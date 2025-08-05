@@ -109,6 +109,8 @@ export default defineConfig([
           args: 'after-used',
           argsIgnorePattern: '^_',
           ignoreRestSiblings: true,
+          caughtErrors: 'all',
+          caughtErrorsIgnorePattern: '^_',
         },
       ],
       '@typescript-eslint/no-floating-promises': 'error',

@@ -21,6 +21,7 @@
       "@/*": ["./src/*"],
       "@common/*": ["src/common/*"],
       "@config/*": ["src/config/*"],
+      "@infrastructure/*": ["src/infrastructure/*"],
       "@core/*": ["src/core/*"]
     }
   }

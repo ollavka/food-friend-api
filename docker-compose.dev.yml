@@ -1,0 +1,43 @@
+services:
+  db:
+    image: postgres:latest
+    restart: always
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB_NAME}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - '${POSTGRES_PORT}:5432'
+    networks:
+      - app-network
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    image: app:development
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: ${DATABASE_URL}
+    ports:
+      - ${APP_PORT}:3000
+    volumes:
+      - ./:/app
+    depends_on:
+      - db
+    networks:
+      - app-network
+    command: ['yarn', 'start:dev']
+
+volumes:
+  postgres_data:
+
+networks:
+  app-network:
