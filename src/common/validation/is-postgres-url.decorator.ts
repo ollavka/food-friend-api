@@ -1,6 +1,6 @@
 import { ValidateBy, ValidationOptions } from 'class-validator'
 
-export function IsPostgresURL(options?: ValidationOptions): PropertyDecorator {
+export function IsPostgresURL(validationOptions?: ValidationOptions): PropertyDecorator {
   return ValidateBy(
     {
       name: 'isPostgresURL',
@@ -26,6 +26,6 @@ export function IsPostgresURL(options?: ValidationOptions): PropertyDecorator {
         },
       },
     },
-    options,
+    validationOptions,
   )
 }

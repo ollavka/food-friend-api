@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto'
 import { Hash, Uuid } from '../type'
 import { def, uuid } from '.'
 
@@ -47,6 +48,11 @@ export function isHash(value: unknown): value is Hash {
 
 export function randomHash(): Hash {
   return uuidToHash(uuid())
+}
+
+export function hashValue(value: string): string {
+  const hash = createHash('sha256').update(value).digest('hex')
+  return hash
 }
 
 function hashToInt(hash: Hash): null | bigint {

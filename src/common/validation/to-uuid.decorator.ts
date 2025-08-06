@@ -4,12 +4,12 @@ import { ValidationOptions } from 'class-validator'
 import { hashToUuid } from '../util'
 import { IsId } from '.'
 
-export function ToUuid(options?: ValidationOptions): PropertyDecorator {
+export function ToUuid(validationOptions?: ValidationOptions): PropertyDecorator {
   return applyDecorators(
-    IsId(options),
+    IsId(validationOptions),
     Transform(
       ({ value }) =>
-        options?.each && Array.isArray(value) ? value.map((item) => hashToUuid(item)) : hashToUuid(value),
+        validationOptions?.each && Array.isArray(value) ? value.map((item) => hashToUuid(item)) : hashToUuid(value),
       { toClassOnly: true },
     ),
   )

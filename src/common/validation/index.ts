@@ -1,3 +1,6 @@
 export * from './is-postgres-url.decorator'
 export * from './is-id.decorator'
 export * from './is-uuid.decorator'
+export * from './is-length.decorator'
+export * from './is-password.decorator'
+export * from './is-email.decorator'
