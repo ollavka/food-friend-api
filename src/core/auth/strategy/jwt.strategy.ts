@@ -1,8 +1,9 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common'
+import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { PassportStrategy } from '@nestjs/passport'
 import { User } from '@prisma/client'
 import { ExtractJwt, Strategy } from 'passport-jwt'
+import { AppEntityNotFoundException } from '@common/exception'
 import { isDev } from '@common/util'
 import { UserService } from '@core/user'
 import { JWT_ENV_CONFIG_KEY, JwtEnvConfig } from '../config/jwt'
@@ -28,7 +29,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     const user = await this.userService.findById(payload.id)
 
     if (!user) {
-      throw new NotFoundException('User not found')
+      throw AppEntityNotFoundException.byId('User', payload.id)
     }
 
     if (!isDev(this.configService) && !user.isVerified) {
