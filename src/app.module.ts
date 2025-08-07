@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
+import { filters } from '@common/filter/all'
 import { interceptors } from '@common/interceptor/all'
 import { pipes } from '@common/pipe/all'
 import { configModuleOptions } from '@config/app/options'
@@ -10,6 +11,6 @@ import { PrismaModule } from '@infrastructure/database'
 
 @Module({
   imports: [ConfigModule.forRoot(configModuleOptions), PrismaModule, BcryptModule, AuthModule, UserModule],
-  providers: [...pipes, ...interceptors],
+  providers: [...pipes, ...interceptors, ...filters],
 })
 export class AppModule {}

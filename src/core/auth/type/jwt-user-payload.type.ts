@@ -1,3 +1,3 @@
 import { User } from '@prisma/client'
 
-export type JwtUserPayload = Pick<User, 'id' | 'email' | 'role'>
+export type JwtUserPayload = Pick<User, 'id'>

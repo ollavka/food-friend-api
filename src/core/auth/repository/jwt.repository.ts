@@ -76,8 +76,6 @@ export class JwtRepository {
   public generateToken(user: User, expiresIn: DurationString): string {
     const payload: JwtUserPayload = {
       id: user.id,
-      email: user.email,
-      role: user.role,
     }
 
     const token = this.jwtService.sign(payload, {

@@ -1,8 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { PassportStrategy } from '@nestjs/passport'
 import { User } from '@prisma/client'
 import { ExtractJwt, Strategy } from 'passport-jwt'
+import { isDev } from '@common/util'
 import { UserService } from '@core/user'
 import { JWT_ENV_CONFIG_KEY, JwtEnvConfig } from '../config/jwt'
 import { JwtUserPayload } from '../type'
@@ -28,6 +29,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
     if (!user) {
       throw new NotFoundException('User not found')
+    }
+
+    if (!isDev(this.configService) && !user.isVerified) {
+      throw new UnauthorizedException('Email not confirmed')
     }
 
     return user

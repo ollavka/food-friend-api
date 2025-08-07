@@ -1,7 +1,8 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common'
+import { BadRequestException, ConflictException, Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { AuthMethod, User, UserRole } from '@prisma/client'
 import { Request, Response } from 'express'
+import { AppEntityNotFoundException } from '@common/exception'
 import { convertToMs, hashValue, isDev } from '@common/util'
 import { UserService } from '@core/user'
 import { BcryptService } from '@infrastructure/cryptography/bcrypt'
@@ -49,13 +50,13 @@ export class AuthService {
     })
 
     if (!user || !user.password) {
-      throw new NotFoundException('Invalid email or password')
+      throw new BadRequestException('Invalid email or password')
     }
 
     const isPasswordsMatches = await this.bcryptService.compare(password, user.password)
 
     if (!isPasswordsMatches) {
-      throw new NotFoundException('Invalid email or password')
+      throw new BadRequestException('Invalid email or password')
     }
 
     return this.auth(res, user)
@@ -83,7 +84,7 @@ export class AuthService {
       const user = await this.userService.findById(payload.id, { select: { id: true, email: true, role: true } })
 
       if (!user) {
-        throw new NotFoundException('User not found')
+        throw new AppEntityNotFoundException('User not found', payload)
       }
 
       await this.jwtRepository.removeRefreshTokenByHash(tokenHash)

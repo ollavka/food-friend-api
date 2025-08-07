@@ -19,6 +19,7 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@common/*": ["src/common/*"],
+      "@access-control/*": ["src/access-control/*"],
       "@config/*": ["src/config/*"],
       "@infrastructure/*": ["src/infrastructure/*"],
       "@core/*": ["src/core/*"]
