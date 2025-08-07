@@ -20,7 +20,7 @@ export class AuthService {
     private readonly configService: ConfigService<{ [JWT_ENV_CONFIG_KEY]: JwtEnvConfig }, true>,
     private readonly jwtRepository: JwtRepository,
   ) {
-    this.jwtEnvConfig = this.configService.get(JWT_ENV_CONFIG_KEY)
+    this.jwtEnvConfig = configService.get(JWT_ENV_CONFIG_KEY)
   }
 
   public async register(res: Response, { password, ...userDto }: RegisterUserDto): Promise<SuccessAuthResponse> {
