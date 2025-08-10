@@ -10,7 +10,7 @@ export function ToUuid(validationOptions?: ValidationOptions): PropertyDecorator
     Transform(
       ({ value }) =>
         validationOptions?.each && Array.isArray(value) ? value.map((item) => hashToUuid(item)) : hashToUuid(value),
-      { toClassOnly: true },
+      { toPlainOnly: true },
     ),
   )
 }

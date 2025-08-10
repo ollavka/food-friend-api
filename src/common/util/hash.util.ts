@@ -34,7 +34,7 @@ export function hashToUuid<T extends undefined | null>(hash: T | Hash): T | Uuid
   const int = hashToInt(hash)
 
   if (int === null) {
-    throw new Error('Invalid hash.')
+    return hash
   }
 
   const hex = int.toString(16).padStart(32, '0')

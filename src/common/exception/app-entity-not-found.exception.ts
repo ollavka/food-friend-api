@@ -1,6 +1,6 @@
 import { HttpStatus } from '@nestjs/common'
 import { Uuid } from '../type'
-import { isUuid, uuidToHash } from '../util'
+import { isEmptyObject, isUuid, uuidToHash } from '../util'
 import { AppException } from '.'
 
 export class AppEntityNotFoundException extends AppException {
@@ -10,9 +10,9 @@ export class AppEntityNotFoundException extends AppException {
     super('entity-not-found', 'Entity not found.')
 
     const safeIdentity = { ...identity }
-    const isIdentityNotEmpty = Object.keys(safeIdentity).length > 0
+    const isIdentityEmpty = isEmptyObject(safeIdentity)
 
-    if (isIdentityNotEmpty && isUuid(safeIdentity.id)) {
+    if (!isIdentityEmpty && isUuid(safeIdentity.id)) {
       safeIdentity.id = uuidToHash(safeIdentity.id)
     }
 
