@@ -1,7 +1,7 @@
 import { ArgumentsHost, Catch, ExceptionFilter, Logger } from '@nestjs/common'
 import { Response } from 'express'
 import { Exception } from '@common/exception'
-import { IS_DEV } from '@common/util'
+import { IS_DEV, toJsonString } from '@common/util'
 
 @Catch()
 export class AppExceptionFilter implements ExceptionFilter {
@@ -24,7 +24,9 @@ export class AppExceptionFilter implements ExceptionFilter {
   protected errorToException(error: unknown): Exception {
     if (error instanceof Exception) {
       return error
-    } else if (!(error instanceof Error)) {
+    }
+
+    if (!(error instanceof Error)) {
       return new Exception('Unknown error.', { details: { error } })
     }
 
@@ -35,7 +37,7 @@ export class AppExceptionFilter implements ExceptionFilter {
     if (exception.isInternal) {
       const { type, message, details, trace } = exception
       const info = { type, message, details, trace }
-      this.logger.error(JSON.stringify(info, null, 2))
+      this.logger.error(toJsonString(info))
     }
   }
 
@@ -47,6 +49,7 @@ export class AppExceptionFilter implements ExceptionFilter {
       status: 'error',
       error: {
         type,
+        statusCode: httpStatus,
         message:
           !IS_DEV && isInternal
             ? 'Internal error occurred. Please contact Food Friend support for more information regarding further actions.'

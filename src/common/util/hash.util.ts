@@ -13,7 +13,7 @@ export function uuidToHash<T extends undefined | null>(uuid: T | Uuid): T | Hash
     return uuid
   }
 
-  const hex = uuid.replace(/-/g, '')
+  const hex = uuid.replaceAll(/-/g, '')
   let int = BigInt(`0x${hex}`)
   let hash = ''
 

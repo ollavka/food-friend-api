@@ -28,7 +28,7 @@ export class AuthService {
     const isUserExists = await this.userService.findByEmail(userDto.email, { select: { id: true } })
 
     if (isUserExists) {
-      throw new ConflictException('This email address is already taken')
+      throw new ConflictException('This email address is already taken.')
     }
 
     const hashedPassword = password ? await this.bcryptService.hash(password) : undefined
@@ -37,8 +37,8 @@ export class AuthService {
       ...userDto,
       password: hashedPassword,
       isVerified: false,
-      role: UserRole.REGULAR,
-      authMethod: AuthMethod.CREDENTIALS,
+      role: UserRole.Regular,
+      authMethod: AuthMethod.Credentials,
     })
 
     return this.auth(res, createdUser)
@@ -50,13 +50,13 @@ export class AuthService {
     })
 
     if (!user || !user.password) {
-      throw new BadRequestException('Invalid email or password')
+      throw new BadRequestException('Invalid email or password.')
     }
 
     const isPasswordsMatches = await this.bcryptService.compare(password, user.password)
 
     if (!isPasswordsMatches) {
-      throw new BadRequestException('Invalid email or password')
+      throw new BadRequestException('Invalid email or password.')
     }
 
     return this.auth(res, user)
@@ -84,7 +84,7 @@ export class AuthService {
       const user = await this.userService.findById(payload.id, { select: { id: true, email: true, role: true } })
 
       if (!user) {
-        throw new AppEntityNotFoundException('User not found', payload)
+        throw new AppEntityNotFoundException('User', payload)
       }
 
       await this.jwtRepository.removeRefreshTokenByHash(tokenHash)

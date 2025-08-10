@@ -1,8 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { PassportStrategy } from '@nestjs/passport'
 import { User } from '@prisma/client'
 import { ExtractJwt, Strategy } from 'passport-jwt'
+import { AccessControlAuthorizationException } from '@access-control/exception'
 import { AppEntityNotFoundException } from '@common/exception'
 import { isDev } from '@common/util'
 import { UserService } from '@core/user'
@@ -33,7 +34,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
 
     if (!isDev(this.configService) && !user.isVerified) {
-      throw new UnauthorizedException('Email not confirmed')
+      throw new AccessControlAuthorizationException('Email not confirmed.', 'email-confirmation')
     }
 
     return user

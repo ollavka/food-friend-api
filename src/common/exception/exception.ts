@@ -1,7 +1,8 @@
 import { HttpStatus } from '@nestjs/common'
 import { Nullable } from '@common/type'
+import { isEmptyObject } from '@common/util'
 
-type ExceptionDetails = Record<string, unknown>
+export type ExceptionDetails = Record<string, unknown>
 
 interface BaseExceptionParams {
   type?: string
@@ -32,9 +33,10 @@ export class Exception extends Error implements BaseExceptionParams {
   public constructor(message: string, params?: BaseExceptionParams) {
     super(message)
     const { type, httpStatus, details, stack } = params ?? {}
+
+    this.details = isEmptyObject(details) ? null : details
     this.type = type ?? 'internal'
     this.httpStatus = httpStatus ?? HttpStatus.INTERNAL_SERVER_ERROR
-    this.details = details ?? null
     this.stack = stack
   }
 

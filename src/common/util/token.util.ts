@@ -1,28 +1,27 @@
 import { isHexadecimal } from 'class-validator'
-import { Token } from '@common/type'
-import { isUuid, uuid } from './uuid.util'
+import { Token, Uuid } from '@common/type'
+import { def } from './def.util'
+import { uuid } from './uuid.util'
 
-export function generateToken(): Token {
-  const randomUUID = uuid()
-  const token = randomUUID.replaceAll(/-/g, '')
-  return token
+export function token(): Token {
+  return uuid().replaceAll(/-/g, '')
 }
 
 export function isToken(value: unknown): value is Token {
-  const isValidHexString = typeof value === 'string' && isHexadecimal(value) && value.length === 32
+  return typeof value === 'string' && value.length === 32 && isHexadecimal(value)
+}
 
-  if (!isValidHexString) {
-    return false
+export function uuidToToken<T extends Uuid>(uuid: T): Token
+export function uuidToToken<T extends undefined | null>(uuid: T | Uuid): T | Token {
+  return def(uuid) ? uuid.replaceAll(/-/g, '') : uuid
+}
+
+export function tokenToUuid<T extends Token>(token: T): Uuid
+export function tokenToUuid<T extends undefined | null>(token: T | Token): T | Uuid {
+  if (!def(token)) {
+    return token
   }
 
-  const match = value.match(/(.{8})(.{4})(.{4})(.{4})(.{12})/)
-
-  if (!match) {
-    return false
-  }
-
-  const uuidStr = match.slice(1).join('-')
-  const isValidUUID = isUuid(uuidStr)
-
-  return isValidUUID
+  const match = token.match(/(.{8})(.{4})(.{4})(.{4})(.{12})/)
+  return match!.slice(1).join('-')
 }

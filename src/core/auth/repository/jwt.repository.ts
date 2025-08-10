@@ -1,7 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { User } from '@prisma/client'
 import { addMilliseconds, isBefore } from 'date-fns'
+import { AccessControlAuthenticationException } from '@access-control/exception'
 import { DurationString } from '@common/type'
 import { convertToMs, hashValue } from '@common/util'
 import { PrismaService } from '@infrastructure/database'
@@ -16,12 +17,12 @@ export class JwtRepository {
   ) {}
 
   public async removeRefreshTokenById(tokenId: string): Promise<boolean> {
-    await this.prismaService.refreshToken.delete({ where: { id: tokenId } })
+    await this.prismaService.refreshToken.deleteMany({ where: { id: tokenId } })
     return true
   }
 
   public async removeRefreshTokenByHash(tokenHash: string): Promise<boolean> {
-    await this.prismaService.refreshToken.delete({ where: { tokenHash } })
+    await this.prismaService.refreshToken.deleteMany({ where: { tokenHash } })
     return true
   }
 
@@ -40,19 +41,19 @@ export class JwtRepository {
     })
 
     if (!refreshToken) {
-      throw new UnauthorizedException('Refresh token does not exist')
+      throw new AccessControlAuthenticationException('not-found-token', 'Refresh token does not exist.')
     }
 
     const isTokenExpired = isBefore(refreshToken.expiresAt, new Date())
 
     if (isTokenExpired) {
-      throw new UnauthorizedException('Refresh token is expired')
+      throw new AccessControlAuthenticationException('expired-token', 'Refresh token is expired.')
     }
 
     const payload = this.jwtService.verify<JwtUserPayload>(token)
 
     if (!payload) {
-      throw new UnauthorizedException('Invalid refresh token')
+      throw new AccessControlAuthenticationException('invalid-token', 'Invalid refresh token.')
     }
 
     return payload

@@ -4,7 +4,7 @@ import { isUuid, uuidToHash } from '../util'
 import { AppException } from '.'
 
 export class AppEntityNotFoundException extends AppException {
-  public readonly httpStatus: HttpStatus = HttpStatus.NOT_FOUND
+  public httpStatus: HttpStatus = HttpStatus.NOT_FOUND
 
   public constructor(entityType: string, identity: Record<string, unknown> & { id?: Uuid }) {
     super('entity-not-found', 'Entity not found.')

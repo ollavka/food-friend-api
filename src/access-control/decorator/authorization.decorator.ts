@@ -1,6 +1,7 @@
 import { UseGuards, applyDecorators } from '@nestjs/common'
 import { UserRole } from '@prisma/client'
-import { JwtAuthGuard, RolesGuard } from '../guard'
+import { JwtAuthGuard } from '@core/auth/guard'
+import { RolesGuard } from '../guard'
 import { Roles } from './roles.decorator'
 
 export function Authorization(...roles: UserRole[]): ReturnType<typeof applyDecorators> {
