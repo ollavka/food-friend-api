@@ -6,7 +6,7 @@ model User {
   email     String  @unique
   password  String?
 
-  role       UserRole @default(Regular)
+  role       UserRole @default(REGULAR)
   isVerified Boolean  @default(false) @map("is_verified")
 
   refreshToken RefreshToken[] 
@@ -21,11 +21,11 @@ model User {
 }
 
 enum UserRole {
-  Regular
-  Admin
+  REGULAR
+  ADMIN
 }
 
 enum AuthMethod {
-  Credentials
-  Google
+  CREDENTIALS
+  GOOGLE
 }

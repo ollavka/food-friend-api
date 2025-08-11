@@ -37,8 +37,8 @@ export class AuthService {
       ...userDto,
       password: hashedPassword,
       isVerified: false,
-      role: UserRole.Regular,
-      authMethod: AuthMethod.Credentials,
+      role: UserRole.REGULAR,
+      authMethod: AuthMethod.CREDENTIALS,
     })
 
     return this.auth(res, createdUser)

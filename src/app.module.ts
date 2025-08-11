@@ -8,9 +8,17 @@ import { AuthModule } from '@core/auth'
 import { UserModule } from '@core/user'
 import { BcryptModule } from '@infrastructure/cryptography'
 import { PrismaModule } from '@infrastructure/database'
+import { SchedulerModule } from '@infrastructure/scheduler'
 
 @Module({
-  imports: [ConfigModule.forRoot(configModuleOptions), PrismaModule, BcryptModule, AuthModule, UserModule],
+  imports: [
+    ConfigModule.forRoot(configModuleOptions),
+    SchedulerModule,
+    PrismaModule,
+    BcryptModule,
+    AuthModule,
+    UserModule,
+  ],
   providers: [...pipes, ...interceptors, ...filters],
 })
 export class AppModule {}
