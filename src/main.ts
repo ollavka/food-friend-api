@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core'
 import * as cookieParser from 'cookie-parser'
 import { APP_ENV_CONFIG_KEY, AppEnvConfig } from '@config/app'
 import { getCorsOptions } from '@config/cors'
+import { setupSwagger } from '@config/swagger'
 import { AppModule } from './app.module'
 
 async function bootstrap(): Promise<void> {
@@ -13,6 +14,7 @@ async function bootstrap(): Promise<void> {
   app.useLogger(logLevels)
   app.enableCors(getCorsOptions(allowedOrigins))
   app.use(cookieParser())
+  setupSwagger(app)
 
   await app.listen(port, host)
 }

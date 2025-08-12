@@ -18,11 +18,12 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@common/*": ["src/common/*"],
       "@access-control/*": ["src/access-control/*"],
-      "@config/*": ["src/config/*"],
+      "@core/*": ["src/core/*"],
       "@infrastructure/*": ["src/infrastructure/*"],
-      "@core/*": ["src/core/*"]
+      "@common/*": ["src/common/*"],
+      "@config/*": ["src/config/*"],
+      "@swagger/*": ["src/swagger/*"]
     }
   }
 }

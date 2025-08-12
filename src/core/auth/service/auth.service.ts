@@ -1,15 +1,16 @@
-import { BadRequestException, ConflictException, Injectable } from '@nestjs/common'
+import { ConflictException, Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { AuthMethod, User, UserRole } from '@prisma/client'
 import { Request, Response } from 'express'
+import { AccessControlAuthenticationException } from '@access-control/exception'
 import { AppEntityNotFoundException } from '@common/exception'
 import { convertToMs, hashValue, isDev } from '@common/util'
 import { UserService } from '@core/user'
 import { BcryptService } from '@infrastructure/cryptography/bcrypt'
+import { AccessTokenApiModel } from '../api-model'
 import { JWT_ENV_CONFIG_KEY, JwtEnvConfig } from '../config/jwt'
 import { LoginUserDto, RegisterUserDto } from '../dto'
 import { JwtRepository } from '../repository'
-import { SuccessAuthResponse } from '../type'
 
 @Injectable()
 export class AuthService {
@@ -24,7 +25,7 @@ export class AuthService {
     this.jwtEnvConfig = configService.get(JWT_ENV_CONFIG_KEY)
   }
 
-  public async register(res: Response, { password, ...userDto }: RegisterUserDto): Promise<SuccessAuthResponse> {
+  public async register(res: Response, { password, ...userDto }: RegisterUserDto): Promise<AccessTokenApiModel> {
     const isUserExists = await this.userService.findByEmail(userDto.email, { select: { id: true } })
 
     if (isUserExists) {
@@ -44,19 +45,19 @@ export class AuthService {
     return this.auth(res, createdUser)
   }
 
-  public async login(res: Response, { email, password }: LoginUserDto): Promise<SuccessAuthResponse> {
+  public async login(res: Response, { email, password }: LoginUserDto): Promise<AccessTokenApiModel> {
     const user = await this.userService.findByEmail(email, {
-      select: { id: true, email: true, password: true, role: true },
+      select: { id: true, email: true, password: true, role: true, isVerified: true },
     })
 
     if (!user || !user.password) {
-      throw new BadRequestException('Invalid email or password.')
+      throw new AccessControlAuthenticationException('credentials', 'Invalid credentials.')
     }
 
     const isPasswordsMatches = await this.bcryptService.compare(password, user.password)
 
     if (!isPasswordsMatches) {
-      throw new BadRequestException('Invalid email or password.')
+      throw new AccessControlAuthenticationException('credentials', 'Invalid credentials.')
     }
 
     return this.auth(res, user)
@@ -75,7 +76,7 @@ export class AuthService {
     return true
   }
 
-  public async refresh(req: Request, res: Response): Promise<SuccessAuthResponse> {
+  public async refresh(req: Request, res: Response): Promise<AccessTokenApiModel> {
     const refreshToken = req.cookies['refresh-token'] ?? ''
 
     try {
@@ -95,7 +96,7 @@ export class AuthService {
     }
   }
 
-  private async auth(res: Response, user: User): Promise<SuccessAuthResponse> {
+  private async auth(res: Response, user: User): Promise<AccessTokenApiModel> {
     const { jwtAccessTokenTtl, jwtRefreshTokenTtl } = this.jwtEnvConfig
     const { accessToken, refreshToken } = await this.jwtRepository.generateTokens(user, {
       jwtAccessTokenTtl,

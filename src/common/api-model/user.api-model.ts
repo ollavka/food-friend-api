@@ -3,7 +3,7 @@ import { Exclude, Expose } from 'class-transformer'
 import { ToId } from '@common/validation'
 
 @Exclude()
-export class UserEntity {
+export class UserApiModel {
   @Expose()
   @ToId()
   public id: string
@@ -27,7 +27,7 @@ export class UserEntity {
     Object.assign(this, partial)
   }
 
-  public static from(data: Partial<User>): UserEntity {
+  public static from(data: Partial<User>): UserApiModel {
     return new this(data)
   }
 }

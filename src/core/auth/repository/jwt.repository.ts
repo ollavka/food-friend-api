@@ -6,8 +6,9 @@ import { AccessControlAuthenticationException } from '@access-control/exception'
 import { DurationString } from '@common/type'
 import { convertToMs, hashValue } from '@common/util'
 import { PrismaService } from '@infrastructure/database'
+import { AuthTokensApiModel } from '../api-model'
 import { JwtEnvConfig } from '../config/jwt'
-import { AuthTokens, JwtUserPayload } from '../type'
+import { JwtUserPayload } from '../type'
 
 @Injectable()
 export class JwtRepository {
@@ -41,19 +42,19 @@ export class JwtRepository {
     })
 
     if (!refreshToken) {
-      throw new AccessControlAuthenticationException('not-found-token', 'Refresh token does not exist.')
+      throw new AccessControlAuthenticationException('refresh-token', 'Refresh token does not exist.')
     }
 
     const isTokenExpired = isBefore(refreshToken.expiresAt, new Date())
 
     if (isTokenExpired) {
-      throw new AccessControlAuthenticationException('expired-token', 'Refresh token is expired.')
+      throw new AccessControlAuthenticationException('refresh-token', 'Refresh token is expired.')
     }
 
     const payload = this.jwtService.verify<JwtUserPayload>(token)
 
-    if (!payload) {
-      throw new AccessControlAuthenticationException('invalid-token', 'Invalid refresh token.')
+    if (!payload?.id) {
+      throw new AccessControlAuthenticationException('refresh-token', 'Invalid refresh token.')
     }
 
     return payload
@@ -86,7 +87,7 @@ export class JwtRepository {
     return token
   }
 
-  public async generateTokens(user: User, jwtOptions: Omit<JwtEnvConfig, 'jwtSecretKey'>): Promise<AuthTokens> {
+  public async generateTokens(user: User, jwtOptions: Omit<JwtEnvConfig, 'jwtSecretKey'>): Promise<AuthTokensApiModel> {
     const { jwtAccessTokenTtl, jwtRefreshTokenTtl } = jwtOptions
 
     const accessToken = this.generateToken(user, jwtAccessTokenTtl)

@@ -34,7 +34,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
 
     if (!isDev(this.configService) && !user.isVerified) {
-      throw new AccessControlAuthorizationException('Email not confirmed.', 'email-confirmation')
+      throw new AccessControlAuthorizationException('email-confirmation', 'Email not confirmed.')
     }
 
     return user
