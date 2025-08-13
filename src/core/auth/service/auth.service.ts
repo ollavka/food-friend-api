@@ -1,6 +1,6 @@
 import { ConflictException, Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { AuthMethod, User, UserRole } from '@prisma/client'
+import { AuthMethod, User, UserRole, UserStatus } from '@prisma/client'
 import { Request, Response } from 'express'
 import { AccessControlAuthenticationException } from '@access-control/exception'
 import { AppEntityNotFoundException } from '@common/exception'
@@ -37,7 +37,7 @@ export class AuthService {
     const createdUser = await this.userService.create({
       ...userDto,
       password: hashedPassword,
-      isVerified: false,
+      status: UserStatus.UNVERIFIED,
       role: UserRole.REGULAR,
       authMethod: AuthMethod.CREDENTIALS,
     })
@@ -47,7 +47,7 @@ export class AuthService {
 
   public async login(res: Response, { email, password }: LoginUserDto): Promise<AccessTokenApiModel> {
     const user = await this.userService.findByEmail(email, {
-      select: { id: true, email: true, password: true, role: true, isVerified: true },
+      select: { id: true, email: true, password: true, role: true, status: true },
     })
 
     if (!user || !user.password) {

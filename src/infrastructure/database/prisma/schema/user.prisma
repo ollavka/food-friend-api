@@ -6,10 +6,10 @@ model User {
   email     String  @unique
   password  String?
 
-  role       UserRole @default(REGULAR)
-  isVerified Boolean  @default(false) @map("is_verified")
+  role   UserRole   @default(REGULAR)
+  status UserStatus @default(UNVERIFIED)
 
-  refreshToken RefreshToken[] 
+  refreshToken RefreshToken[]
 
   authMethod AuthMethod @map("auth_method")
 
@@ -23,6 +23,11 @@ model User {
 enum UserRole {
   REGULAR
   ADMIN
+}
+
+enum UserStatus {
+  VERIFIED
+  UNVERIFIED
 }
 
 enum AuthMethod {
