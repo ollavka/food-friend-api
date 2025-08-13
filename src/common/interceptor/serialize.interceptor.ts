@@ -12,7 +12,7 @@ export class SerializeInterceptor extends ClassSerializerInterceptor {
     return super.intercept(context, next).pipe(
       map((serialized) => ({
         status: 'success',
-        data: serialized,
+        data: serialized ?? null,
       })),
     )
   }

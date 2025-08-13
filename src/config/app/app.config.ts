@@ -9,6 +9,7 @@ export const appEnvConfig: () => AppEnvConfig = registerAs(APP_ENV_CONFIG_KEY, (
   host: process.env.APP_HOST,
   nodeEnv: process.env.NODE_ENV as Environment,
   allowedOrigins: (process.env.ALLOWED_ORIGINS ?? '').split(',').map((origin) => origin.trim()),
+  hashPepper: process.env.HASH_PEPPER,
   logLevels: <LogLevel[]>[
     ...('true' === process.env.LOG_ERROR ? ['error'] : []),
     ...('true' === process.env.LOG_WARNING ? ['warn'] : []),

@@ -7,12 +7,16 @@ import { AuthorizedUser } from '@common/decorator'
 import { AppEntityNotFoundException } from '@common/exception'
 import { HashToUuidPipe } from '@common/pipe'
 import { Uuid } from '@common/type'
+import { MailService } from '@infrastructure/mail'
 import { UserService } from '../service'
 
 @ApiExcludeController()
 @Controller('users')
 export class UserController {
-  public constructor(private readonly userService: UserService) {}
+  public constructor(
+    private readonly userService: UserService,
+    private readonly mailService: MailService,
+  ) {}
 
   @Authorization()
   @Get('me')

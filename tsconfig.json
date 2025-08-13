@@ -17,6 +17,7 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
+    "jsx": "react",
     "paths": {
       "@access-control/*": ["src/access-control/*"],
       "@core/*": ["src/core/*"],

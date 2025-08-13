@@ -9,8 +9,7 @@ import { hashToUuid } from '@common/util'
 @Injectable()
 export class HashToUuidPipe implements PipeTransform {
   public async transform(id: Hash): Promise<Uuid> {
-    const resourceIdInstance = plainToInstance(ResourceIdDto, { id })
-    const errors = await validate(resourceIdInstance)
+    const errors = await validate(plainToInstance(ResourceIdDto, { id }))
 
     if (errors.length > 0) {
       throw ValidationExceptionFactory.fromValidationErrors(errors)

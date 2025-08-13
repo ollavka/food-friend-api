@@ -5,6 +5,7 @@ export type AppEnvConfig = {
   port: string
   host: string
   allowedOrigins: string[]
+  hashPepper: string
   logLevels: LogLevel[]
   nodeEnv: Environment
 }

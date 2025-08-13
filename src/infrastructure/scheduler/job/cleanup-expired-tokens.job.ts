@@ -9,7 +9,7 @@ export class CleanupExpiredTokensJob {
 
   public constructor(private readonly prismaService: PrismaService) {}
 
-  private async removeTokens(tokenType: TokenType, currentDate: Date): Promise<number> {
+  private async removeTokensOrCodes(tokenType: TokenType, currentDate: Date): Promise<number> {
     const { count } = await (this.prismaService[tokenType] as TokenDelegate).deleteMany({
       where: { expiresAt: { lt: currentDate } },
     })
@@ -23,12 +23,12 @@ export class CleanupExpiredTokensJob {
 
     const currentDate = new Date()
 
-    const [refreshTokensCount, actionTokenCount] = await Promise.all([
-      this.removeTokens('refreshToken', currentDate),
-      this.removeTokens('actionToken', currentDate),
+    const [refreshTokensCount, verificationCodeCount] = await Promise.all([
+      this.removeTokensOrCodes('refreshToken', currentDate),
+      this.removeTokensOrCodes('verificationCode', currentDate),
     ])
 
     this.logger.log(`Removed ${refreshTokensCount} expired refresh tokens`)
-    this.logger.log(`Removed ${actionTokenCount} expired action tokens`)
+    this.logger.log(`Removed ${verificationCodeCount} expired verification codes`)
   }
 }

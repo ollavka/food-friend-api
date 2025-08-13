@@ -8,6 +8,8 @@ import { AuthModule } from '@core/auth'
 import { UserModule } from '@core/user'
 import { BcryptModule } from '@infrastructure/cryptography'
 import { PrismaModule } from '@infrastructure/database'
+import { MailModule } from '@infrastructure/mail'
+import { OtpModule } from '@infrastructure/otp'
 import { SchedulerModule } from '@infrastructure/scheduler'
 
 @Module({
@@ -18,6 +20,8 @@ import { SchedulerModule } from '@infrastructure/scheduler'
     BcryptModule,
     AuthModule,
     UserModule,
+    OtpModule,
+    MailModule,
   ],
   providers: [...pipes, ...interceptors, ...filters],
 })

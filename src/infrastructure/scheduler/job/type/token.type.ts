@@ -1,1 +1,1 @@
-export type TokenType = 'refreshToken' | 'actionToken'
+export type TokenType = 'refreshToken' | 'verificationCode'

@@ -15,6 +15,9 @@ export class AppEnvSchema {
   @IsString()
   public readonly ALLOWED_ORIGINS: string
 
+  @IsString()
+  public readonly HASH_PEPPER: string
+
   @IsBooleanString()
   public readonly LOG_ERROR: string
 
