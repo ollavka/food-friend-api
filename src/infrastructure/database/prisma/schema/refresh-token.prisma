@@ -10,6 +10,7 @@ model RefreshToken {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("update_at")
 
+  @@index([expiresAt])
   @@index([userId, tokenHash])
   @@map("refresh_tokens")
 }

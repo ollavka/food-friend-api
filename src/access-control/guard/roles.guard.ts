@@ -2,11 +2,12 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 import { User, UserRole } from '@prisma/client'
 import { Request } from 'express'
-import { ROLES_KEY } from '../decorator'
+import { AccessControlAuthorizationException } from '@access-control/exception'
+import { ROLES_KEY } from '../decorator/roles.decorator'
 
 @Injectable()
 export class RolesGuard implements CanActivate {
-  public constructor(private reflector: Reflector) {}
+  public constructor(private readonly reflector: Reflector) {}
 
   public canActivate(context: ExecutionContext): boolean {
     const requiredRoles = this.reflector.getAllAndOverride<UserRole[]>(ROLES_KEY, [
@@ -19,7 +20,17 @@ export class RolesGuard implements CanActivate {
     }
 
     const req = context.switchToHttp().getRequest() as Request
-    const user = req.user as User | null
-    return !!user && requiredRoles.some((role) => user.role.includes(role))
+    const user = <User>req.user
+    const hasRequiredRole = requiredRoles.some((role) => user.role.includes(role))
+
+    if (hasRequiredRole) {
+      return true
+    }
+
+    const formattedRequiredRoles = requiredRoles.join(', ')
+    throw new AccessControlAuthorizationException(
+      'roles',
+      `To access the resource, you must have one of the following roles: ${formattedRequiredRoles}`,
+    )
   }
 }

@@ -2,23 +2,19 @@ import { Controller, Get, Param } from '@nestjs/common'
 import { ApiExcludeController } from '@nestjs/swagger'
 import { User } from '@prisma/client'
 import { Authorization } from '@access-control/decorator'
-import { UserApiModel } from '@common/api-model'
 import { AuthorizedUser } from '@common/decorator'
 import { AppEntityNotFoundException } from '@common/exception'
 import { HashToUuidPipe } from '@common/pipe'
 import { Uuid } from '@common/type'
-import { MailService } from '@infrastructure/mail'
+import { UserApiModel } from '../api-model'
 import { UserService } from '../service'
 
 @ApiExcludeController()
 @Controller('users')
 export class UserController {
-  public constructor(
-    private readonly userService: UserService,
-    private readonly mailService: MailService,
-  ) {}
+  public constructor(private readonly userService: UserService) {}
 
-  @Authorization()
+  @Authorization({})
   @Get('me')
   public getMe(@AuthorizedUser() user: User): UserApiModel {
     return UserApiModel.from(user)

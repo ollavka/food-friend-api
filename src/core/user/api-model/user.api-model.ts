@@ -1,4 +1,4 @@
-import { User, UserRole } from '@prisma/client'
+import { User, UserRole, UserStatus } from '@prisma/client'
 import { Exclude, Expose } from 'class-transformer'
 import { ToId } from '@common/validation'
 
@@ -22,6 +22,9 @@ export class UserApiModel {
 
   @Expose()
   public role: UserRole
+
+  @Expose()
+  public status: UserStatus
 
   public constructor(partial: Partial<User>) {
     Object.assign(this, partial)

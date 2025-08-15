@@ -3,13 +3,18 @@ model OtpCode {
 
   type      OtpCodeType
   email     String
-  codeHash  String      @map("code_hash")
+  codeHash  String      @unique @map("code_hash")
   expiresAt DateTime    @map("expires_at")
+
+  attempts        Int       @default(0)
+  windowStartedAt DateTime? @map("window_started_at")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("update_at")
 
+  @@unique([email, type])
   @@index([email, type])
+  @@index([expiresAt])
   @@map("otp_codes")
 }
 

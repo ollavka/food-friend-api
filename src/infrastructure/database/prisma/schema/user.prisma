@@ -26,8 +26,9 @@ enum UserRole {
 }
 
 enum UserStatus {
-  VERIFIED
   UNVERIFIED
+  ACTIVE
+  BLOCKED
 }
 
 enum AuthMethod {

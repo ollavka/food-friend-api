@@ -1,1 +1,1 @@
-export * from './email-confirmation.template'
+export * from './email-verification.template'

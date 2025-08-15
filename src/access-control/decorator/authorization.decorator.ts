@@ -1,33 +1,30 @@
 /* eslint-disable @typescript-eslint/no-unsafe-function-type */
 import { CanActivate, UseGuards, applyDecorators } from '@nestjs/common'
 import { UserRole } from '@prisma/client'
-import { RolesGuard, VerifiedGuard } from '@access-control/guard'
+import { RolesGuard, UserStatusGuard } from '@access-control/guard'
 import { UniversalDecorator } from '@common/type'
+import { useOnlyIf } from '@common/util'
 import { JwtAuthGuard } from '@core/auth/guard'
+import { OnlyActiveStatus } from './only-active-status.decorator'
 import { Roles } from './roles.decorator'
 
-type AuthorizationDecoratorParams = {
+type AuthorizationParams = {
   roles?: UserRole[]
-  verified?: boolean
+  onlyActiveStatus?: boolean
 }
 
-export function Authorization(params?: AuthorizationDecoratorParams): UniversalDecorator {
+export function Authorization(params?: AuthorizationParams): UniversalDecorator {
   const roles = params?.roles ?? []
-  const verified = params?.verified ?? false
+  const onlyActiveStatus = params?.onlyActiveStatus ?? false
+
   const hasRoles = roles.length > 0
 
-  const guards = <Array<CanActivate | Function>>[
-    [JwtAuthGuard, true],
-    [RolesGuard, hasRoles],
-    [VerifiedGuard, verified],
-  ]
-    .map(([guard, isAvailable]) => (isAvailable ? guard : null))
-    .filter(Boolean)
-
+  const guards = <Array<CanActivate | Function>>(
+    [JwtAuthGuard, UserStatusGuard, useOnlyIf(RolesGuard, hasRoles)].filter(Boolean)
+  )
   const extraDecorators = <Array<UniversalDecorator>>(
-    [[Roles(...roles), hasRoles]].map(([decorator, isAvailable]) => (isAvailable ? decorator : null)).filter(Boolean)
+    [useOnlyIf(OnlyActiveStatus(), onlyActiveStatus), useOnlyIf(Roles(...roles), hasRoles)].filter(Boolean)
   )
 
-  const fullDecoratorList = [...(guards.length > 0 ? [UseGuards(...guards)] : []), ...extraDecorators]
-  return applyDecorators(...fullDecoratorList)
+  return applyDecorators(UseGuards(...guards), ...extraDecorators)
 }

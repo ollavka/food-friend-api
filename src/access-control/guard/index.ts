@@ -1,2 +1,2 @@
 export * from './roles.guard'
-export * from './verified.guard'
+export * from './user-status.guard'

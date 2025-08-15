@@ -42,19 +42,19 @@ export class JwtRepository {
     })
 
     if (!refreshToken) {
-      throw new AccessControlAuthenticationException('refresh-token', 'Refresh token does not exist.')
+      throw new AccessControlAuthenticationException('refresh-token-not-found', 'Refresh token does not exist.')
     }
 
     const isTokenExpired = isBefore(refreshToken.expiresAt, new Date())
 
     if (isTokenExpired) {
-      throw new AccessControlAuthenticationException('refresh-token', 'Refresh token is expired.')
+      throw new AccessControlAuthenticationException('refresh-token-expired', 'Refresh token is expired.')
     }
 
     const payload = this.jwtService.verify<JwtUserPayload>(token)
 
     if (!payload?.id) {
-      throw new AccessControlAuthenticationException('refresh-token', 'Invalid refresh token.')
+      throw new AccessControlAuthenticationException('refresh-token-invalid', 'Invalid refresh token.')
     }
 
     return payload

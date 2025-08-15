@@ -1,12 +1,14 @@
 import { Body, Controller, HttpCode, HttpStatus, Post, Req, Res } from '@nestjs/common'
-import { ApiExtraModels } from '@nestjs/swagger'
+import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import { Request, Response } from 'express'
 import { AccessTokenApiModel } from '../api-model'
 import { LoginDocs, LogoutDocs, RefreshDocs } from '../docs'
 import { RegisterDocs } from '../docs/register.docs'
 import { LoginUserDto, RegisterUserDto } from '../dto'
+import { OtpTicketApiModel } from '../email-verification/api-model'
 import { AuthService } from '../service'
 
+@ApiTags('Auth')
 @ApiExtraModels(AccessTokenApiModel)
 @Controller('auth')
 export class AuthController {
@@ -18,7 +20,7 @@ export class AuthController {
   public async register(
     @Res({ passthrough: true }) res: Response,
     @Body() userDto: RegisterUserDto,
-  ): Promise<AccessTokenApiModel> {
+  ): Promise<OtpTicketApiModel> {
     return this.authService.register(res, userDto)
   }
 

@@ -1,9 +1,10 @@
 import { Global, Module } from '@nestjs/common'
+import { OtpRepository } from './repository'
 import { OtpService } from './service'
 
 @Global()
 @Module({
-  providers: [OtpService],
+  providers: [OtpService, OtpRepository],
   exports: [OtpService],
 })
 export class OtpModule {}

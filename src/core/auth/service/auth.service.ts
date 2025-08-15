@@ -1,15 +1,18 @@
-import { ConflictException, Injectable } from '@nestjs/common'
+import { Inject, Injectable, forwardRef } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { AuthMethod, User, UserRole, UserStatus } from '@prisma/client'
 import { Request, Response } from 'express'
 import { AccessControlAuthenticationException } from '@access-control/exception'
-import { AppEntityNotFoundException } from '@common/exception'
+import { StatusPolicy } from '@access-control/util'
+import { AppConflictException, AppEntityNotFoundException } from '@common/exception'
 import { convertToMs, hashValue, isDev } from '@common/util'
 import { UserService } from '@core/user'
 import { BcryptService } from '@infrastructure/cryptography/bcrypt'
 import { AccessTokenApiModel } from '../api-model'
 import { JWT_ENV_CONFIG_KEY, JwtEnvConfig } from '../config/jwt'
 import { LoginUserDto, RegisterUserDto } from '../dto'
+import { EmailVerificationService } from '../email-verification'
+import { OtpTicketApiModel } from '../email-verification/api-model'
 import { JwtRepository } from '../repository'
 
 @Injectable()
@@ -21,15 +24,17 @@ export class AuthService {
     private readonly bcryptService: BcryptService,
     private readonly configService: ConfigService<{ [JWT_ENV_CONFIG_KEY]: JwtEnvConfig }, true>,
     private readonly jwtRepository: JwtRepository,
+    @Inject(forwardRef(() => EmailVerificationService))
+    private readonly emailVerificationService: EmailVerificationService,
   ) {
     this.jwtEnvConfig = configService.get(JWT_ENV_CONFIG_KEY)
   }
 
-  public async register(res: Response, { password, ...userDto }: RegisterUserDto): Promise<AccessTokenApiModel> {
+  public async register(res: Response, { password, ...userDto }: RegisterUserDto): Promise<OtpTicketApiModel> {
     const isUserExists = await this.userService.findByEmail(userDto.email, { select: { id: true } })
 
     if (isUserExists) {
-      throw new ConflictException('This email address is already taken.')
+      throw new AppConflictException('email-taken', 'This email address is already taken.')
     }
 
     const hashedPassword = password ? await this.bcryptService.hash(password) : undefined
@@ -42,13 +47,11 @@ export class AuthService {
       authMethod: AuthMethod.CREDENTIALS,
     })
 
-    return this.auth(res, createdUser)
+    return this.emailVerificationService.sendVerificationMail(createdUser.email, false)
   }
 
   public async login(res: Response, { email, password }: LoginUserDto): Promise<AccessTokenApiModel> {
-    const user = await this.userService.findByEmail(email, {
-      select: { id: true, email: true, password: true, role: true, status: true },
-    })
+    const user = await this.userService.findByEmail(email)
 
     if (!user || !user.password) {
       throw new AccessControlAuthenticationException('credentials', 'Invalid credentials.')
@@ -82,7 +85,7 @@ export class AuthService {
     try {
       const payload = await this.jwtRepository.validateRefreshToken(refreshToken)
       const tokenHash = hashValue(refreshToken)
-      const user = await this.userService.findById(payload.id, { select: { id: true, email: true, role: true } })
+      const user = await this.userService.findById(payload.id, { omit: { password: true } })
 
       if (!user) {
         throw new AppEntityNotFoundException('User', payload)
@@ -96,7 +99,9 @@ export class AuthService {
     }
   }
 
-  private async auth(res: Response, user: User): Promise<AccessTokenApiModel> {
+  public async auth(res: Response, user: User): Promise<AccessTokenApiModel> {
+    await StatusPolicy.enforce(user)
+
     const { jwtAccessTokenTtl, jwtRefreshTokenTtl } = this.jwtEnvConfig
     const { accessToken, refreshToken } = await this.jwtRepository.generateTokens(user, {
       jwtAccessTokenTtl,
