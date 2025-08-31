@@ -9,10 +9,7 @@ export class NamespacedLocalizer {
     const ctx = I18nContext.current()
 
     if (!ctx) {
-      throw new Error(
-        'I18nContext is not available. ' +
-          'This usually means you are outside an HTTP request or i18n interceptor is not initialized.',
-      )
+      throw new Error('I18nContext is not available.')
     }
 
     return ctx
