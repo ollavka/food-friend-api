@@ -8,7 +8,7 @@ import { MailService } from '@infrastructure/mail'
 import { OtpService } from '@infrastructure/otp'
 import { AuthService } from '../../service'
 import { OtpTicketApiModel } from '../api-model'
-import { ConfirmEmailDto } from '../dto'
+import { ConfirmEmailDto, SendVerificationMailDto } from '../dto'
 
 @Injectable()
 export class EmailVerificationService {
@@ -19,11 +19,10 @@ export class EmailVerificationService {
     @Inject(forwardRef(() => AuthService)) private readonly authService: AuthService,
   ) {}
 
-  public test(): string {
-    return 'test'
-  }
-
-  public async sendVerificationMail(email: string, checkUser = true): Promise<OtpTicketApiModel> {
+  public async sendVerificationMail(
+    { email, userName }: SendVerificationMailDto,
+    checkUser = true,
+  ): Promise<OtpTicketApiModel> {
     if (checkUser) {
       const user = await this.userService.findByEmail(email)
 
@@ -34,7 +33,7 @@ export class EmailVerificationService {
 
     const otpCode = this.otpService.generateCode()
     const hashedCode = this.otpService.hashCode(otpCode, { scope: OtpCodeType.EMAIL_VERIFICATION, identity: email })
-    await this.mailService.sendVerificationEmailMail(otpCode)
+    await this.mailService.sendVerificationEmailMail(otpCode, email, userName)
     const otpEntity = await this.otpService.saveCode(hashedCode, email, OtpCodeType.EMAIL_VERIFICATION)
     return OtpTicketApiModel.from(otpEntity)
   }
@@ -43,12 +42,12 @@ export class EmailVerificationService {
     res: Response,
     { ticket, code }: ConfirmEmailDto,
     makeAuth?: boolean,
-  ): Promise<AccessTokenApiModel | boolean> {
+  ): Promise<AccessTokenApiModel | null> {
     const userEmail = await this.otpService.confirmCode(ticket, code, OtpCodeType.EMAIL_VERIFICATION)
 
     try {
       const userEntity = await this.userService.updateStatus({ email: userEmail }, UserStatus.ACTIVE)
-      return makeAuth ? this.authService.auth(res, userEntity) : true
+      return makeAuth ? this.authService.auth(res, userEntity) : null
     } catch (_err) {
       throw new AppEntityNotFoundException('User', { email: userEmail })
     }

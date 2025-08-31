@@ -15,8 +15,10 @@ export class EmailVerificationController {
 
   @Post('request')
   @HttpCode(HttpStatus.ACCEPTED)
-  public async sendVerificationMail(@Body() { email }: SendVerificationMailDto): Promise<OtpTicketApiModel> {
-    return this.emailVerificationService.sendVerificationMail(email)
+  public async sendVerificationMail(
+    @Body() sendVerificationMailDto: SendVerificationMailDto,
+  ): Promise<OtpTicketApiModel> {
+    return this.emailVerificationService.sendVerificationMail(sendVerificationMailDto)
   }
 
   @Post('confirm')
@@ -25,7 +27,7 @@ export class EmailVerificationController {
     @Res({ passthrough: true }) res: Response,
     @Body() confirmEmailDto: ConfirmEmailDto,
     @AuthorizedUser() user: User,
-  ): Promise<AccessTokenApiModel | boolean> {
+  ): Promise<AccessTokenApiModel | null> {
     return this.emailVerificationService.confirmEmail(res, confirmEmailDto, !user)
   }
 }

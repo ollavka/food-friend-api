@@ -1,1 +1,1 @@
-export type TokenType = 'refreshToken' | 'verificationCode'
+export type TokenType = 'refreshToken' | 'otpCode'

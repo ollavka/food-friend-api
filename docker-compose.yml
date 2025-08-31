@@ -12,28 +12,6 @@ services:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - '${POSTGRES_PORT}:5432'
-    networks:
-      - app-network
-
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: production
-    image: app:production
-    env_file:
-      - .env
-    environment:
-      NODE_ENV: production
-    ports:
-      - ${APP_PORT}:3000
-    depends_on:
-      - db
-    networks:
-      - app-network
 
 volumes:
   postgres_data:
-
-networks:
-  app-network:

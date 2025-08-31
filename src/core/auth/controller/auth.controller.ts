@@ -37,7 +37,7 @@ export class AuthController {
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   @LogoutDocs()
-  public async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<boolean> {
+  public async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<null> {
     return this.authService.logout(req, res)
   }
 

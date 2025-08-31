@@ -47,7 +47,10 @@ export class AuthService {
       authMethod: AuthMethod.CREDENTIALS,
     })
 
-    return this.emailVerificationService.sendVerificationMail(createdUser.email, false)
+    return this.emailVerificationService.sendVerificationMail(
+      { email: createdUser.email, userName: createdUser.firstName },
+      false,
+    )
   }
 
   public async login(res: Response, { email, password }: LoginUserDto): Promise<AccessTokenApiModel> {
@@ -66,7 +69,7 @@ export class AuthService {
     return this.auth(res, user)
   }
 
-  public async logout(req: Request, res: Response): Promise<boolean> {
+  public async logout(req: Request, res: Response): Promise<null> {
     const refreshToken = req.cookies['refresh-token'] ?? ''
     const tokenHash = hashValue(refreshToken)
 
@@ -76,7 +79,7 @@ export class AuthService {
 
     res.clearCookie('refresh-token')
 
-    return true
+    return null
   }
 
   public async refresh(req: Request, res: Response): Promise<AccessTokenApiModel> {
@@ -114,7 +117,7 @@ export class AuthService {
   }
 
   private setRefreshTokenCookie(res: Response, token: string): void {
-    const isDevEnv = isDev(this.configService)
+    const isDevEnv = isDev()
 
     res.cookie('refresh-token', token, {
       httpOnly: true,

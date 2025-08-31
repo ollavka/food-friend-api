@@ -1,22 +1,25 @@
 import { Injectable } from '@nestjs/common'
 import { MailerService } from '@nestjs-modules/mailer'
-import { render } from '@react-email/components'
+import { render } from '@react-email/render'
 import { Exception } from '@common/exception'
-import { Email } from '../template'
+import { LocalizationFactory } from '@localization'
+import { EmailVerificationTemplate } from '../template'
 
 @Injectable()
 export class MailService {
-  public constructor(private readonly mailerService: MailerService) {}
+  public constructor(
+    private readonly mailerService: MailerService,
+    private readonly localizationFactory: LocalizationFactory,
+  ) {}
 
-  public async sendVerificationEmailMail(code: string): Promise<any> {
+  public async sendVerificationEmailMail(code: string, toEmail: string, userName?: string): Promise<void> {
     try {
-      const html = await render(Email({ code }))
+      const { t, tHtml } = this.localizationFactory.createFor('email.verification')
+      const html = await render(EmailVerificationTemplate({ code, userName, t: tHtml }))
 
       await this.mailerService.sendMail({
-        to: 'lavka.alexey37@gmail.com',
-        from: 'lavka.alexey37@gmail.com',
-        subject: 'Testing Nest MailerModule ✔',
-        text: 'welcome',
+        to: toEmail,
+        subject: t('subject'),
         html,
       })
     } catch (err) {

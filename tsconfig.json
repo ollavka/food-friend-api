@@ -22,6 +22,7 @@
       "@access-control/*": ["src/access-control/*"],
       "@core/*": ["src/core/*"],
       "@infrastructure/*": ["src/infrastructure/*"],
+      "@localization": ["src/infrastructure/localization"],
       "@common/*": ["src/common/*"],
       "@config/*": ["src/config/*"],
       "@swagger/*": ["src/swagger/*"]

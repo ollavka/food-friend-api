@@ -3,7 +3,7 @@ import { BadRequestException, Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { OtpCode, OtpCodeType } from '@prisma/client'
 import { addMilliseconds, addMinutes, differenceInSeconds, isBefore } from 'date-fns'
-import { HASH_PEPPER_KEY } from '@common/constant'
+import { HASH_PEPPER_KEY, OTP_CODE_LENGTH } from '@common/constant'
 import { AppEntityNotFoundException, AppGoneException, AppRateLimitException } from '@common/exception'
 import { Uuid } from '@common/type'
 import { hashValue } from '@common/util'
@@ -39,10 +39,10 @@ export class OtpService {
   }
 
   public generateCode(): string {
-    const min = 100_000
-    const max = 1_000_000
+    const min = 10 ** (OTP_CODE_LENGTH - 1)
+    const max = 10 ** OTP_CODE_LENGTH
     const randomNumber = randomInt(min, max)
-    return randomNumber.toString().padStart(6, '0')
+    return randomNumber.toString().padStart(OTP_CODE_LENGTH, '0')
   }
 
   public hashCode(code: string, params: HashOtpCodeParams): string {

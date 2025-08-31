@@ -1,7 +1,7 @@
 import { ArgumentsHost, Catch, ExceptionFilter, Logger } from '@nestjs/common'
 import { Response } from 'express'
 import { Exception } from '@common/exception'
-import { IS_DEV, toJsonString } from '@common/util'
+import { isDev, toJsonString } from '@common/util'
 
 @Catch()
 export class AppExceptionFilter implements ExceptionFilter {
@@ -44,6 +44,7 @@ export class AppExceptionFilter implements ExceptionFilter {
   private handleHttpException(exception: Exception, host: ArgumentsHost): void {
     const response = host.switchToHttp().getResponse<Response>()
     const { details, httpStatus, message, type, isInternal, trace } = exception
+    const isDevEnv = isDev()
 
     response.status(httpStatus).json({
       status: 'error',
@@ -51,11 +52,11 @@ export class AppExceptionFilter implements ExceptionFilter {
         type,
         statusCode: httpStatus,
         message:
-          !IS_DEV && isInternal
+          !isDevEnv && isInternal
             ? 'Internal error occurred. Please contact Food Friend support for more information regarding further actions.'
             : message,
         details: details ?? null,
-        ...(IS_DEV && isInternal ? { trace } : {}),
+        ...(isDevEnv && isInternal ? { trace } : {}),
       },
     })
   }

@@ -1,12 +1,11 @@
-import { IsNotEmpty, IsNumberString } from 'class-validator'
-import { ToUuid } from '@common/validation'
+import { IsNotEmpty } from 'class-validator'
+import { IsOTPCode, ToUuid } from '@common/validation'
 
 export class ConfirmEmailDto {
   @IsNotEmpty()
   @ToUuid()
   public ticket: string
 
-  @IsNotEmpty()
-  @IsNumberString()
+  @IsOTPCode()
   public code: string
 }

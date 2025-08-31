@@ -1,0 +1,11 @@
+{
+  "verification": {
+    "subject": "Food Friend — Verify your email address",
+    "heading": "Food Friend — Sign-in verification",
+    "greeting": "Hello, {userName}! 👋",
+    "anonGreeting": "Hello, friend! 👋",
+    "instructions": "Use the 6-digit code below to confirm your login or complete the action in the <strong>Food Friend</strong> app:",
+    "codeNote": "The code is valid for 10 minutes. If this wasn’t you — please ignore this email.",
+    "signature": "With care,<br/>Food Friend Team"
+  }
+}

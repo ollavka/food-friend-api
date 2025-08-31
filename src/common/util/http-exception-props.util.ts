@@ -12,6 +12,5 @@ export function extractHttpExceptionProperties(statusCode: number): HttpExceptio
   const statusKey = enumKey(HttpStatus, statusCode) ?? 'http-request'
   const type = TextCaseConverter.convert(statusKey, TextCase.Spinal)
   const message = `${TextCaseConverter.convert(statusKey, TextCase.Space)}.`
-
   return { type, message }
 }

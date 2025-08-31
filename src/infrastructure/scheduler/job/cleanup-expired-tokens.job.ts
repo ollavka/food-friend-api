@@ -23,12 +23,12 @@ export class CleanupExpiredTokensJob {
 
     const currentDate = new Date()
 
-    const [refreshTokensCount, verificationCodeCount] = await Promise.all([
+    const [refreshTokensCount, otpCodeCount] = await Promise.all([
       this.removeTokensOrCodes('refreshToken', currentDate),
-      this.removeTokensOrCodes('verificationCode', currentDate),
+      this.removeTokensOrCodes('otpCode', currentDate),
     ])
 
     this.logger.log(`Removed ${refreshTokensCount} expired refresh tokens`)
-    this.logger.log(`Removed ${verificationCodeCount} expired verification codes`)
+    this.logger.log(`Removed ${otpCodeCount} expired OTP codes`)
   }
 }
