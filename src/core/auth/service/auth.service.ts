@@ -8,6 +8,7 @@ import { AppConflictException, AppEntityNotFoundException } from '@common/except
 import { convertToMs, hashValue, isDev } from '@common/util'
 import { UserService } from '@core/user'
 import { BcryptService } from '@infrastructure/cryptography/bcrypt'
+import { MailService } from '@infrastructure/mail'
 import { AccessTokenApiModel } from '../api-model'
 import { JWT_ENV_CONFIG_KEY, JwtEnvConfig } from '../config/jwt'
 import { LoginUserDto, RegisterUserDto } from '../dto'
@@ -24,6 +25,7 @@ export class AuthService {
     private readonly bcryptService: BcryptService,
     private readonly configService: ConfigService<{ [JWT_ENV_CONFIG_KEY]: JwtEnvConfig }, true>,
     private readonly jwtRepository: JwtRepository,
+    private readonly mailService: MailService,
     @Inject(forwardRef(() => EmailVerificationService))
     private readonly emailVerificationService: EmailVerificationService,
   ) {
@@ -46,6 +48,8 @@ export class AuthService {
       role: UserRole.REGULAR,
       authMethod: AuthMethod.CREDENTIALS,
     })
+
+    await this.mailService.sendWelcomeMail(createdUser.email, createdUser.firstName)
 
     return this.emailVerificationService.sendVerificationMail(
       { email: createdUser.email, userName: createdUser.firstName },

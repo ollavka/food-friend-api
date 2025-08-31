@@ -7,5 +7,15 @@
     "instructions": "Use the 6-digit code below to confirm your login or complete the action in the <strong>Food Friend</strong> app:",
     "codeNote": "The code is valid for 10 minutes. If this wasn’t you — please ignore this email.",
     "signature": "With care,<br/>Food Friend Team"
+  },
+  "welcome": {
+    "subject": "Welcome to Food Friend!",
+    "preview": "Glad you're here — let’s start cooking together.",
+    "heading": "Welcome to Food Friend 🎉",
+    "greeting": "Hello, {userName}! 👋",
+    "anonGreeting": "Hello, friend! 👋",
+    "intro": "We’re happy you’ve joined. This is your cozy place to plan, save, and enjoy what you cook.",
+    "ctaPrimary": "Get started",
+    "signature": "With care,<br/>Food Friend Team"
   }
 }

@@ -3,7 +3,7 @@ import { MailerService } from '@nestjs-modules/mailer'
 import { render } from '@react-email/render'
 import { Exception } from '@common/exception'
 import { LocalizationFactory } from '@localization'
-import { EmailVerificationTemplate } from '../template'
+import { EmailVerificationTemplate, EmailWelcomeTemplate } from '../template'
 
 @Injectable()
 export class MailService {
@@ -11,6 +11,22 @@ export class MailService {
     private readonly mailerService: MailerService,
     private readonly localizationFactory: LocalizationFactory,
   ) {}
+
+  public async sendWelcomeMail(toEmail: string, userName?: string): Promise<void> {
+    try {
+      const { t, tHtml } = this.localizationFactory.createFor('email.welcome')
+      const html = await render(EmailWelcomeTemplate({ userName, t: tHtml }))
+
+      await this.mailerService.sendMail({
+        to: toEmail,
+        subject: t('subject'),
+        html,
+      })
+    } catch (err) {
+      const reason = err?.message ?? null
+      throw new Exception('The welcome email could not be sent.', { details: reason ? { reason } : null })
+    }
+  }
 
   public async sendVerificationEmailMail(code: string, toEmail: string, userName?: string): Promise<void> {
     try {
