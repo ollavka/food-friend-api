@@ -1,11 +1,11 @@
 import { Container, Head, Heading, Html, Section, Text } from '@react-email/components'
 import * as React from 'react'
-import { NamespacedTranslateHtmlFunction } from '@localization'
+import { NamespacedTranslateFunction } from '@localization'
 
 interface FoodFriendOtpEmailProps {
   code: string
   userName?: string
-  t: NamespacedTranslateHtmlFunction
+  t: NamespacedTranslateFunction
 }
 
 export function EmailVerificationTemplate({ code, userName, t }: FoodFriendOtpEmailProps): React.JSX.Element {

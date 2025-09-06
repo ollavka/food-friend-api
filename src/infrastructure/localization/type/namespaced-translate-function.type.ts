@@ -1,3 +1,7 @@
-import { TranslateOptions } from 'nestjs-i18n'
+import { domToReact } from 'html-react-parser'
+import { TranslateFunctionOptions } from './translate-function-options.type'
 
-export type NamespacedTranslateFunction = (key: string, options?: TranslateOptions) => string
+export type NamespacedTranslateFunction = <T extends TranslateFunctionOptions | undefined = undefined>(
+  key: string,
+  options?: T,
+) => T extends { parseHtml: true } ? ReturnType<typeof domToReact> : string

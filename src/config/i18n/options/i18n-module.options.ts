@@ -4,10 +4,11 @@ import { UserLanguageResolver } from '../resolver'
 
 export const I18nModuleOptions: I18nOptions = {
   fallbackLanguage: 'en',
-  fallbacks: { 'ua-*': 'uk', 'en-*': 'en' },
+  fallbacks: { 'ua-*': 'uk', 'uk-*': 'uk', 'en-*': 'en' },
   loaderOptions: {
     path: path.resolve(process.cwd(), 'src/i18n'),
     watch: true,
   },
+  throwOnMissingKey: true,
   resolvers: [{ use: QueryResolver, options: ['lang'] }, new HeaderResolver(['x-lang']), UserLanguageResolver],
 }
