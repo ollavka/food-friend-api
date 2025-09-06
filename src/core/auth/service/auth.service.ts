@@ -12,8 +12,8 @@ import { MailService } from '@infrastructure/mail'
 import { AccessTokenApiModel } from '../api-model'
 import { JWT_ENV_CONFIG_KEY, JwtEnvConfig } from '../config/jwt'
 import { LoginUserDto, RegisterUserDto } from '../dto'
-import { EmailVerificationService } from '../email-verification'
-import { OtpTicketApiModel } from '../email-verification/api-model'
+import { EmailVerificationService } from '../module/email-verification'
+import { OtpTicketApiModel } from '../module/email-verification/api-model'
 import { JwtRepository } from '../repository'
 
 @Injectable()

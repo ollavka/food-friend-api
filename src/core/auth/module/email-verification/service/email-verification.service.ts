@@ -6,7 +6,7 @@ import { AccessTokenApiModel } from '@core/auth/api-model'
 import { UserService } from '@core/user'
 import { MailService } from '@infrastructure/mail'
 import { OtpService } from '@infrastructure/otp'
-import { AuthService } from '../../service'
+import { AuthService } from '../../../service'
 import { OtpTicketApiModel } from '../api-model'
 import { ConfirmEmailDto, SendVerificationMailDto } from '../dto'
 

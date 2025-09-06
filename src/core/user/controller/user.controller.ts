@@ -14,6 +14,11 @@ import { UserService } from '../service'
 export class UserController {
   public constructor(private readonly userService: UserService) {}
 
+  @Get('test')
+  public test(): string {
+    return 'test'
+  }
+
   @Authorization({})
   @Get('me')
   public getMe(@AuthorizedUser() user: User): UserApiModel {

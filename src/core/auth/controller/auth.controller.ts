@@ -5,7 +5,7 @@ import { AccessTokenApiModel } from '../api-model'
 import { LoginDocs, LogoutDocs, RefreshDocs } from '../docs'
 import { RegisterDocs } from '../docs/register.docs'
 import { LoginUserDto, RegisterUserDto } from '../dto'
-import { OtpTicketApiModel } from '../email-verification/api-model'
+import { OtpTicketApiModel } from '../module/email-verification/api-model'
 import { AuthService } from '../service'
 
 @ApiTags('Auth')

@@ -14,12 +14,13 @@ export class MailService {
 
   public async sendWelcomeMail(toEmail: string, userName?: string): Promise<void> {
     try {
-      const { t } = this.localizationFactory.createFor('email.welcome')
+      const t = this.localizationFactory.createFor('email.welcome', { parseHtml: true })
       const html = await render(EmailWelcomeTemplate({ userName, t }))
 
       await this.mailerService.sendMail({
-        to: toEmail,
-        subject: t('subject'),
+        to: 'lavka.alexey37@gmail.com',
+        // to: toEmail,
+        subject: t('subject', { parseHtml: false }),
         html,
       })
     } catch (err) {
@@ -30,12 +31,13 @@ export class MailService {
 
   public async sendVerificationEmailMail(code: string, toEmail: string, userName?: string): Promise<void> {
     try {
-      const { t } = this.localizationFactory.createFor('email.verification')
+      const t = this.localizationFactory.createFor('email.verification', { parseHtml: true })
       const html = await render(EmailVerificationTemplate({ code, userName, t }))
 
       await this.mailerService.sendMail({
-        to: toEmail,
-        subject: t('subject'),
+        to: 'lavka.alexey37@gmail.com',
+        // to: toEmail,
+        subject: t('subject', { parseHtml: false }),
         html,
       })
     } catch (err) {
