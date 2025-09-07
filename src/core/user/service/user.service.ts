@@ -1,14 +1,16 @@
 import { Injectable } from '@nestjs/common'
-import { User, UserStatus } from '@prisma/client'
+import { Prisma, User } from '@prisma/client'
+import { isEmail } from 'class-validator'
 import { PrismaService } from '@infrastructure/database'
-import { CreateUserPayload, FindUserOptions, UserWhereOptions } from '../type'
+import { CreateUserPayload, FindUserOptions } from '../type'
 
 @Injectable()
 export class UserService {
   public constructor(private readonly prismaService: PrismaService) {}
 
-  public async findById(id: string, options?: FindUserOptions): Promise<User | null> {
-    const user = await this.prismaService.user.findUnique({
+  public async findById(id: string, options?: FindUserOptions, tx?: Prisma.TransactionClient): Promise<User | null> {
+    const db = tx ?? this.prismaService
+    const user = await db.user.findUnique({
       where: { id },
       ...options,
     })
@@ -16,8 +18,13 @@ export class UserService {
     return user
   }
 
-  public async findByEmail(email: string, options?: FindUserOptions): Promise<User | null> {
-    const user = await this.prismaService.user.findUnique({
+  public async findByEmail(
+    email: string,
+    options?: FindUserOptions,
+    tx?: Prisma.TransactionClient,
+  ): Promise<User | null> {
+    const db = tx ?? this.prismaService
+    const user = await db.user.findUnique({
       where: { email },
       ...options,
     })
@@ -25,20 +32,22 @@ export class UserService {
     return user
   }
 
-  public async create(payload: CreateUserPayload): Promise<User> {
-    const newUser = this.prismaService.user.create({
+  public async create(payload: CreateUserPayload, tx?: Prisma.TransactionClient): Promise<User> {
+    const db = tx ?? this.prismaService
+    const newUser = await db.user.create({
       data: payload,
     })
 
     return newUser
   }
 
-  public async updateStatus(where: UserWhereOptions, status: UserStatus): Promise<User> {
-    const updatedUser = this.prismaService.user.update({
+  public async update(idOrEmail: string, data: Prisma.UserUpdateInput, tx?: Prisma.TransactionClient): Promise<User> {
+    const db = tx ?? this.prismaService
+    const where = isEmail(idOrEmail) ? { email: idOrEmail } : { id: idOrEmail }
+
+    const updatedUser = await db.user.update({
       where,
-      data: {
-        status,
-      },
+      data,
     })
 
     return updatedUser

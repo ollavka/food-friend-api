@@ -1,0 +1,1 @@
+export const RESET_SESSION_TTL_MINS = 60

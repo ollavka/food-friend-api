@@ -1,1 +1,1 @@
-export * from './cleanup-expired-tokens.job'
+export * from './cleanup-expired-entities.job'

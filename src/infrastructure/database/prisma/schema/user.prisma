@@ -9,12 +9,17 @@ model User {
   role   UserRole   @default(REGULAR)
   status UserStatus @default(UNVERIFIED)
 
-  refreshToken RefreshToken[]
+  otpCodes             OtpCode[]
+  refreshTokens        RefreshToken[]
+  resetPasswordSession ResetPasswordSession?
 
   authMethod AuthMethod @map("auth_method")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("update_at")
+
+  lastResetPasswordMailSentAt     DateTime? @map("last_reset_password_mail_sent_at")
+  lastEmailVerificationMailSentAt DateTime? @map("last_email_verification_mail_sent_at")
 
   @@index([email])
   @@map("users")

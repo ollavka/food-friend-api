@@ -9,11 +9,10 @@ import { convertToMs, hashValue, isDev } from '@common/util'
 import { UserService } from '@core/user'
 import { BcryptService } from '@infrastructure/cryptography/bcrypt'
 import { MailService } from '@infrastructure/mail'
-import { AccessTokenApiModel } from '../api-model'
+import { AccessTokenApiModel, OtpTicketApiModel } from '../api-model'
 import { JWT_ENV_CONFIG_KEY, JwtEnvConfig } from '../config/jwt'
 import { LoginUserDto, RegisterUserDto } from '../dto'
 import { EmailVerificationService } from '../module/email-verification'
-import { OtpTicketApiModel } from '../module/email-verification/api-model'
 import { JwtRepository } from '../repository'
 
 @Injectable()
@@ -32,7 +31,7 @@ export class AuthService {
     this.jwtEnvConfig = configService.get(JWT_ENV_CONFIG_KEY)
   }
 
-  public async register(res: Response, { password, ...userDto }: RegisterUserDto): Promise<OtpTicketApiModel> {
+  public async register({ password, ...userDto }: RegisterUserDto): Promise<OtpTicketApiModel> {
     const isUserExists = await this.userService.findByEmail(userDto.email, { select: { id: true } })
 
     if (isUserExists) {
@@ -47,14 +46,16 @@ export class AuthService {
       status: UserStatus.UNVERIFIED,
       role: UserRole.REGULAR,
       authMethod: AuthMethod.CREDENTIALS,
+      lastEmailVerificationMailSentAt: null,
+      lastResetPasswordMailSentAt: null,
     })
 
-    await this.mailService.sendWelcomeMail(createdUser.email, createdUser.firstName)
+    const [, emailVerificationTicketModel] = await Promise.all([
+      this.mailService.sendWelcomeMail(createdUser.email, createdUser.firstName),
+      this.emailVerificationService.sendVerificationMail(createdUser.email, false),
+    ])
 
-    return this.emailVerificationService.sendVerificationMail(
-      { email: createdUser.email, userName: createdUser.firstName },
-      false,
-    )
+    return emailVerificationTicketModel
   }
 
   public async login(res: Response, { email, password }: LoginUserDto): Promise<AccessTokenApiModel> {
@@ -82,7 +83,6 @@ export class AuthService {
     }
 
     res.clearCookie('refresh-token')
-
     return null
   }
 

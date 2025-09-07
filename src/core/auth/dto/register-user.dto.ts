@@ -10,7 +10,6 @@ export class RegisterUserDto {
   public email: string
 
   @IsPassword()
-  @ApiProperty()
   @ApiProperty({ description: 'User password', example: 'Test!234', minLength: 8, maxLength: 32, required: true })
   public password: string
 

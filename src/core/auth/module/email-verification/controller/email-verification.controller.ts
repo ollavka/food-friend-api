@@ -2,10 +2,11 @@ import { Body, Controller, HttpCode, HttpStatus, Post, Res } from '@nestjs/commo
 import { ApiTags } from '@nestjs/swagger'
 import { User } from '@prisma/client'
 import { Response } from 'express'
+import { SuccessMessageApiModel } from '@common/api-model'
 import { AuthorizedUser } from '@common/decorator'
-import { AccessTokenApiModel } from '../../../api-model'
-import { OtpTicketApiModel } from '../api-model'
-import { ConfirmEmailDto, SendVerificationMailDto } from '../dto'
+import { ConfirmOtpCodeDto } from '@common/dto'
+import { AccessTokenApiModel, OtpTicketApiModel } from '@core/auth/api-model'
+import { SendVerificationMailDto } from '../dto'
 import { EmailVerificationService } from '../service'
 
 @ApiTags('Auth')
@@ -15,19 +16,17 @@ export class EmailVerificationController {
 
   @Post('request')
   @HttpCode(HttpStatus.ACCEPTED)
-  public async sendVerificationMail(
-    @Body() sendVerificationMailDto: SendVerificationMailDto,
-  ): Promise<OtpTicketApiModel> {
-    return this.emailVerificationService.sendVerificationMail(sendVerificationMailDto)
+  public async sendVerificationMail(@Body() { email }: SendVerificationMailDto): Promise<OtpTicketApiModel> {
+    return this.emailVerificationService.sendVerificationMail(email)
   }
 
   @Post('confirm')
-  @HttpCode(HttpStatus.OK)
   public async confirmEmail(
     @Res({ passthrough: true }) res: Response,
-    @Body() confirmEmailDto: ConfirmEmailDto,
+    @Body() confirmOtpCodeDto: ConfirmOtpCodeDto,
     @AuthorizedUser() user: User,
-  ): Promise<AccessTokenApiModel | null> {
-    return this.emailVerificationService.confirmEmail(res, confirmEmailDto, !user)
+  ): Promise<AccessTokenApiModel | SuccessMessageApiModel> {
+    const accessTokenApiModel = await this.emailVerificationService.confirmEmail(res, confirmOtpCodeDto, !user)
+    return accessTokenApiModel ?? { message: 'The email has been successfully confirmed.' }
   }
 }

@@ -12,13 +12,13 @@ export class UserApiModel {
   public firstName: string
 
   @Expose()
+  public lastName: string
+
+  @Expose()
   public email: string
 
   @Expose()
   public isVerified: boolean
-
-  @Expose()
-  public lastName: string
 
   @Expose()
   public role: UserRole
@@ -32,5 +32,9 @@ export class UserApiModel {
 
   public static from(data: Partial<User>): UserApiModel {
     return new this(data)
+  }
+
+  public get fullName(): string {
+    return `${this.firstName} ${this.lastName}`
   }
 }

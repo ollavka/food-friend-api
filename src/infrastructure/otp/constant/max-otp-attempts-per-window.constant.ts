@@ -1,0 +1,1 @@
+export const MAX_OTP_ATTEMPTS_PER_WINDOW = 5

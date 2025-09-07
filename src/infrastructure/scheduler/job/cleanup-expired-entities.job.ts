@@ -4,8 +4,8 @@ import { PrismaService } from '@infrastructure/database'
 import { TokenDelegate, TokenType } from './type'
 
 @Injectable()
-export class CleanupExpiredTokensJob {
-  private readonly logger = new Logger(CleanupExpiredTokensJob.name)
+export class CleanupExpiredEntitiesJob {
+  private readonly logger = new Logger(CleanupExpiredEntitiesJob.name)
 
   public constructor(private readonly prismaService: PrismaService) {}
 

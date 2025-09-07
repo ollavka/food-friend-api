@@ -1,2 +1,2 @@
-export * from './max-attempts-per-window.constant'
-export * from './window-ms.constant'
+export * from './max-otp-attempts-per-window.constant'
+export * from './otp-window-ms.constant'

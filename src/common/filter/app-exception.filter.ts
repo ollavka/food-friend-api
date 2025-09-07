@@ -10,15 +10,7 @@ export class AppExceptionFilter implements ExceptionFilter {
   public catch(error: Error, host: ArgumentsHost): void {
     const exception = this.errorToException(error)
     this.logException(exception)
-
-    switch (host.getType()) {
-      case 'http':
-        this.handleHttpException(exception, host)
-        break
-
-      default:
-        throw exception
-    }
+    this.handleHttpException(exception, host)
   }
 
   protected errorToException(error: unknown): Exception {

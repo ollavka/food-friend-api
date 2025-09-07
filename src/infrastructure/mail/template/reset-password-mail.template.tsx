@@ -1,14 +1,15 @@
 import { Container, Head, Heading, Html, Section, Text } from '@react-email/components'
 import * as React from 'react'
+import { OTP_CODE_LENGTH, OTP_CODE_TTL_MINS } from '@common/constant'
 import { NamespacedTranslateFunction } from '@localization'
 
-interface FoodFriendOtpEmailProps {
+interface ResetPasswordMailProps {
   code: string
   userName?: string
   t: NamespacedTranslateFunction
 }
 
-export function EmailVerificationTemplate({ code, userName, t }: FoodFriendOtpEmailProps): React.JSX.Element {
+export function ResetPasswordMailTemplate({ code, userName, t }: ResetPasswordMailProps): React.JSX.Element {
   return (
     <Html>
       <Head />
@@ -32,7 +33,9 @@ export function EmailVerificationTemplate({ code, userName, t }: FoodFriendOtpEm
             {userName ? t('greeting', { args: { userName } }) : t('anonGreeting')}
           </Text>
 
-          <Text style={{ fontSize: '16px', lineHeight: '24px' }}>{t('instructions')}</Text>
+          <Text style={{ fontSize: '16px', lineHeight: '24px' }}>
+            {t('instructions', { args: { otpLength: OTP_CODE_LENGTH } })}
+          </Text>
 
           <Section
             style={{
@@ -47,7 +50,9 @@ export function EmailVerificationTemplate({ code, userName, t }: FoodFriendOtpEm
             {code}
           </Section>
 
-          <Text style={{ fontSize: '14px', lineHeight: '20px', color: '#666' }}>{t('codeNote')}</Text>
+          <Text style={{ fontSize: '14px', lineHeight: '20px', color: '#666' }}>
+            {t('codeNote', { args: { otpTtl: OTP_CODE_TTL_MINS } })}
+          </Text>
 
           <Text style={{ marginTop: '32px', fontSize: '14px', color: '#666' }}>{t('signature')}</Text>
         </Container>

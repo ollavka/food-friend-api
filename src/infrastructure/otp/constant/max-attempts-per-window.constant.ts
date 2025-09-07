@@ -1,1 +1,0 @@
-export const MAX_ATTEMPTS_PER_WINDOW = 5

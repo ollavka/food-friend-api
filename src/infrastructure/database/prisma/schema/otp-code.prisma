@@ -6,6 +6,9 @@ model OtpCode {
   codeHash  String      @unique @map("code_hash")
   expiresAt DateTime    @map("expires_at")
 
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
+
   attempts        Int       @default(0)
   windowStartedAt DateTime? @map("window_started_at")
 
@@ -14,12 +17,10 @@ model OtpCode {
 
   @@unique([email, type])
   @@index([email, type])
-  @@index([expiresAt])
   @@map("otp_codes")
 }
 
 enum OtpCodeType {
   EMAIL_VERIFICATION
   PASSWORD_RESET
-  PASSWORD_CHANGE
 }

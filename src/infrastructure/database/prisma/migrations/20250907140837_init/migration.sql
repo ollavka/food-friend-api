@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "public"."OtpCodeType" AS ENUM ('EMAIL_VERIFICATION', 'PASSWORD_RESET', 'PASSWORD_CHANGE');
+CREATE TYPE "public"."OtpCodeType" AS ENUM ('EMAIL_VERIFICATION', 'PASSWORD_RESET');
 
 -- CreateEnum
 CREATE TYPE "public"."UserRole" AS ENUM ('REGULAR', 'ADMIN');

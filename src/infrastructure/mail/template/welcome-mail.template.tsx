@@ -2,13 +2,13 @@ import { Container, Head, Heading, Html, Link, Section, Text } from '@react-emai
 import * as React from 'react'
 import { NamespacedTranslateFunction } from '@localization'
 
-interface EmailWelcomeProps {
+interface WelcomeMailProps {
   userName?: string
   t: NamespacedTranslateFunction
   ctaUrl?: string
 }
 
-export function EmailWelcomeTemplate({ userName, t, ctaUrl }: EmailWelcomeProps): React.JSX.Element {
+export function WelcomeMailTemplate({ userName, t, ctaUrl }: WelcomeMailProps): React.JSX.Element {
   return (
     <Html>
       <Head />

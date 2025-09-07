@@ -1,0 +1,1 @@
+export const MAIL_RESEND_WINDOW_MINS = 5

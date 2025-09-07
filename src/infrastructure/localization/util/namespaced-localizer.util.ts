@@ -9,7 +9,7 @@ export class NamespacedLocalizer {
     private readonly defaultOptions: TranslateFunctionOptions,
   ) {}
 
-  private get i18n(): I18nContext<Record<string, unknown>> | never {
+  private get i18n(): I18nContext<Record<string, unknown>> {
     const ctx = I18nContext.current()
 
     if (!ctx) {

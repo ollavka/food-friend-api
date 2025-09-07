@@ -1,13 +1,13 @@
 import { randomInt } from 'node:crypto'
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { OtpCode, OtpCodeType } from '@prisma/client'
+import { OtpCode, OtpCodeType, Prisma, User } from '@prisma/client'
 import { addMilliseconds, addMinutes, differenceInSeconds, isBefore } from 'date-fns'
-import { HASH_PEPPER_KEY, OTP_CODE_LENGTH } from '@common/constant'
+import { HASH_PEPPER_KEY, OTP_CODE_LENGTH, OTP_CODE_TTL_MINS } from '@common/constant'
 import { AppEntityNotFoundException, AppGoneException, AppRateLimitException } from '@common/exception'
 import { Uuid } from '@common/type'
 import { hashValue } from '@common/util'
-import { MAX_ATTEMPTS_PER_WINDOW, WINDOW_MS } from '../constant'
+import { MAX_OTP_ATTEMPTS_PER_WINDOW, OTP_WINDOW_MS } from '../constant'
 import { OtpRepository } from '../repository'
 import { HashOtpCodeParams } from '../type'
 
@@ -27,14 +27,9 @@ export class OtpService {
     return formattedCode
   }
 
-  public async saveCode(
-    hashedCode: string,
-    email: string,
-    type: OtpCodeType,
-    codeTtlMins: number = 10,
-  ): Promise<OtpCode> {
-    const expiresAt = addMinutes(new Date(), codeTtlMins)
-    const otpCode = await this.otpRepository.saveCode(hashedCode, email, type, expiresAt)
+  public async saveCode(hashedCode: string, user: User, type: OtpCodeType): Promise<OtpCode> {
+    const expiresAt = addMinutes(new Date(), OTP_CODE_TTL_MINS)
+    const otpCode = await this.otpRepository.saveCode(hashedCode, user, type, expiresAt)
     return otpCode
   }
 
@@ -51,9 +46,14 @@ export class OtpService {
     return hashedCode
   }
 
-  public async confirmCode(ticket: Uuid, code: string, scope: OtpCodeType): Promise<string> {
+  public async confirmCode(
+    ticket: Uuid,
+    code: string,
+    scope: OtpCodeType,
+    tx?: Prisma.TransactionClient,
+  ): Promise<string> {
     const now = new Date()
-    const foundOtpCode = await this.otpRepository.findById(ticket)
+    const foundOtpCode = await this.otpRepository.findById(ticket, tx)
 
     if (!foundOtpCode) {
       throw new AppEntityNotFoundException('OTP', { id: ticket })
@@ -62,12 +62,12 @@ export class OtpService {
     const otpIsExpired = isBefore(foundOtpCode.expiresAt, now)
 
     if (otpIsExpired) {
-      await this.otpRepository.removeById(ticket)
+      await this.otpRepository.removeById(ticket, tx)
       throw new AppGoneException('otp-expired', 'OTP code is expired.')
     }
 
     const started = foundOtpCode.windowStartedAt ?? now
-    const windowEndsAt = addMilliseconds(started, WINDOW_MS)
+    const windowEndsAt = addMilliseconds(started, OTP_WINDOW_MS)
     const windowClosed = now >= windowEndsAt
 
     let attempts = foundOtpCode.attempts
@@ -76,9 +76,9 @@ export class OtpService {
     if (windowClosed || !windowStartedAt) {
       attempts = 1
       windowStartedAt = now
-    } else if (attempts >= MAX_ATTEMPTS_PER_WINDOW) {
+    } else if (attempts >= MAX_OTP_ATTEMPTS_PER_WINDOW) {
       const retryAfterSec = differenceInSeconds(windowEndsAt, now)
-      await this.otpRepository.updateCode(ticket, { attempts, windowStartedAt })
+      await this.otpRepository.updateCode(ticket, { attempts, windowStartedAt }, tx)
       throw new AppRateLimitException(
         'otp',
         `You have exceeded the rate limit. Please try again in ${retryAfterSec} seconds.`,
@@ -94,11 +94,11 @@ export class OtpService {
     const isValidOtp = currentOtpHash === foundOtpCode.codeHash
 
     if (isValidOtp) {
-      await this.otpRepository.removeById(ticket)
+      await this.otpRepository.removeById(ticket, tx)
       return foundOtpCode.email
     }
 
-    await this.otpRepository.updateCode(ticket, { attempts, windowStartedAt })
+    await this.otpRepository.updateCode(ticket, { attempts, windowStartedAt }, tx)
     throw new BadRequestException('Invalid OTP code.')
   }
 }
