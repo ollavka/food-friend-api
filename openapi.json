@@ -1,0 +1,1162 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "description": "Creates a new account, sends a verification email and returns an access token (JWT)",
+        "operationId": "AuthController_register",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "Registration payload",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User successfully registered",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessResponseApiModel"
+                    },
+                    {
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "default": "success"
+                        },
+                        "data": {
+                          "$ref": "#/components/schemas/AccessTokenApiModel"
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "data"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/HttpExceptionApiModel"
+                            },
+                            {
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "default": "validation"
+                                },
+                                "message": {
+                                  "type": "string",
+                                  "default": "Validation failed."
+                                },
+                                "statusCode": {
+                                  "type": "number",
+                                  "default": 400
+                                },
+                                "details": {
+                                  "$ref": "#/components/schemas/AuthValidationDetailsApiModel"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "User email is already taken",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/HttpExceptionApiModel"
+                            },
+                            {
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "default": "conflict"
+                                },
+                                "message": {
+                                  "type": "string",
+                                  "default": "Conflict."
+                                },
+                                "statusCode": {
+                                  "type": "number",
+                                  "default": 409
+                                },
+                                "details": {
+                                  "type": "object",
+                                  "properties": {
+                                    "reason": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "reason"
+                                  ],
+                                  "example": {
+                                    "reason": "This email address is already taken."
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "Register a new user",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "description": "Authenticates user by email and password and returns an access token (JWT)",
+        "operationId": "AuthController_login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User successfully registered",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessResponseApiModel"
+                    },
+                    {
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "default": "success"
+                        },
+                        "data": {
+                          "$ref": "#/components/schemas/AccessTokenApiModel"
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "data"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/HttpExceptionApiModel"
+                            },
+                            {
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "default": "validation"
+                                },
+                                "message": {
+                                  "type": "string",
+                                  "default": "Validation failed."
+                                },
+                                "statusCode": {
+                                  "type": "number",
+                                  "default": 400
+                                },
+                                "details": {
+                                  "$ref": "#/components/schemas/AuthValidationDetailsApiModel"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/HttpExceptionApiModel"
+                            },
+                            {
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "default": "access-control.authentication.credentials"
+                                },
+                                "message": {
+                                  "type": "string",
+                                  "default": "Authentication failed."
+                                },
+                                "statusCode": {
+                                  "type": "number",
+                                  "default": 401
+                                },
+                                "details": {
+                                  "type": "object",
+                                  "properties": {
+                                    "reason": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "reason"
+                                  ],
+                                  "example": {
+                                    "reason": "Invalid credentials."
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "Log in with credentials",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "description": "Invalidates the current refresh token (server-side)",
+        "operationId": "AuthController_logout",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Logged out and refresh token invalidated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessResponseApiModel"
+                    },
+                    {
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "default": "success"
+                        },
+                        "data": {
+                          "type": "any",
+                          "default": true
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "data"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "Log out",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "description": "Refresh access and refresh tokens. Returns a new access token",
+        "operationId": "AuthController_refresh",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "New access and refresh tokens",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessResponseApiModel"
+                    },
+                    {
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "default": "success"
+                        },
+                        "data": {
+                          "$ref": "#/components/schemas/AccessTokenApiModel"
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "data"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Refresh token missing, expired, or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/HttpExceptionApiModel"
+                            },
+                            {
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "default": "access-control.authentication.refresh-token"
+                                },
+                                "message": {
+                                  "type": "string",
+                                  "default": "Authentication failed."
+                                },
+                                "statusCode": {
+                                  "type": "number",
+                                  "default": 401
+                                },
+                                "details": {
+                                  "type": "object",
+                                  "properties": {
+                                    "reason": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "reason"
+                                  ],
+                                  "example": {
+                                    "reason": "Refresh token is expired."
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found by token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/HttpExceptionApiModel"
+                            },
+                            {
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "default": "app.entity-not-found"
+                                },
+                                "message": {
+                                  "type": "string",
+                                  "default": "Entity not found."
+                                },
+                                "statusCode": {
+                                  "type": "number",
+                                  "default": 404
+                                },
+                                "details": {
+                                  "type": "object",
+                                  "properties": {
+                                    "entityType": {
+                                      "type": "string"
+                                    },
+                                    "identity": {
+                                      "type": "object",
+                                      "additionalProperties": {
+                                        "nullable": true,
+                                        "oneOf": [
+                                          {
+                                            "type": "object",
+                                            "title": "Object",
+                                            "description": "Any JSON",
+                                            "additionalProperties": true
+                                          },
+                                          {
+                                            "type": "array",
+                                            "items": {},
+                                            "title": "Array",
+                                            "description": "Any array"
+                                          },
+                                          {
+                                            "type": "string",
+                                            "title": "String",
+                                            "description": "Any string"
+                                          },
+                                          {
+                                            "type": "number",
+                                            "title": "Number",
+                                            "description": "Any number"
+                                          },
+                                          {
+                                            "type": "boolean",
+                                            "title": "String",
+                                            "description": "True or false"
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  },
+                                  "required": [
+                                    "entityType"
+                                  ],
+                                  "example": {
+                                    "entityType": "User",
+                                    "identity": {
+                                      "id": "6wvHiPEGR5X3wTPtTkjEhS"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "Refresh tokens",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/password/reset": {
+      "post": {
+        "operationId": "PasswordManagementController_resetPassword",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/password/reset/confirm": {
+      "post": {
+        "operationId": "PasswordManagementController_confirmResetPassword",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfirmOtpCodeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/password/reset/complete": {
+      "post": {
+        "operationId": "PasswordManagementController_completeResetPassword",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordCompleteDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/password/set": {
+      "post": {
+        "operationId": "PasswordManagementController_setPassword",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetPasswordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/password/change": {
+      "post": {
+        "operationId": "PasswordManagementController_changePassword",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePasswordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/email/verification/request": {
+      "post": {
+        "operationId": "EmailVerificationController_sendVerificationMail",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendVerificationMailDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/email/verification/confirm": {
+      "post": {
+        "operationId": "EmailVerificationController_confirmEmail",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfirmOtpCodeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Food Friend API",
+    "description": "API documentation for the Food Friend app",
+    "version": "1.0.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "Access token": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http",
+        "name": "Authorization",
+        "description": "Enter JWT token"
+      }
+    },
+    "schemas": {
+      "AccessTokenApiModel": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "description": "Access JWT token",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiO..."
+          }
+        },
+        "required": [
+          "accessToken"
+        ]
+      },
+      "AuthValidationErrorEntryApiModel": {
+        "type": "object",
+        "properties": {
+          "property": {
+            "type": "string",
+            "example": "email",
+            "description": "Field that has not passed validation"
+          },
+          "value": {
+            "type": "object",
+            "example": "invalid-mail@mailcom",
+            "description": "Actual value that has not passed validation"
+          },
+          "constraints": {
+            "type": "object",
+            "description": "Message for each validation rule",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "example": {
+              "isEmail": "Value must be an email."
+            }
+          }
+        },
+        "required": [
+          "property",
+          "value",
+          "constraints"
+        ]
+      },
+      "AuthValidationDetailsApiModel": {
+        "type": "object",
+        "properties": {
+          "entries": {
+            "type": "array",
+            "description": "List of errors by fields",
+            "items": {
+              "$ref": "#/components/schemas/AuthValidationErrorEntryApiModel"
+            },
+            "example": [
+              {
+                "property": "email",
+                "value": "invalid-mail@mailcom",
+                "constraints": {
+                  "isEmail": "Value must be an email."
+                }
+              },
+              {
+                "property": "password",
+                "value": "Invalid-password",
+                "constraints": {
+                  "containsDigits": "Value must contains at least one digit."
+                }
+              }
+            ]
+          }
+        },
+        "required": [
+          "entries"
+        ]
+      },
+      "RegisterUserDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User email",
+            "example": "john.doe@mail.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "User password",
+            "example": "Test!234",
+            "minLength": 8,
+            "maxLength": 32
+          },
+          "firstName": {
+            "type": "string",
+            "description": "User first name",
+            "example": "John"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "User last name",
+            "example": "Doe"
+          }
+        },
+        "required": [
+          "email",
+          "password",
+          "firstName",
+          "lastName"
+        ]
+      },
+      "LoginUserDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User email",
+            "example": "john.doe@mail.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "User password",
+            "example": "Test!234",
+            "minLength": 8,
+            "maxLength": 32
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "ResetPasswordDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User email",
+            "example": "john.doe@mail.com"
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "ConfirmOtpCodeDto": {
+        "type": "object",
+        "properties": {
+          "ticket": {
+            "type": "string",
+            "description": "OTP Ticket",
+            "example": "LnT8BAUhhoJ2Y6MuB9AAZp"
+          },
+          "code": {
+            "type": "string",
+            "description": "OTP Code",
+            "example": "451957"
+          }
+        },
+        "required": [
+          "ticket",
+          "code"
+        ]
+      },
+      "ResetPasswordCompleteDto": {
+        "type": "object",
+        "properties": {
+          "ticket": {
+            "type": "string",
+            "description": "OTP Ticket",
+            "example": "LnT8BAUhhoJ2Y6MuB9AAZp"
+          },
+          "newPassword": {
+            "type": "string",
+            "description": "User password",
+            "example": "Temp!234",
+            "minLength": 8,
+            "maxLength": 32
+          }
+        },
+        "required": [
+          "ticket",
+          "newPassword"
+        ]
+      },
+      "SetPasswordDto": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "description": "User password",
+            "example": "Test!234",
+            "minLength": 8,
+            "maxLength": 32
+          }
+        },
+        "required": [
+          "password"
+        ]
+      },
+      "ChangePasswordDto": {
+        "type": "object",
+        "properties": {
+          "currentPassword": {
+            "type": "string",
+            "description": "User password",
+            "example": "Current!2345",
+            "minLength": 8,
+            "maxLength": 32
+          },
+          "newPassword": {
+            "type": "string",
+            "description": "User password",
+            "example": "New!2345",
+            "minLength": 8,
+            "maxLength": 32
+          }
+        },
+        "required": [
+          "currentPassword",
+          "newPassword"
+        ]
+      },
+      "SendVerificationMailDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User email",
+            "example": "john.doe@mail.com"
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "SuccessResponseApiModel": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Response status",
+            "enum": [
+              "success"
+            ]
+          },
+          "data": {
+            "oneOf": [
+              {
+                "type": "object",
+                "title": "Object",
+                "description": "Any JSON",
+                "additionalProperties": true
+              },
+              {
+                "type": "array",
+                "items": {},
+                "title": "Array",
+                "description": "Any array"
+              },
+              {
+                "type": "string",
+                "title": "String",
+                "description": "Any string"
+              },
+              {
+                "type": "number",
+                "title": "Number",
+                "description": "Any number"
+              },
+              {
+                "type": "boolean",
+                "title": "String",
+                "description": "True or false"
+              }
+            ],
+            "nullable": true,
+            "description": "Response data"
+          }
+        },
+        "required": [
+          "status",
+          "data"
+        ]
+      },
+      "HttpExceptionApiModel": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Exception type"
+          },
+          "statusCode": {
+            "type": "number",
+            "description": "HTTP status code"
+          },
+          "message": {
+            "type": "string",
+            "description": "Exception message"
+          },
+          "details": {
+            "description": "Exception details",
+            "oneOf": [
+              {
+                "type": "object",
+                "title": "Object",
+                "description": "Any JSON",
+                "additionalProperties": true
+              },
+              {
+                "type": "array",
+                "items": {},
+                "title": "Array",
+                "description": "Any array"
+              },
+              {
+                "type": "string",
+                "title": "String",
+                "description": "Any string"
+              },
+              {
+                "type": "number",
+                "title": "Number",
+                "description": "Any number"
+              },
+              {
+                "type": "boolean",
+                "title": "String",
+                "description": "True or false"
+              }
+            ],
+            "nullable": true
+          }
+        },
+        "required": [
+          "type",
+          "statusCode",
+          "message",
+          "details"
+        ]
+      },
+      "ErrorResponseApiModel": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Response status",
+            "enum": [
+              "error"
+            ]
+          },
+          "error": {
+            "description": "Response error",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/HttpExceptionApiModel"
+              }
+            ]
+          }
+        },
+        "required": [
+          "status",
+          "error"
+        ]
+      }
+    }
+  },
+  "security": [
+    {
+      "Access token": []
+    }
+  ]
+}

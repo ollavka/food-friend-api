@@ -1,7 +1,7 @@
 {
   "verification": {
     "subject": "Food Friend — Verify your email address",
-    "heading": "Food Friend — Sign-in verification",
+    "heading": "Food Friend — Email verification",
     "greeting": "Hello, {userName}! 👋",
     "anonGreeting": "Hello, friend! 👋",
     "instructions": "Use the {otpLength}-digit code below to confirm your login or complete the action in the <strong>Food Friend</strong> app:",

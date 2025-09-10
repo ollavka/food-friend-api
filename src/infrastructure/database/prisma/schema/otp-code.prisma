@@ -3,8 +3,9 @@ model OtpCode {
 
   type      OtpCodeType
   email     String
-  codeHash  String      @unique @map("code_hash")
-  expiresAt DateTime    @map("expires_at")
+  codeHash  String        @unique @map("code_hash")
+  expiresAt DateTime      @map("expires_at")
+  status    OtpCodeStatus @default(PENDING)
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @map("user_id")
@@ -23,4 +24,11 @@ model OtpCode {
 enum OtpCodeType {
   EMAIL_VERIFICATION
   PASSWORD_RESET
+}
+
+enum OtpCodeStatus {
+  PENDING // created but unconfirmed code
+  CONSUMED // confirmed code
+  USED // code has been used
+  EXPIRED // expired code
 }

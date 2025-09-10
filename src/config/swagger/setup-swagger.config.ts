@@ -1,5 +1,7 @@
+import { writeFile } from 'fs'
 import { INestApplication } from '@nestjs/common'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
+import { toJsonString } from '@common/util'
 import { swaggerExtraModels } from '@swagger/api-model/all'
 
 export function setupSwagger(app: INestApplication): void {
@@ -20,8 +22,16 @@ export function setupSwagger(app: INestApplication): void {
     .addSecurityRequirements('Access token')
     .build()
 
-  SwaggerModule.setup('docs', app, SwaggerModule.createDocument(app, config, { extraModels: swaggerExtraModels }), {
+  const apiDocument = SwaggerModule.createDocument(app, config, { extraModels: swaggerExtraModels })
+
+  SwaggerModule.setup('docs', app, apiDocument, {
     customSiteTitle: 'Food Friend API Docs',
     swaggerOptions: { persistAuthorization: true },
+  })
+
+  writeFile('./openapi.json', toJsonString(apiDocument), (err) => {
+    if (err) {
+      console.error('An error occurred while save api docs: ', err)
+    }
   })
 }

@@ -22,9 +22,9 @@ export class OtpRepository {
     return true
   }
 
-  public async updateCode(
+  public async update(
     id: Uuid,
-    data: Pick<Prisma.OtpCodeUpdateInput, 'attempts' | 'expiresAt' | 'windowStartedAt'>,
+    data: Pick<Prisma.OtpCodeUpdateInput, 'attempts' | 'expiresAt' | 'windowStartedAt' | 'status'>,
     tx?: Prisma.TransactionClient,
   ): Promise<OtpCode> {
     const db = tx ?? this.prismaService
@@ -38,7 +38,21 @@ export class OtpRepository {
     return otpCode
   }
 
-  public async saveCode(
+  public async updateMany(
+    where: NonNullable<Prisma.OtpCodeUpdateManyArgs['where']>,
+    data: Pick<Prisma.OtpCodeUpdateInput, 'attempts' | 'expiresAt' | 'windowStartedAt' | 'status'>,
+    tx?: Prisma.TransactionClient,
+  ): Promise<number> {
+    const db = tx ?? this.prismaService
+    const { count } = await db.otpCode.updateMany({
+      where,
+      data,
+    })
+
+    return count
+  }
+
+  public async save(
     hashedCode: string,
     user: User,
     type: OtpCodeType,

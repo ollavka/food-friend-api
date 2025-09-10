@@ -6,7 +6,6 @@ import { SuccessMessageApiModel } from '@common/api-model'
 import { AuthorizedUser } from '@common/decorator'
 import { ConfirmOtpCodeDto } from '@common/dto'
 import { OtpTicketApiModel } from '@core/auth/api-model'
-import { ResetPasswordSessionApiModel } from '../api-model'
 import { ChangePasswordDto, ResetPasswordCompleteDto, ResetPasswordDto, SetPasswordDto } from '../dto'
 import { PasswordManagementService } from '../service'
 
@@ -22,9 +21,7 @@ export class PasswordManagementController {
   }
 
   @Post('reset/confirm')
-  public async confirmResetPassword(
-    @Body() confirmOtpCodeDto: ConfirmOtpCodeDto,
-  ): Promise<ResetPasswordSessionApiModel> {
+  public async confirmResetPassword(@Body() confirmOtpCodeDto: ConfirmOtpCodeDto): Promise<OtpTicketApiModel> {
     return this.passwordManagementService.confirmResetPassword(confirmOtpCodeDto)
   }
 

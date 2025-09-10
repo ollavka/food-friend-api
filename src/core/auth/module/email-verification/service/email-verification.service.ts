@@ -1,5 +1,5 @@
 import { BadRequestException, Inject, Injectable, forwardRef } from '@nestjs/common'
-import { OtpCodeType, UserStatus } from '@prisma/client'
+import { OtpCodeStatus, OtpCodeType, UserStatus } from '@prisma/client'
 import { Response } from 'express'
 import { StatusPolicy } from '@access-control/util'
 import { ConfirmOtpCodeDto } from '@common/dto'
@@ -39,13 +39,9 @@ export class EmailVerificationService {
     const retryAfterSec = this.mailService.canSendMailAfterSeconds(user.lastEmailVerificationMailSentAt)
 
     if (retryAfterSec > 0) {
-      throw new AppRateLimitException(
-        'mail',
-        `You have exceeded the rate limit. Please try again in ${retryAfterSec} seconds.`,
-        {
-          secondsLeft: retryAfterSec,
-        },
-      )
+      throw new AppRateLimitException('mail', {
+        secondsLeft: retryAfterSec,
+      })
     }
 
     const otpCode = this.otpService.generateCode()
@@ -63,17 +59,23 @@ export class EmailVerificationService {
     { ticket, code }: ConfirmOtpCodeDto,
     makeAuth?: boolean,
   ): Promise<AccessTokenApiModel | null> {
+    const { email: userEmail } = await this.otpService.confirmCode(ticket, code, OtpCodeType.EMAIL_VERIFICATION)
+
     const userEntity = await this.prismaService.$transaction(async (tx) => {
-      const userEmail = await this.otpService.confirmCode(ticket, code, OtpCodeType.EMAIL_VERIFICATION, tx)
+      const otpCode = await this.otpService.findById(ticket, tx)
+      this.otpService.validateStatus(otpCode, OtpCodeStatus.CONSUMED)
+
       const user = await this.userService.findByEmail(userEmail, {}, tx)
 
       if (!user) {
         throw new AppEntityNotFoundException('User', { email: userEmail })
       }
 
-      const isActiveUserStatus = await StatusPolicy.enforce(user)
+      await StatusPolicy.enforce(user)
 
-      if (isActiveUserStatus) {
+      await this.otpService.update(ticket, { status: OtpCodeStatus.USED }, tx)
+
+      if (user.status === UserStatus.UNVERIFIED) {
         return this.userService.update(user.id, { status: UserStatus.ACTIVE }, tx)
       }
 

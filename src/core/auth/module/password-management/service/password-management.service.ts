@@ -1,5 +1,5 @@
 import { BadRequestException, ConflictException, Injectable } from '@nestjs/common'
-import { OtpCodeType, User, UserStatus } from '@prisma/client'
+import { OtpCodeStatus, OtpCodeType, User, UserStatus } from '@prisma/client'
 import { StatusPolicy } from '@access-control/util'
 import { ConfirmOtpCodeDto } from '@common/dto'
 import { AppEntityNotFoundException, AppRateLimitException } from '@common/exception'
@@ -10,9 +10,7 @@ import { BcryptService } from '@infrastructure/cryptography'
 import { PrismaService } from '@infrastructure/database'
 import { MailService } from '@infrastructure/mail'
 import { OtpService } from '@infrastructure/otp'
-import { ResetPasswordSessionApiModel } from '../api-model'
 import { ChangePasswordDto, ResetPasswordCompleteDto } from '../dto'
-import { ResetPasswordSessionRepository } from '../repository'
 
 @Injectable()
 export class PasswordManagementService {
@@ -21,14 +19,24 @@ export class PasswordManagementService {
     private readonly bcryptService: BcryptService,
     private readonly otpService: OtpService,
     private readonly mailService: MailService,
-    private readonly resetPasswordSessionRepository: ResetPasswordSessionRepository,
     private readonly prismaService: PrismaService,
   ) {}
 
-  public async completeResetPassword({ sessionId, newPassword }: ResetPasswordCompleteDto): Promise<void> {
+  public async completeResetPassword({ ticket, newPassword }: ResetPasswordCompleteDto): Promise<void> {
     await this.prismaService.$transaction(async (tx) => {
-      const { userId } = await this.resetPasswordSessionRepository.markAsConsumed(sessionId, tx)
-      const user = await this.userService.findById(userId, {}, tx)
+      const otpCode = await tx.otpCode.findUnique({
+        where: { id: ticket },
+        include: { user: true },
+      })
+
+      this.otpService.validateStatus(otpCode, OtpCodeStatus.CONSUMED)
+
+      const user = otpCode?.user
+
+      if (!user) {
+        throw new AppEntityNotFoundException('User', { otpTicket: ticket })
+      }
+
       const isPasswordsMatches = await this.bcryptService.compare(newPassword, user?.password)
 
       if (isPasswordsMatches) {
@@ -36,13 +44,18 @@ export class PasswordManagementService {
       }
 
       const newHashedPassword = await this.bcryptService.hash(newPassword)
-      await this.userService.update(userId, { password: newHashedPassword }, tx)
+      await this.userService.update(user.id, { password: newHashedPassword }, tx)
+      await this.otpService.update(ticket, { status: OtpCodeStatus.USED }, tx)
     })
   }
 
-  public async confirmResetPassword({ ticket, code }: ConfirmOtpCodeDto): Promise<ResetPasswordSessionApiModel> {
-    const resetPasswordSession = await this.prismaService.$transaction(async (tx) => {
-      const userEmail = await this.otpService.confirmCode(ticket, code, OtpCodeType.PASSWORD_RESET, tx)
+  public async confirmResetPassword({ ticket, code }: ConfirmOtpCodeDto): Promise<OtpTicketApiModel> {
+    const { email: userEmail } = await this.otpService.confirmCode(ticket, code, OtpCodeType.PASSWORD_RESET)
+
+    const otpEntity = await this.prismaService.$transaction(async (tx) => {
+      const otpCode = await this.otpService.findById(ticket, tx)
+      this.otpService.validateStatus(otpCode, OtpCodeStatus.CONSUMED)
+
       const user = await this.userService.findByEmail(userEmail, {}, tx)
 
       if (!user) {
@@ -55,10 +68,10 @@ export class PasswordManagementService {
         await this.userService.update(user.id, { status: UserStatus.ACTIVE }, tx)
       }
 
-      return this.resetPasswordSessionRepository.create(user, tx)
+      return otpCode!
     })
 
-    return ResetPasswordSessionApiModel.from(resetPasswordSession)
+    return OtpTicketApiModel.from(otpEntity)
   }
 
   public async sendResetPasswordMail(email: string): Promise<OtpTicketApiModel> {
@@ -73,13 +86,9 @@ export class PasswordManagementService {
     const retryAfterSec = this.mailService.canSendMailAfterSeconds(user.lastResetPasswordMailSentAt)
 
     if (retryAfterSec > 0) {
-      throw new AppRateLimitException(
-        'mail',
-        `You have exceeded the rate limit. Please try again in ${retryAfterSec} seconds.`,
-        {
-          secondsLeft: retryAfterSec,
-        },
-      )
+      throw new AppRateLimitException('mail', {
+        secondsLeft: retryAfterSec,
+      })
     }
 
     const otpCode = this.otpService.generateCode()
