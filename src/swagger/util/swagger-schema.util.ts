@@ -26,7 +26,6 @@ export function successApiSchemaLiteral(literal: any): Pick<SchemaObject, 'allOf
         properties: {
           status: { type: 'string', default: 'success' },
           data: {
-            type: 'any',
             default: literal,
           },
         },

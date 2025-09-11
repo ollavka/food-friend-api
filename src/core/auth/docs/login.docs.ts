@@ -1,6 +1,10 @@
 import { applyDecorators } from '@nestjs/common'
 import { ApiBody, ApiOkResponse, ApiOperation } from '@nestjs/swagger'
-import { ApiAuthenticationExceptionResponse, ApiValidationExceptionResponse } from '@swagger/decorator'
+import {
+  ApiAuthenticationExceptionResponse,
+  ApiUserStatusPolicyExceptionResponse,
+  ApiValidationExceptionResponse,
+} from '@swagger/decorator'
 import { successApiSchemaRef } from '@swagger/util'
 import { AccessTokenApiModel, AuthValidationDetailsApiModel } from '../api-model'
 import { LoginUserDto } from '../dto'
@@ -20,7 +24,7 @@ export function LoginDocs(): MethodDecorator {
     ApiAuthenticationExceptionResponse({
       type: 'credentials',
       description: 'Invalid credentials',
-      detailsModel: {
+      details: {
         type: 'object',
         properties: {
           reason: { type: 'string' },
@@ -31,5 +35,6 @@ export function LoginDocs(): MethodDecorator {
         },
       },
     }),
+    ApiUserStatusPolicyExceptionResponse(),
   )
 }

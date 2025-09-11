@@ -9,7 +9,7 @@ import { OtpTicketApiModel } from '@core/auth/api-model'
 import { ChangePasswordDto, ResetPasswordCompleteDto, ResetPasswordDto, SetPasswordDto } from '../dto'
 import { PasswordManagementService } from '../service'
 
-@ApiTags('Auth')
+@ApiTags('Password management')
 @Controller('auth/password')
 export class PasswordManagementController {
   public constructor(private readonly passwordManagementService: PasswordManagementService) {}

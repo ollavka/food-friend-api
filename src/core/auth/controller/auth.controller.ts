@@ -7,8 +7,8 @@ import { RegisterDocs } from '../docs/register.docs'
 import { LoginUserDto, RegisterUserDto } from '../dto'
 import { AuthService } from '../service'
 
-@ApiTags('Auth')
-@ApiExtraModels(AccessTokenApiModel)
+@ApiTags('Auth flow')
+@ApiExtraModels(AccessTokenApiModel, OtpTicketApiModel)
 @Controller('auth')
 export class AuthController {
   public constructor(private readonly authService: AuthService) {}

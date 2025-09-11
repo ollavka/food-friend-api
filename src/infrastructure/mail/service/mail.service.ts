@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, InternalServerErrorException } from '@nestjs/common'
 import { MailerService } from '@nestjs-modules/mailer'
 import { render } from '@react-email/render'
 import { addMinutes, differenceInSeconds, isAfter, isEqual } from 'date-fns'
@@ -25,9 +25,8 @@ export class MailService {
         subject: t('subject', { parseHtml: false }),
         html,
       })
-    } catch (err) {
-      const reason = err?.message ?? null
-      throw new Exception('The welcome mail could not be sent.', { details: reason ? { reason } : null }).internal()
+    } catch {
+      throw new InternalServerErrorException('The welcome mail could not be sent.')
     }
   }
 
@@ -42,11 +41,8 @@ export class MailService {
         subject: t('subject', { parseHtml: false }),
         html,
       })
-    } catch (err) {
-      const reason = err?.message ?? null
-      throw new Exception('The confirmation email mail could not be sent.', {
-        details: reason ? { reason } : null,
-      }).internal()
+    } catch {
+      throw new InternalServerErrorException('The confirmation email mail could not be sent.')
     }
   }
 

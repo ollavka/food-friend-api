@@ -9,8 +9,8 @@ model User {
   role   UserRole   @default(REGULAR)
   status UserStatus @default(UNVERIFIED)
 
-  otpCodes             OtpCode[]
-  refreshTokens        RefreshToken[]
+  otpCodes     OtpCode[]
+  refreshToken RefreshToken?
 
   authMethod AuthMethod @map("auth_method")
 

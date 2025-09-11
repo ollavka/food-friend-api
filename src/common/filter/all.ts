@@ -5,6 +5,7 @@ import {
   AuthenticationExceptionFilter,
   AuthorizationExceptionFilter,
   HttpExceptionFallbackFilter,
+  InternalServerErrorExceptionFilter,
   NotFoundExceptionFilter,
   PrismaExceptionFilter,
 } from '.'
@@ -12,6 +13,7 @@ import {
 export const filters: Provider[] = [
   AppExceptionFilter,
   HttpExceptionFallbackFilter,
+  InternalServerErrorExceptionFilter,
   PrismaExceptionFilter,
   NotFoundExceptionFilter,
   AuthorizationExceptionFilter,

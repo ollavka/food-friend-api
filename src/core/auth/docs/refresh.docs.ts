@@ -16,22 +16,46 @@ export function RefreshDocs(): MethodDecorator {
       schema: successApiSchemaRef(AccessTokenApiModel),
     }),
     ApiAuthenticationExceptionResponse({
-      type: 'refresh-token',
       description: 'Refresh token missing, expired, or invalid',
-      detailsModel: {
-        type: 'object',
-        properties: {
-          reason: { type: 'string' },
+      variants: [
+        {
+          typeKey: 'refresh-token-not-found',
+          messageOverride: 'Authentication failed.',
+          summary: 'Refresh token missing',
+          details: {
+            type: 'object',
+            properties: { reason: { type: 'string' } },
+            required: ['reason'],
+          },
+          example: { reason: 'Refresh token does not exist.' },
         },
-        required: ['reason'],
-        example: {
-          reason: 'Refresh token is expired.',
+        {
+          typeKey: 'refresh-token-expired',
+          messageOverride: 'Authentication failed.',
+          summary: 'Refresh token is expired',
+          details: {
+            type: 'object',
+            properties: { reason: { type: 'string' } },
+            required: ['reason'],
+          },
+          example: { reason: 'Refresh token is expired.' },
         },
-      },
+        {
+          typeKey: 'refresh-token-invalid',
+          messageOverride: 'Authentication failed.',
+          summary: 'Invalid refresh token',
+          details: {
+            type: 'object',
+            properties: { reason: { type: 'string' } },
+            required: ['reason'],
+          },
+          example: { reason: 'Invalid refresh token.' },
+        },
+      ],
     }),
     ApiAppEntityNotFoundExceptionResponse({
       description: 'User not found by token',
-      detailsModel: {
+      details: {
         type: 'object',
         properties: {
           entityType: { type: 'string' },

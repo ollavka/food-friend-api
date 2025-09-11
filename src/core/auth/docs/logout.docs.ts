@@ -7,7 +7,7 @@ export function LogoutDocs(): MethodDecorator {
     ApiOperation({ summary: 'Log out', description: 'Invalidates the current refresh token (server-side)' }),
     ApiOkResponse({
       description: 'Logged out and refresh token invalidated',
-      schema: successApiSchemaLiteral(true),
+      schema: successApiSchemaLiteral(null),
     }),
   )
 }

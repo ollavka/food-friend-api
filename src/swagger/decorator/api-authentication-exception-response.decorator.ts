@@ -1,18 +1,37 @@
 import { HttpStatus } from '@nestjs/common'
-import { ApiExceptionResponseParams } from '@swagger/type'
+import { ApiExceptionResponseParams, ApiHttpExceptionResponseVariant } from '@swagger/type'
 import { ApiHttpExceptionResponse } from './api-http-exception-response.decorator'
+
+export type ApiAuthenticationExceptionResponseParams = ApiExceptionResponseParams & {
+  variants?: Array<ApiHttpExceptionResponseVariant>
+}
 
 export function ApiAuthenticationExceptionResponse({
   type,
   description,
-  detailsModel,
-}: ApiExceptionResponseParams): MethodDecorator {
-  const exceptionType = ['access-control.authentication', type].filter(Boolean).join('.')
+  details,
+  variants = [],
+}: ApiAuthenticationExceptionResponseParams): MethodDecorator {
+  const exceptionTypePrefix = 'access-control.authentication'
+
+  if (variants.length > 0) {
+    return ApiHttpExceptionResponse({
+      statusCode: HttpStatus.UNAUTHORIZED,
+      description: description ?? 'Authentication failed',
+      variants: variants.map(({ typeKey, details, ...restVariant }) => ({
+        typeKey: [exceptionTypePrefix, typeKey].filter(Boolean).join('.'),
+        details: details ?? null,
+        ...restVariant,
+      })),
+    })
+  }
+
+  const exceptionType = [exceptionTypePrefix, type].filter(Boolean).join('.')
 
   return ApiHttpExceptionResponse({
     statusCode: HttpStatus.UNAUTHORIZED,
     description: description ?? 'Authentication failed',
-    details: detailsModel,
+    details,
     typeKeyOverride: exceptionType,
     messageOverride: 'Authentication failed.',
   })

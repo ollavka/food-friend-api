@@ -4,12 +4,12 @@ import { ApiHttpExceptionResponse } from './api-http-exception-response.decorato
 
 export function ApiResourceNotFoundExceptionResponse({
   description,
-  detailsModel,
+  details,
 }: Omit<ApiExceptionResponseParams, 'type'>): MethodDecorator {
   return ApiHttpExceptionResponse({
     statusCode: HttpStatus.NOT_FOUND,
     description: description ?? 'Resource not found',
-    details: detailsModel,
+    details,
     typeKeyOverride: 'not-found',
     messageOverride: 'Resource not found.',
   })

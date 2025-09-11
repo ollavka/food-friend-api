@@ -1,15 +1,15 @@
-import { BadRequestException, Inject, Injectable, forwardRef } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { OtpCodeStatus, OtpCodeType, UserStatus } from '@prisma/client'
 import { Response } from 'express'
 import { StatusPolicy } from '@access-control/util'
 import { ConfirmOtpCodeDto } from '@common/dto'
 import { AppEntityNotFoundException, AppRateLimitException } from '@common/exception'
-import { AccessTokenApiModel, OtpTicketApiModel } from '@core/auth/api-model'
-import { AuthService } from '@core/auth/service'
 import { UserService } from '@core/user'
 import { PrismaService } from '@infrastructure/database'
 import { MailService } from '@infrastructure/mail'
 import { OtpService } from '@infrastructure/otp'
+import { AccessTokenApiModel, OtpTicketApiModel } from '../../../api-model'
+import { AuthSessionService } from '../../auth-session'
 
 @Injectable()
 export class EmailVerificationService {
@@ -18,7 +18,7 @@ export class EmailVerificationService {
     private readonly otpService: OtpService,
     private readonly userService: UserService,
     private readonly prismaService: PrismaService,
-    @Inject(forwardRef(() => AuthService)) private readonly authService: AuthService,
+    private readonly authSessionService: AuthSessionService,
   ) {}
 
   public async sendVerificationMail(email: string, checkUser = true): Promise<OtpTicketApiModel> {
@@ -82,6 +82,6 @@ export class EmailVerificationService {
       return user
     })
 
-    return makeAuth ? this.authService.auth(res, userEntity) : null
+    return makeAuth ? this.authSessionService.auth(res, userEntity) : null
   }
 }

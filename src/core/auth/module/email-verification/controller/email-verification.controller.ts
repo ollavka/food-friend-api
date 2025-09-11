@@ -9,7 +9,7 @@ import { AccessTokenApiModel, OtpTicketApiModel } from '@core/auth/api-model'
 import { SendVerificationMailDto } from '../dto'
 import { EmailVerificationService } from '../service'
 
-@ApiTags('Auth')
+@ApiTags('Email verification')
 @Controller('auth/email/verification')
 export class EmailVerificationController {
   public constructor(private readonly emailVerificationService: EmailVerificationService) {}

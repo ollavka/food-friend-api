@@ -6,9 +6,9 @@ import { AccessControlAuthenticationException } from '@access-control/exception'
 import { DurationString } from '@common/type'
 import { convertToMs, hashValue } from '@common/util'
 import { PrismaService } from '@infrastructure/database'
-import { AuthTokensApiModel } from '../api-model'
-import { JwtEnvConfig } from '../config/jwt'
-import { JwtUserPayload } from '../type'
+import { AuthTokensApiModel } from '../../../api-model'
+import { JwtEnvConfig } from '../../../config/jwt'
+import { JwtUserPayload } from '../../../type'
 
 @Injectable()
 export class JwtRepository {
@@ -64,11 +64,18 @@ export class JwtRepository {
     const tokenHash = hashValue(token)
     const expiresAt = addMilliseconds(new Date(), convertToMs(tokenTtl))
 
-    await this.prismaService.refreshToken.create({
-      data: {
+    await this.prismaService.refreshToken.upsert({
+      where: {
+        userId,
+      },
+      create: {
         user: {
           connect: { id: userId },
         },
+        tokenHash,
+        expiresAt,
+      },
+      update: {
         tokenHash,
         expiresAt,
       },
@@ -92,8 +99,6 @@ export class JwtRepository {
 
     const accessToken = this.generateToken(user, jwtAccessTokenTtl)
     const refreshToken = this.generateToken(user, jwtRefreshTokenTtl)
-
-    await this.saveRefreshToken(refreshToken, user.id, jwtRefreshTokenTtl)
 
     return {
       accessToken,

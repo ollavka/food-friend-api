@@ -3,7 +3,7 @@
   "paths": {
     "/auth/register": {
       "post": {
-        "description": "Creates a new account, sends a verification email and returns an access token (JWT)",
+        "description": "Creates a new account, generates an OTP code for email verification, sends welcome and verification emails, and returns a ticket for completing email verification",
         "operationId": "AuthController_register",
         "parameters": [],
         "requestBody": {
@@ -34,7 +34,7 @@
                           "default": "success"
                         },
                         "data": {
-                          "$ref": "#/components/schemas/AccessTokenApiModel"
+                          "$ref": "#/components/schemas/OtpTicketApiModel"
                         }
                       },
                       "required": [
@@ -167,11 +167,77 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "Some mail could not be sent",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/HttpExceptionApiModel"
+                            },
+                            {
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "default": "internal"
+                                },
+                                "message": {
+                                  "type": "string",
+                                  "default": "Internal server error."
+                                },
+                                "statusCode": {
+                                  "type": "number",
+                                  "default": 500
+                                },
+                                "details": {
+                                  "type": "object",
+                                  "properties": {
+                                    "reason": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "reason"
+                                  ],
+                                  "example": {
+                                    "reason": "The welcome mail could not be sent."
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
           }
         },
         "summary": "Register a new user",
         "tags": [
-          "Auth"
+          "Auth flow"
         ]
       }
     },
@@ -340,11 +406,154 @@
                 }
               }
             }
+          },
+          "403": {
+            "description": "User status policy failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/HttpExceptionApiModel"
+                            },
+                            {
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "access-control.authorization.unverified",
+                                    "access-control.authorization.blocked",
+                                    "access-control.authorization.forbidden"
+                                  ]
+                                },
+                                "message": {
+                                  "type": "string",
+                                  "default": "Forbidden."
+                                },
+                                "statusCode": {
+                                  "type": "number",
+                                  "enum": [
+                                    403
+                                  ]
+                                },
+                                "details": {
+                                  "oneOf": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "reason": {
+                                          "type": "string"
+                                        }
+                                      },
+                                      "required": [
+                                        "reason"
+                                      ]
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "reason": {
+                                          "type": "string"
+                                        }
+                                      },
+                                      "required": [
+                                        "reason"
+                                      ]
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "reason": {
+                                          "type": "string"
+                                        }
+                                      },
+                                      "required": [
+                                        "reason"
+                                      ]
+                                    }
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type",
+                                "statusCode"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                },
+                "examples": {
+                  "access-control.authorization.unverified": {
+                    "summary": "Email not confirmed",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "access-control.authorization.unverified",
+                        "message": "Authorization failed",
+                        "statusCode": 403,
+                        "details": {
+                          "reason": "Email not confirmed. Please verify your email address in your profile settings."
+                        }
+                      }
+                    }
+                  },
+                  "access-control.authorization.blocked": {
+                    "summary": "User account is blocked",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "access-control.authorization.blocked",
+                        "message": "Authorization failed",
+                        "statusCode": 403,
+                        "details": {
+                          "reason": "Your account has been blocked. Please contact support."
+                        }
+                      }
+                    }
+                  },
+                  "access-control.authorization.forbidden": {
+                    "summary": "Forbidden resource (fallback)",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "access-control.authorization.forbidden",
+                        "message": "Authorization failed",
+                        "statusCode": 403,
+                        "details": {
+                          "reason": "Access denied. Please contact support."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "summary": "Log in with credentials",
         "tags": [
-          "Auth"
+          "Auth flow"
         ]
       }
     },
@@ -370,8 +579,7 @@
                           "default": "success"
                         },
                         "data": {
-                          "type": "any",
-                          "default": true
+                          "default": null
                         }
                       },
                       "required": [
@@ -387,7 +595,7 @@
         },
         "summary": "Log out",
         "tags": [
-          "Auth"
+          "Auth flow"
         ]
       }
     },
@@ -453,31 +661,64 @@
                               "properties": {
                                 "type": {
                                   "type": "string",
-                                  "default": "access-control.authentication.refresh-token"
+                                  "enum": [
+                                    "access-control.authentication.refresh-token-not-found",
+                                    "access-control.authentication.refresh-token-expired",
+                                    "access-control.authentication.refresh-token-invalid"
+                                  ]
                                 },
                                 "message": {
                                   "type": "string",
-                                  "default": "Authentication failed."
+                                  "default": "Unauthorized."
                                 },
                                 "statusCode": {
                                   "type": "number",
-                                  "default": 401
+                                  "enum": [
+                                    401
+                                  ]
                                 },
                                 "details": {
-                                  "type": "object",
-                                  "properties": {
-                                    "reason": {
-                                      "type": "string"
+                                  "oneOf": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "reason": {
+                                          "type": "string"
+                                        }
+                                      },
+                                      "required": [
+                                        "reason"
+                                      ]
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "reason": {
+                                          "type": "string"
+                                        }
+                                      },
+                                      "required": [
+                                        "reason"
+                                      ]
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "reason": {
+                                          "type": "string"
+                                        }
+                                      },
+                                      "required": [
+                                        "reason"
+                                      ]
                                     }
-                                  },
-                                  "required": [
-                                    "reason"
-                                  ],
-                                  "example": {
-                                    "reason": "Refresh token is expired."
-                                  }
+                                  ]
                                 }
-                              }
+                              },
+                              "required": [
+                                "type",
+                                "statusCode"
+                              ]
                             }
                           ]
                         }
@@ -488,6 +729,50 @@
                       ]
                     }
                   ]
+                },
+                "examples": {
+                  "access-control.authentication.refresh-token-not-found": {
+                    "summary": "Refresh token missing",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "access-control.authentication.refresh-token-not-found",
+                        "message": "Authentication failed.",
+                        "statusCode": 401,
+                        "details": {
+                          "reason": "Refresh token does not exist."
+                        }
+                      }
+                    }
+                  },
+                  "access-control.authentication.refresh-token-expired": {
+                    "summary": "Refresh token is expired",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "access-control.authentication.refresh-token-expired",
+                        "message": "Authentication failed.",
+                        "statusCode": 401,
+                        "details": {
+                          "reason": "Refresh token is expired."
+                        }
+                      }
+                    }
+                  },
+                  "access-control.authentication.refresh-token-invalid": {
+                    "summary": "Invalid refresh token",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "access-control.authentication.refresh-token-invalid",
+                        "message": "Authentication failed.",
+                        "statusCode": 401,
+                        "details": {
+                          "reason": "Invalid refresh token."
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -599,7 +884,7 @@
         },
         "summary": "Refresh tokens",
         "tags": [
-          "Auth"
+          "Auth flow"
         ]
       }
     },
@@ -623,7 +908,7 @@
           }
         },
         "tags": [
-          "Auth"
+          "Password management"
         ]
       }
     },
@@ -647,7 +932,7 @@
           }
         },
         "tags": [
-          "Auth"
+          "Password management"
         ]
       }
     },
@@ -671,7 +956,7 @@
           }
         },
         "tags": [
-          "Auth"
+          "Password management"
         ]
       }
     },
@@ -695,7 +980,7 @@
           }
         },
         "tags": [
-          "Auth"
+          "Password management"
         ]
       }
     },
@@ -719,7 +1004,7 @@
           }
         },
         "tags": [
-          "Auth"
+          "Password management"
         ]
       }
     },
@@ -743,7 +1028,7 @@
           }
         },
         "tags": [
-          "Auth"
+          "Email verification"
         ]
       }
     },
@@ -767,7 +1052,7 @@
           }
         },
         "tags": [
-          "Auth"
+          "Email verification"
         ]
       }
     }
@@ -802,6 +1087,19 @@
         },
         "required": [
           "accessToken"
+        ]
+      },
+      "OtpTicketApiModel": {
+        "type": "object",
+        "properties": {
+          "ticket": {
+            "type": "string",
+            "description": "OTP Ticket",
+            "example": "LnT8BAUhhoJ2Y6MuB9AAZp"
+          }
+        },
+        "required": [
+          "ticket"
         ]
       },
       "AuthValidationErrorEntryApiModel": {
@@ -896,6 +1194,86 @@
           "password",
           "firstName",
           "lastName"
+        ]
+      },
+      "HttpExceptionApiModel": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Exception type"
+          },
+          "statusCode": {
+            "type": "number",
+            "description": "HTTP status code"
+          },
+          "message": {
+            "type": "string",
+            "description": "Exception message"
+          },
+          "details": {
+            "description": "Exception details",
+            "oneOf": [
+              {
+                "type": "object",
+                "title": "Object",
+                "description": "Any JSON",
+                "additionalProperties": true
+              },
+              {
+                "type": "array",
+                "items": {},
+                "title": "Array",
+                "description": "Any array"
+              },
+              {
+                "type": "string",
+                "title": "String",
+                "description": "Any string"
+              },
+              {
+                "type": "number",
+                "title": "Number",
+                "description": "Any number"
+              },
+              {
+                "type": "boolean",
+                "title": "String",
+                "description": "True or false"
+              }
+            ],
+            "nullable": true
+          }
+        },
+        "required": [
+          "type",
+          "statusCode",
+          "message",
+          "details"
+        ]
+      },
+      "ErrorResponseApiModel": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Response status",
+            "enum": [
+              "error"
+            ]
+          },
+          "error": {
+            "description": "Response error",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/HttpExceptionApiModel"
+              }
+            ]
+          }
+        },
+        "required": [
+          "status",
+          "error"
         ]
       },
       "LoginUserDto": {
@@ -1070,86 +1448,6 @@
         "required": [
           "status",
           "data"
-        ]
-      },
-      "HttpExceptionApiModel": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": "string",
-            "description": "Exception type"
-          },
-          "statusCode": {
-            "type": "number",
-            "description": "HTTP status code"
-          },
-          "message": {
-            "type": "string",
-            "description": "Exception message"
-          },
-          "details": {
-            "description": "Exception details",
-            "oneOf": [
-              {
-                "type": "object",
-                "title": "Object",
-                "description": "Any JSON",
-                "additionalProperties": true
-              },
-              {
-                "type": "array",
-                "items": {},
-                "title": "Array",
-                "description": "Any array"
-              },
-              {
-                "type": "string",
-                "title": "String",
-                "description": "Any string"
-              },
-              {
-                "type": "number",
-                "title": "Number",
-                "description": "Any number"
-              },
-              {
-                "type": "boolean",
-                "title": "String",
-                "description": "True or false"
-              }
-            ],
-            "nullable": true
-          }
-        },
-        "required": [
-          "type",
-          "statusCode",
-          "message",
-          "details"
-        ]
-      },
-      "ErrorResponseApiModel": {
-        "type": "object",
-        "properties": {
-          "status": {
-            "type": "string",
-            "description": "Response status",
-            "enum": [
-              "error"
-            ]
-          },
-          "error": {
-            "description": "Response error",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/HttpExceptionApiModel"
-              }
-            ]
-          }
-        },
-        "required": [
-          "status",
-          "error"
         ]
       }
     }

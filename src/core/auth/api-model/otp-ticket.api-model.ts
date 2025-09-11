@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger'
 import { OtpCode } from '@prisma/client'
 import { Exclude, Expose } from 'class-transformer'
 import { ToId } from '@common/validation'
@@ -6,6 +7,11 @@ import { ToId } from '@common/validation'
 export class OtpTicketApiModel {
   @Expose()
   @ToId()
+  @ApiProperty({
+    description: 'OTP Ticket',
+    example: 'LnT8BAUhhoJ2Y6MuB9AAZp',
+    required: true,
+  })
   public ticket: string
 
   public constructor(otp: OtpCode) {

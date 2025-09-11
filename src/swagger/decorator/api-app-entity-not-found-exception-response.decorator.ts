@@ -4,12 +4,12 @@ import { ApiHttpExceptionResponse } from './api-http-exception-response.decorato
 
 export function ApiAppEntityNotFoundExceptionResponse({
   description,
-  detailsModel,
+  details,
 }: Omit<ApiExceptionResponseParams, 'type'>): MethodDecorator {
   return ApiHttpExceptionResponse({
     statusCode: HttpStatus.NOT_FOUND,
     description: description ?? 'Entity not found',
-    details: detailsModel,
+    details,
     typeKeyOverride: 'app.entity-not-found',
     messageOverride: 'Entity not found.',
   })
