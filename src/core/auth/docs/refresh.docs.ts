@@ -1,7 +1,10 @@
 import { applyDecorators } from '@nestjs/common'
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger'
-import { ANY_DOCS_JSON } from '@swagger/constant'
-import { ApiAppEntityNotFoundExceptionResponse, ApiAuthenticationExceptionResponse } from '@swagger/decorator'
+import {
+  ApiAppEntityNotFoundExceptionResponse,
+  ApiAuthenticationExceptionResponse,
+  ApiUserStatusPolicyExceptionResponse,
+} from '@swagger/decorator'
 import { successApiSchemaRef } from '@swagger/util'
 import { AccessTokenApiModel } from '../api-model'
 
@@ -55,18 +58,9 @@ export function RefreshDocs(): MethodDecorator {
     }),
     ApiAppEntityNotFoundExceptionResponse({
       description: 'User not found by token',
-      details: {
-        type: 'object',
-        properties: {
-          entityType: { type: 'string' },
-          identity: { type: 'object', additionalProperties: ANY_DOCS_JSON },
-        },
-        required: ['entityType'],
-        example: {
-          entityType: 'User',
-          identity: { id: '6wvHiPEGR5X3wTPtTkjEhS' },
-        },
-      },
+      entityType: 'User',
+      identity: { id: '6wvHiPEGR5X3wTPtTkjEhS' },
     }),
+    ApiUserStatusPolicyExceptionResponse(),
   )
 }

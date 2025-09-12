@@ -1,11 +1,8 @@
 import { HttpStatus } from '@nestjs/common'
-import { ApiExceptionResponseParams, ApiHttpExceptionResponseVariant } from '@swagger/type'
+import { ApiExceptionResponseParams } from '@swagger/type'
 import { ApiHttpExceptionResponse } from './api-http-exception-response.decorator'
 
-export type ApiAuthorizationExceptionResponseParams = ApiExceptionResponseParams & {
-  variants?: Array<ApiHttpExceptionResponseVariant>
-}
-
+export type ApiAuthorizationExceptionResponseParams = ApiExceptionResponseParams
 export function ApiAuthorizationExceptionResponse({
   type,
   description,

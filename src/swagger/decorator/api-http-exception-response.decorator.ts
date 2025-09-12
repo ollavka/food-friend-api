@@ -6,7 +6,7 @@ import { Nullable } from '@common/type'
 import { extractHttpExceptionProperties } from '@common/util'
 import { ANY_DOCS_JSON } from '@swagger/constant'
 import { ApiExceptionDetails, ApiHttpExceptionResponseVariant } from '@swagger/type'
-import { ErrorResponseApiModel, HttpExceptionApiModel } from '../api-model'
+import { ErrorResponseApiModel } from '../api-model'
 
 export type ApiHttpExceptionOptions = {
   statusCode: HttpStatus
@@ -43,25 +43,29 @@ export function ApiHttpExceptionResponse({
     })
 
     const examples = Object.fromEntries(
-      variants.map((variant) => [
-        variant.typeKey,
-        {
-          summary: variant.summary ?? variant.typeKey,
-          value: {
-            status: 'error',
-            error: {
-              type: variant.typeKey,
-              message: variant.messageOverride ?? messageOverride ?? extractHttpExceptionProperties(statusCode).message,
-              statusCode,
-              details: variant.example ?? {},
+      variants.map((variant, idx) => {
+        const key = `${variant.typeKey}_${idx + 1}`
+        return [
+          key,
+          {
+            summary: variant.summary ?? variant.typeKey,
+            value: {
+              status: 'error',
+              error: {
+                type: variant.typeKey,
+                message:
+                  variant.messageOverride ?? messageOverride ?? extractHttpExceptionProperties(statusCode).message,
+                statusCode,
+                details: variant.example ?? {},
+              },
             },
           },
-        },
-      ]),
+        ]
+      }),
     )
 
     return applyDecorators(
-      ApiExtraModels(ErrorResponseApiModel, HttpExceptionApiModel, ...variantRefModels),
+      ApiExtraModels(ErrorResponseApiModel, ...variantRefModels),
       ApiResponse({
         status: statusCode,
         description,
@@ -71,24 +75,21 @@ export function ApiHttpExceptionResponse({
               allOf: [
                 { $ref: getSchemaPath(ErrorResponseApiModel) },
                 {
+                  type: 'object',
                   properties: {
                     status: { type: 'string', enum: ['error'], default: 'error' },
                     error: {
-                      allOf: [
-                        { $ref: getSchemaPath(HttpExceptionApiModel) },
-                        {
-                          properties: {
-                            type: { type: 'string', enum: typeEnum },
-                            message: {
-                              type: 'string',
-                              default: messageOverride ?? extractHttpExceptionProperties(statusCode).message,
-                            },
-                            statusCode: { type: 'number', enum: [statusCode] },
-                            details: { oneOf: detailsOneOf },
-                          },
-                          required: ['type', 'statusCode'],
+                      type: 'object',
+                      properties: {
+                        type: { type: 'string', enum: typeEnum },
+                        message: {
+                          type: 'string',
+                          default: messageOverride ?? extractHttpExceptionProperties(statusCode).message,
                         },
-                      ],
+                        statusCode: { type: 'number', enum: [statusCode] },
+                        details: { oneOf: detailsOneOf },
+                      },
+                      required: ['type', 'statusCode'],
                     },
                   },
                   required: ['status', 'error'],
@@ -121,20 +122,17 @@ export function ApiHttpExceptionResponse({
         allOf: [
           { $ref: getSchemaPath(ErrorResponseApiModel) },
           {
+            type: 'object',
             properties: {
               status: { type: 'string', enum: ['error'], default: 'error' },
               error: {
-                allOf: [
-                  { $ref: getSchemaPath(HttpExceptionApiModel) },
-                  {
-                    properties: {
-                      type: { type: 'string', default: exceptionType },
-                      message: { type: 'string', default: exceptionMessage },
-                      statusCode: { type: 'number', default: statusCode },
-                      details: detailsSchema,
-                    },
-                  },
-                ],
+                type: 'object',
+                properties: {
+                  type: { type: 'string', default: exceptionType },
+                  message: { type: 'string', default: exceptionMessage },
+                  statusCode: { type: 'number', default: statusCode },
+                  details: detailsSchema,
+                },
               },
             },
             required: ['status', 'error'],

@@ -68,7 +68,6 @@ export class OtpService {
     if (!foundOtpCode) {
       throw new AppEntityNotFoundException('OTP', { id: ticket })
     }
-
     const otpIsExpired = isBefore(foundOtpCode.expiresAt, now)
 
     if (otpIsExpired) {
