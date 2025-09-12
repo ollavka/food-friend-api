@@ -29,6 +29,10 @@ export class PasswordManagementService {
         include: { user: true },
       })
 
+      if (!otpCode) {
+        throw new AppEntityNotFoundException('OTP', { id: ticket })
+      }
+
       this.otpService.validateStatus(otpCode, OtpCodeStatus.CONSUMED)
 
       const user = otpCode?.user
@@ -36,6 +40,8 @@ export class PasswordManagementService {
       if (!user) {
         throw new AppEntityNotFoundException('User', { otpTicket: ticket })
       }
+
+      await StatusPolicy.enforce(user)
 
       const isPasswordsMatches = await this.bcryptService.compare(newPassword, user?.password)
 

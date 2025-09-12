@@ -2,7 +2,7 @@ import { HttpStatus, applyDecorators } from '@nestjs/common'
 import { ApiBody, ApiCreatedResponse, ApiOperation } from '@nestjs/swagger'
 import { ApiHttpExceptionResponse, ApiValidationExceptionResponse } from '@swagger/decorator'
 import { successApiSchemaRef } from '@swagger/util'
-import { AuthValidationDetailsApiModel, OtpTicketApiModel } from '../api-model'
+import { OtpTicketApiModel } from '../api-model'
 import { RegisterUserDto } from '../dto'
 
 export function RegisterDocs(): MethodDecorator {
@@ -46,6 +46,19 @@ export function RegisterDocs(): MethodDecorator {
         },
       },
     }),
-    ApiValidationExceptionResponse(AuthValidationDetailsApiModel),
+    ApiValidationExceptionResponse({
+      example: [
+        {
+          property: 'email',
+          value: 'invalid-mail@mailcom',
+          constraints: { isEmail: 'Value must be an email.' },
+        },
+        {
+          property: 'password',
+          value: 'Invalid-password',
+          constraints: { containsDigits: 'Value must contains at least one digit.' },
+        },
+      ],
+    }),
   )
 }

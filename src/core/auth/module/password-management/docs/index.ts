@@ -1,0 +1,5 @@
+export * from './reset-password-request.docs'
+export * from './reset-password-confirm.docs'
+export * from './reset-password-complete.docs'
+export * from './set-password.docs'
+export * from './change-password.docs'

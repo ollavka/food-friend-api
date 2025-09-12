@@ -6,7 +6,7 @@ import {
   ApiValidationExceptionResponse,
 } from '@swagger/decorator'
 import { successApiSchemaRef } from '@swagger/util'
-import { AccessTokenApiModel, AuthValidationDetailsApiModel } from '../api-model'
+import { AccessTokenApiModel } from '../api-model'
 import { LoginUserDto } from '../dto'
 
 export function LoginDocs(): MethodDecorator {
@@ -20,7 +20,20 @@ export function LoginDocs(): MethodDecorator {
       description: 'User successfully registered',
       schema: successApiSchemaRef(AccessTokenApiModel),
     }),
-    ApiValidationExceptionResponse(AuthValidationDetailsApiModel),
+    ApiValidationExceptionResponse({
+      example: [
+        {
+          property: 'email',
+          value: 'invalid-mail@mailcom',
+          constraints: { isEmail: 'Value must be an email.' },
+        },
+        {
+          property: 'password',
+          value: 'Invalid-password',
+          constraints: { containsDigits: 'Value must contains at least one digit.' },
+        },
+      ],
+    }),
     ApiAuthenticationExceptionResponse({
       type: 'credentials',
       description: 'Invalid credentials',

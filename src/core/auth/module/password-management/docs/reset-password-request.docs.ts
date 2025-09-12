@@ -3,46 +3,29 @@ import { ApiAcceptedResponse, ApiBody, ApiOperation } from '@nestjs/swagger'
 import { OtpTicketApiModel } from '@core/auth/api-model'
 import {
   ApiAppEntityNotFoundExceptionResponse,
-  ApiBadRequestExceptionResponse,
   ApiHttpExceptionResponse,
   ApiRateLimitExceptionResponse,
   ApiUserStatusPolicyExceptionResponse,
   ApiValidationExceptionResponse,
 } from '@swagger/decorator'
 import { successApiSchemaRef } from '@swagger/util'
-import { SendVerificationMailDto } from '../dto'
+import { ResetPasswordDto } from '../dto'
 
-export function RequestMailDocs(): MethodDecorator {
+export function ResetPasswordRequestDocs(): MethodDecorator {
   return applyDecorators(
     ApiOperation({
-      summary: 'Request email verification mail',
-      description: 'Request mail with OTP code for confirmation email',
+      summary: 'Reset password request',
+      description: 'Sends a letter with an OTP code to reset the password',
     }),
-    ApiBody({ type: SendVerificationMailDto, required: true }),
+    ApiBody({ type: ResetPasswordDto, required: true }),
     ApiAcceptedResponse({
-      description: 'Confirmation email mail has been successfully sent',
+      description: 'Reset password mail has been successfully sent',
       schema: successApiSchemaRef(OtpTicketApiModel),
     }),
     ApiAppEntityNotFoundExceptionResponse({
-      description: 'User not found',
       entityType: 'User',
-      identity: { email: 'john.doe@mail.com' },
+      identity: { id: '6wvHiPEGR5X3wTPtTkjEhS' },
     }),
-    ApiUserStatusPolicyExceptionResponse(),
-    ApiBadRequestExceptionResponse({
-      description: 'User have already confirmed email address',
-      details: {
-        type: 'object',
-        properties: {
-          reason: { type: 'string' },
-        },
-        required: ['reason'],
-        example: {
-          reason: 'You have already confirmed your email address.',
-        },
-      },
-    }),
-    ApiRateLimitExceptionResponse('mail'),
     ApiValidationExceptionResponse({
       example: [
         {
@@ -52,10 +35,12 @@ export function RequestMailDocs(): MethodDecorator {
         },
       ],
     }),
+    ApiUserStatusPolicyExceptionResponse(),
+    ApiRateLimitExceptionResponse('mail'),
     ApiHttpExceptionResponse({
       statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
       typeKeyOverride: 'internal',
-      description: 'The confirmation email mail could not be sent',
+      description: 'The reset password mail could not be sent',
       details: {
         type: 'object',
         properties: {
@@ -63,7 +48,7 @@ export function RequestMailDocs(): MethodDecorator {
         },
         required: ['reason'],
         example: {
-          reason: 'The confirmation email mail could not be sent.',
+          reason: 'The reset password mail could not be sent.',
         },
       },
     }),

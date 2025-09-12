@@ -19,7 +19,6 @@ export function setupSwagger(app: INestApplication): void {
       },
       'Access token',
     )
-    .addSecurityRequirements('Access token')
     .build()
 
   const apiDocument = SwaggerModule.createDocument(app, config, { extraModels: swaggerExtraModels })

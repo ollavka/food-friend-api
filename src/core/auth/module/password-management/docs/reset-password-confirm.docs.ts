@@ -1,6 +1,7 @@
 import { HttpStatus, applyDecorators } from '@nestjs/common'
 import { ApiBody, ApiOkResponse, ApiOperation } from '@nestjs/swagger'
 import { ConfirmOtpCodeDto } from '@common/dto'
+import { OtpTicketApiModel } from '@core/auth/api-model'
 import {
   ApiAppEntityNotFoundExceptionResponse,
   ApiBadRequestExceptionResponse,
@@ -9,41 +10,19 @@ import {
   ApiUserStatusPolicyExceptionResponse,
   ApiValidationExceptionResponse,
 } from '@swagger/decorator'
+import { successApiSchemaRef } from '@swagger/util'
 
-export function ConfirmEmailDocs(): MethodDecorator {
+export function ResetPasswordConfirmDocs(): MethodDecorator {
   return applyDecorators(
     ApiOperation({
-      summary: 'Confirm email',
-      description: 'Confirm email by OTP code',
+      summary: 'Confirm resetting password',
+      description: 'Confirm resetting password by OTP code',
     }),
     ApiBody({ type: ConfirmOtpCodeDto, required: true }),
     ApiOkResponse({
       description:
-        'Returns a success message to the authorized user; otherwise, returns the access token and creates a session for the user',
-      content: {
-        'application/json': {
-          examples: {
-            accessTokenResponse: {
-              summary: 'Access token',
-              value: {
-                status: 'success',
-                data: {
-                  accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiO...',
-                },
-              },
-            },
-            successMessageResponse: {
-              summary: 'Success message',
-              value: {
-                status: 'success',
-                data: {
-                  message: 'The email has been successfully confirmed.',
-                },
-              },
-            },
-          },
-        },
-      },
+        'Reset password OTP code has been successfully confirmed. You can use this ticket for completing reset password',
+      schema: successApiSchemaRef(OtpTicketApiModel),
     }),
     ApiBadRequestExceptionResponse({
       description: 'OTP code is not available or invalid',

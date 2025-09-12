@@ -1,5 +1,6 @@
 import { applyDecorators } from '@nestjs/common'
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger'
+import { ApiBearerAccessTokenAuth, ApiBearerAuthExceptionResponse } from '@swagger/decorator'
 import { successApiSchemaLiteral } from '@swagger/util'
 
 export function LogoutDocs(): MethodDecorator {
@@ -9,5 +10,7 @@ export function LogoutDocs(): MethodDecorator {
       description: 'Logged out and refresh token invalidated',
       schema: successApiSchemaLiteral(null),
     }),
+    ApiBearerAccessTokenAuth(),
+    ApiBearerAuthExceptionResponse(),
   )
 }

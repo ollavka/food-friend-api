@@ -11,6 +11,6 @@ export class ResetPasswordCompleteDto {
   public ticket: string
 
   @IsPassword()
-  @ApiProperty({ description: 'User password', example: 'Temp!234', minLength: 8, maxLength: 32, required: true })
+  @ApiProperty({ description: 'User password', example: 'New!2345', minLength: 8, maxLength: 32, required: true })
   public newPassword: string
 }

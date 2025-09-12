@@ -1,6 +1,7 @@
 import { Body, Controller, HttpCode, HttpStatus, Post, Req, Res } from '@nestjs/common'
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import { Request, Response } from 'express'
+import { Authorization } from '@access-control/decorator'
 import { AccessTokenApiModel, OtpTicketApiModel } from '../api-model'
 import { LoginDocs, LogoutDocs, RefreshDocs } from '../docs'
 import { RegisterDocs } from '../docs/register.docs'
@@ -30,12 +31,14 @@ export class AuthController {
   }
 
   @Post('logout')
+  @Authorization()
   @LogoutDocs()
   public async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<null> {
     return this.authService.logout(req, res)
   }
 
   @Post('refresh')
+  @Authorization()
   @RefreshDocs()
   public async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<AccessTokenApiModel> {
     return this.authService.refresh(req, res)

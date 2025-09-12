@@ -47,56 +47,6 @@
               }
             }
           },
-          "400": {
-            "description": "Validation failed",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/ErrorResponseApiModel"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "status": {
-                          "type": "string",
-                          "enum": [
-                            "error"
-                          ],
-                          "default": "error"
-                        },
-                        "error": {
-                          "type": "object",
-                          "properties": {
-                            "type": {
-                              "type": "string",
-                              "default": "validation"
-                            },
-                            "message": {
-                              "type": "string",
-                              "default": "Validation failed."
-                            },
-                            "statusCode": {
-                              "type": "number",
-                              "default": 400
-                            },
-                            "details": {
-                              "$ref": "#/components/schemas/AuthValidationDetailsApiModel"
-                            }
-                          }
-                        }
-                      },
-                      "required": [
-                        "status",
-                        "error"
-                      ]
-                    }
-                  ]
-                }
-              }
-            }
-          },
           "409": {
             "description": "User email is already taken",
             "content": {
@@ -144,6 +94,71 @@
                               "example": {
                                 "reason": "This email address is already taken."
                               }
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "default": "validation"
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Validation failed."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "default": 422
+                            },
+                            "details": {
+                              "example": [
+                                {
+                                  "property": "email",
+                                  "value": "invalid-mail@mailcom",
+                                  "constraints": {
+                                    "isEmail": "Value must be an email."
+                                  }
+                                },
+                                {
+                                  "property": "password",
+                                  "value": "Invalid-password",
+                                  "constraints": {
+                                    "containsDigits": "Value must contains at least one digit."
+                                  }
+                                }
+                              ]
                             }
                           }
                         }
@@ -264,56 +279,6 @@
                       "required": [
                         "status",
                         "data"
-                      ]
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Validation failed",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/ErrorResponseApiModel"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "status": {
-                          "type": "string",
-                          "enum": [
-                            "error"
-                          ],
-                          "default": "error"
-                        },
-                        "error": {
-                          "type": "object",
-                          "properties": {
-                            "type": {
-                              "type": "string",
-                              "default": "validation"
-                            },
-                            "message": {
-                              "type": "string",
-                              "default": "Validation failed."
-                            },
-                            "statusCode": {
-                              "type": "number",
-                              "default": 400
-                            },
-                            "details": {
-                              "$ref": "#/components/schemas/AuthValidationDetailsApiModel"
-                            }
-                          }
-                        }
-                      },
-                      "required": [
-                        "status",
-                        "error"
                       ]
                     }
                   ]
@@ -493,6 +458,71 @@
                 }
               }
             }
+          },
+          "422": {
+            "description": "Validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "default": "validation"
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Validation failed."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "default": 422
+                            },
+                            "details": {
+                              "example": [
+                                {
+                                  "property": "email",
+                                  "value": "invalid-mail@mailcom",
+                                  "constraints": {
+                                    "isEmail": "Value must be an email."
+                                  }
+                                },
+                                {
+                                  "property": "password",
+                                  "value": "Invalid-password",
+                                  "constraints": {
+                                    "containsDigits": "Value must contains at least one digit."
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
           }
         },
         "summary": "Log in with credentials",
@@ -535,8 +565,74 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "User not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "default": "access-control.authentication"
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Authentication failed."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "default": 401
+                            },
+                            "details": {
+                              "type": "object",
+                              "properties": {
+                                "reason": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "reason"
+                              ],
+                              "example": {
+                                "reason": "You are not authenticated."
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
           }
         },
+        "security": [
+          {
+            "Access token": []
+          }
+        ],
         "summary": "Log out",
         "tags": [
           "Auth flow"
@@ -579,7 +675,7 @@
             }
           },
           "401": {
-            "description": "Refresh token missing, expired, or invalid",
+            "description": "User not authenticated or refresh token missing, expired or invalid",
             "content": {
               "application/json": {
                 "schema": {
@@ -603,6 +699,7 @@
                             "type": {
                               "type": "string",
                               "enum": [
+                                "access-control.authentication",
                                 "access-control.authentication.refresh-token-not-found",
                                 "access-control.authentication.refresh-token-expired",
                                 "access-control.authentication.refresh-token-invalid"
@@ -620,6 +717,17 @@
                             },
                             "details": {
                               "oneOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "reason": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "reason"
+                                  ]
+                                },
                                 {
                                   "type": "object",
                                   "properties": {
@@ -670,7 +778,21 @@
                   ]
                 },
                 "examples": {
-                  "access-control.authentication.refresh-token-not-found_1": {
+                  "access-control.authentication_1": {
+                    "summary": "User not authenticated",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "access-control.authentication",
+                        "message": "Authentication failed.",
+                        "statusCode": 401,
+                        "details": {
+                          "reason": "You are not authenticated."
+                        }
+                      }
+                    }
+                  },
+                  "access-control.authentication.refresh-token-not-found_2": {
                     "summary": "Refresh token missing",
                     "value": {
                       "status": "error",
@@ -684,7 +806,7 @@
                       }
                     }
                   },
-                  "access-control.authentication.refresh-token-expired_2": {
+                  "access-control.authentication.refresh-token-expired_3": {
                     "summary": "Refresh token is expired",
                     "value": {
                       "status": "error",
@@ -698,7 +820,7 @@
                       }
                     }
                   },
-                  "access-control.authentication.refresh-token-invalid_3": {
+                  "access-control.authentication.refresh-token-invalid_4": {
                     "summary": "Invalid refresh token",
                     "value": {
                       "status": "error",
@@ -928,14 +1050,20 @@
             }
           }
         },
+        "security": [
+          {
+            "Access token": []
+          }
+        ],
         "summary": "Refresh tokens",
         "tags": [
           "Auth flow"
         ]
       }
     },
-    "/auth/password/reset": {
+    "/auth/password/reset/request": {
       "post": {
+        "description": "Sends a letter with an OTP code to reset the password",
         "operationId": "PasswordManagementController_resetPassword",
         "parameters": [],
         "requestBody": {
@@ -950,9 +1078,432 @@
         },
         "responses": {
           "202": {
-            "description": ""
+            "description": "Reset password mail has been successfully sent",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessResponseApiModel"
+                    },
+                    {
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "default": "success"
+                        },
+                        "data": {
+                          "$ref": "#/components/schemas/OtpTicketApiModel"
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "data"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User status policy failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "access-control.authorization.blocked",
+                                "access-control.authorization.forbidden"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Forbidden."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "enum": [
+                                403
+                              ]
+                            },
+                            "details": {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "reason": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "reason"
+                                  ]
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "reason": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "reason"
+                                  ]
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                },
+                "examples": {
+                  "access-control.authorization.blocked_1": {
+                    "summary": "User account is blocked",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "access-control.authorization.blocked",
+                        "message": "Authorization failed",
+                        "statusCode": 403,
+                        "details": {
+                          "reason": "Your account has been blocked. Please contact support."
+                        }
+                      }
+                    }
+                  },
+                  "access-control.authorization.forbidden_2": {
+                    "summary": "Forbidden resource (fallback)",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "access-control.authorization.forbidden",
+                        "message": "Authorization failed",
+                        "statusCode": 403,
+                        "details": {
+                          "reason": "Access denied. Please contact support."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "default": "app.entity-not-found"
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Entity not found."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "default": 404
+                            },
+                            "details": {
+                              "type": "object",
+                              "properties": {
+                                "entityType": {
+                                  "type": "string"
+                                },
+                                "identity": {
+                                  "type": "object",
+                                  "additionalProperties": {
+                                    "nullable": true,
+                                    "oneOf": [
+                                      {
+                                        "type": "object",
+                                        "title": "Object",
+                                        "description": "Any JSON",
+                                        "additionalProperties": true
+                                      },
+                                      {
+                                        "type": "array",
+                                        "items": {},
+                                        "title": "Array",
+                                        "description": "Any array"
+                                      },
+                                      {
+                                        "type": "string",
+                                        "title": "String",
+                                        "description": "Any string"
+                                      },
+                                      {
+                                        "type": "number",
+                                        "title": "Number",
+                                        "description": "Any number"
+                                      },
+                                      {
+                                        "type": "boolean",
+                                        "title": "String",
+                                        "description": "True or false"
+                                      }
+                                    ]
+                                  }
+                                }
+                              },
+                              "required": [
+                                "entityType"
+                              ],
+                              "example": {
+                                "entityType": "User",
+                                "identity": {
+                                  "id": "6wvHiPEGR5X3wTPtTkjEhS"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "default": "validation"
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Validation failed."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "default": 422
+                            },
+                            "details": {
+                              "example": [
+                                {
+                                  "property": "email",
+                                  "value": "invalid-mail@mailcom",
+                                  "constraints": {
+                                    "isEmail": "Value must be an email."
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "default": "rate-limit.mail"
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Rate limit."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "default": 429
+                            },
+                            "details": {
+                              "type": "object",
+                              "properties": {
+                                "reason": {
+                                  "type": "string"
+                                },
+                                "secondsLeft": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "reason",
+                                "secondsLeft"
+                              ],
+                              "example": {
+                                "reason": "You have exceeded the rate limit. Please try again in 10 seconds.",
+                                "secondsLeft": 10
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The reset password mail could not be sent",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "default": "internal"
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Internal server error."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "default": 500
+                            },
+                            "details": {
+                              "type": "object",
+                              "properties": {
+                                "reason": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "reason"
+                              ],
+                              "example": {
+                                "reason": "The reset password mail could not be sent."
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
           }
         },
+        "summary": "Reset password request",
         "tags": [
           "Password management"
         ]
@@ -960,6 +1511,7 @@
     },
     "/auth/password/reset/confirm": {
       "post": {
+        "description": "Confirm resetting password by OTP code",
         "operationId": "PasswordManagementController_confirmResetPassword",
         "parameters": [],
         "requestBody": {
@@ -973,10 +1525,543 @@
           }
         },
         "responses": {
-          "201": {
-            "description": ""
+          "200": {
+            "description": "Reset password OTP code has been successfully confirmed. You can use this ticket for completing reset password",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessResponseApiModel"
+                    },
+                    {
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "default": "success"
+                        },
+                        "data": {
+                          "$ref": "#/components/schemas/OtpTicketApiModel"
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "data"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "OTP code is not available or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "bad-request",
+                                "bad-request"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Bad request."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "enum": [
+                                400
+                              ]
+                            },
+                            "details": {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "additionalProperties": true
+                                },
+                                {
+                                  "type": "object",
+                                  "additionalProperties": true
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                },
+                "examples": {
+                  "bad-request_1": {
+                    "summary": "OTP code is not available",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "bad-request",
+                        "message": "Bad request.",
+                        "statusCode": 400,
+                        "details": {
+                          "reason": "OTP code is not available."
+                        }
+                      }
+                    }
+                  },
+                  "bad-request_2": {
+                    "summary": "OTP code is invalid",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "bad-request",
+                        "message": "Bad request.",
+                        "statusCode": 400,
+                        "details": {
+                          "reason": "Invalid OTP code."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User status policy failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "access-control.authorization.blocked",
+                                "access-control.authorization.forbidden"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Forbidden."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "enum": [
+                                403
+                              ]
+                            },
+                            "details": {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "reason": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "reason"
+                                  ]
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "reason": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "reason"
+                                  ]
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                },
+                "examples": {
+                  "access-control.authorization.blocked_1": {
+                    "summary": "User account is blocked",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "access-control.authorization.blocked",
+                        "message": "Authorization failed",
+                        "statusCode": 403,
+                        "details": {
+                          "reason": "Your account has been blocked. Please contact support."
+                        }
+                      }
+                    }
+                  },
+                  "access-control.authorization.forbidden_2": {
+                    "summary": "Forbidden resource (fallback)",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "access-control.authorization.forbidden",
+                        "message": "Authorization failed",
+                        "statusCode": 403,
+                        "details": {
+                          "reason": "Access denied. Please contact support."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User or OTP code not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "app.entity-not-found",
+                                "app.entity-not-found"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Not found."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "enum": [
+                                404
+                              ]
+                            },
+                            "details": {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "additionalProperties": true
+                                },
+                                {
+                                  "type": "object",
+                                  "additionalProperties": true
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                },
+                "examples": {
+                  "app.entity-not-found_1": {
+                    "summary": "User not found",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "app.entity-not-found",
+                        "message": "Entity not found.",
+                        "statusCode": 404,
+                        "details": {
+                          "entityType": "User",
+                          "identity": {
+                            "email": "john.doe@mail.com"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "app.entity-not-found_2": {
+                    "summary": "OTP code not found",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "app.entity-not-found",
+                        "message": "Entity not found.",
+                        "statusCode": 404,
+                        "details": {
+                          "entityType": "OTP",
+                          "identity": {
+                            "id": "6wvHiPEGR5X3wTPtTkjEhS"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "OTP code is expired",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "default": "gone.otp-expired"
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Gone."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "default": 410
+                            },
+                            "details": {
+                              "type": "object",
+                              "properties": {
+                                "reason": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "reason"
+                              ],
+                              "example": {
+                                "reason": "OTP code is expired."
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "default": "validation"
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Validation failed."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "default": 422
+                            },
+                            "details": {
+                              "example": [
+                                {
+                                  "property": "ticket",
+                                  "constraints": {
+                                    "isId": "Value must be a valid ID.",
+                                    "value": "invalid-ticket"
+                                  }
+                                },
+                                {
+                                  "property": "code",
+                                  "value": "123abcd",
+                                  "constraints": {
+                                    "isNumberString": "Value must be a number string."
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "default": "rate-limit.otp"
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Rate limit."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "default": 429
+                            },
+                            "details": {
+                              "type": "object",
+                              "properties": {
+                                "reason": {
+                                  "type": "string"
+                                },
+                                "secondsLeft": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "reason",
+                                "secondsLeft"
+                              ],
+                              "example": {
+                                "reason": "You have exceeded the rate limit. Please try again in 10 seconds.",
+                                "secondsLeft": 10
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
           }
         },
+        "summary": "Confirm resetting password",
         "tags": [
           "Password management"
         ]
@@ -984,6 +2069,7 @@
     },
     "/auth/password/reset/complete": {
       "post": {
+        "description": "Complete resetting password by OTP code",
         "operationId": "PasswordManagementController_completeResetPassword",
         "parameters": [],
         "requestBody": {
@@ -997,10 +2083,403 @@
           }
         },
         "responses": {
-          "201": {
-            "description": ""
+          "200": {
+            "description": "Message about successful password reset",
+            "content": {
+              "application/json": {
+                "example": {
+                  "summary": "Success message",
+                  "value": {
+                    "status": "success",
+                    "data": {
+                      "message": "The password has been successfully reset."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "OTP code is not available or password are the same",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "bad-request",
+                                "bad-request"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Bad request."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "enum": [
+                                400
+                              ]
+                            },
+                            "details": {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "additionalProperties": true
+                                },
+                                {
+                                  "type": "object",
+                                  "additionalProperties": true
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                },
+                "examples": {
+                  "bad-request_1": {
+                    "summary": "OTP code is not available",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "bad-request",
+                        "message": "Bad request.",
+                        "statusCode": 400,
+                        "details": {
+                          "reason": "OTP code is not available."
+                        }
+                      }
+                    }
+                  },
+                  "bad-request_2": {
+                    "summary": "The new password cannot be the same as the current password",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "bad-request",
+                        "message": "Bad request.",
+                        "statusCode": 400,
+                        "details": {
+                          "reason": "The new password cannot be the same as the current password."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User status policy failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "access-control.authorization.blocked",
+                                "access-control.authorization.forbidden"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Forbidden."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "enum": [
+                                403
+                              ]
+                            },
+                            "details": {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "reason": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "reason"
+                                  ]
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "reason": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "reason"
+                                  ]
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                },
+                "examples": {
+                  "access-control.authorization.blocked_1": {
+                    "summary": "User account is blocked",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "access-control.authorization.blocked",
+                        "message": "Authorization failed",
+                        "statusCode": 403,
+                        "details": {
+                          "reason": "Your account has been blocked. Please contact support."
+                        }
+                      }
+                    }
+                  },
+                  "access-control.authorization.forbidden_2": {
+                    "summary": "Forbidden resource (fallback)",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "access-control.authorization.forbidden",
+                        "message": "Authorization failed",
+                        "statusCode": 403,
+                        "details": {
+                          "reason": "Access denied. Please contact support."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User or OTP code not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "app.entity-not-found",
+                                "app.entity-not-found"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Not found."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "enum": [
+                                404
+                              ]
+                            },
+                            "details": {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "additionalProperties": true
+                                },
+                                {
+                                  "type": "object",
+                                  "additionalProperties": true
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                },
+                "examples": {
+                  "app.entity-not-found_1": {
+                    "summary": "User not found",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "app.entity-not-found",
+                        "message": "Entity not found.",
+                        "statusCode": 404,
+                        "details": {
+                          "entityType": "User",
+                          "identity": {
+                            "otpTicket": "6wvHiPEGR5X3wTPtTkjEhS"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "app.entity-not-found_2": {
+                    "summary": "OTP code not found",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "app.entity-not-found",
+                        "message": "Entity not found.",
+                        "statusCode": 404,
+                        "details": {
+                          "entityType": "OTP",
+                          "identity": {
+                            "id": "6wvHiPEGR5X3wTPtTkjEhS"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "default": "validation"
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Validation failed."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "default": 422
+                            },
+                            "details": {
+                              "example": [
+                                {
+                                  "property": "ticket",
+                                  "constraints": {
+                                    "isId": "Value must be a valid ID.",
+                                    "value": "invalid-ticket"
+                                  }
+                                },
+                                {
+                                  "property": "newPassword",
+                                  "value": "Invalid-password",
+                                  "constraints": {
+                                    "containsDigits": "Value must contains at least one digit."
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
           }
         },
+        "summary": "Complete resetting password",
         "tags": [
           "Password management"
         ]
@@ -1008,6 +2487,7 @@
     },
     "/auth/password/set": {
       "post": {
+        "description": "Set a password for the current user if they previously registered and authorized only through providers, do not use email and password login, and do not yet have an active password",
         "operationId": "PasswordManagementController_setPassword",
         "parameters": [],
         "requestBody": {
@@ -1021,10 +2501,347 @@
           }
         },
         "responses": {
-          "201": {
-            "description": ""
+          "200": {
+            "description": "Message about successful password set",
+            "content": {
+              "application/json": {
+                "example": {
+                  "summary": "Success message",
+                  "value": {
+                    "status": "success",
+                    "data": {
+                      "message": "The password has been successfully set."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "default": "access-control.authentication"
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Authentication failed."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "default": 401
+                            },
+                            "details": {
+                              "type": "object",
+                              "properties": {
+                                "reason": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "reason"
+                              ],
+                              "example": {
+                                "reason": "You are not authenticated."
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User status policy failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "access-control.authorization.unverified",
+                                "access-control.authorization.blocked",
+                                "access-control.authorization.forbidden"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Forbidden."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "enum": [
+                                403
+                              ]
+                            },
+                            "details": {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "reason": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "reason"
+                                  ]
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "reason": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "reason"
+                                  ]
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "reason": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "reason"
+                                  ]
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                },
+                "examples": {
+                  "access-control.authorization.unverified_1": {
+                    "summary": "Email not confirmed",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "access-control.authorization.unverified",
+                        "message": "Authorization failed",
+                        "statusCode": 403,
+                        "details": {
+                          "reason": "Email not confirmed. Please verify your email address in your profile settings."
+                        }
+                      }
+                    }
+                  },
+                  "access-control.authorization.blocked_2": {
+                    "summary": "User account is blocked",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "access-control.authorization.blocked",
+                        "message": "Authorization failed",
+                        "statusCode": 403,
+                        "details": {
+                          "reason": "Your account has been blocked. Please contact support."
+                        }
+                      }
+                    }
+                  },
+                  "access-control.authorization.forbidden_3": {
+                    "summary": "Forbidden resource (fallback)",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "access-control.authorization.forbidden",
+                        "message": "Authorization failed",
+                        "statusCode": 403,
+                        "details": {
+                          "reason": "Access denied. Please contact support."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The password has already been set",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "default": "conflict"
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Conflict."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "default": 409
+                            },
+                            "details": {
+                              "type": "object",
+                              "properties": {
+                                "reason": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "reason"
+                              ],
+                              "example": {
+                                "reason": "The password has already been set."
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "default": "validation"
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Validation failed."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "default": 422
+                            },
+                            "details": {
+                              "example": [
+                                {
+                                  "property": "password",
+                                  "value": "Invalid-password",
+                                  "constraints": {
+                                    "containsDigits": "Value must contains at least one digit."
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
           }
         },
+        "security": [
+          {
+            "Access token": []
+          }
+        ],
+        "summary": "Set password for user",
         "tags": [
           "Password management"
         ]
@@ -1032,6 +2849,7 @@
     },
     "/auth/password/change": {
       "post": {
+        "description": "Change the password for the current user if they previously registered and logged in using only a password and email address, or have already set a password for this type of login",
         "operationId": "PasswordManagementController_changePassword",
         "parameters": [],
         "requestBody": {
@@ -1045,10 +2863,452 @@
           }
         },
         "responses": {
-          "201": {
-            "description": ""
+          "200": {
+            "description": "Message about successful password change",
+            "content": {
+              "application/json": {
+                "example": {
+                  "summary": "Success message",
+                  "value": {
+                    "status": "success",
+                    "data": {
+                      "message": "The password has been successfully changed."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The current password is incorrect or matches the new one",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "bad-request",
+                                "bad-request"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Bad request."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "enum": [
+                                400
+                              ]
+                            },
+                            "details": {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "additionalProperties": true
+                                },
+                                {
+                                  "type": "object",
+                                  "additionalProperties": true
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                },
+                "examples": {
+                  "bad-request_1": {
+                    "summary": "The current password is incorrect",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "bad-request",
+                        "message": "Bad request.",
+                        "statusCode": 400,
+                        "details": {
+                          "reason": "The current password is incorrect."
+                        }
+                      }
+                    }
+                  },
+                  "bad-request_2": {
+                    "summary": "The new password cannot be the same as the current password",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "bad-request",
+                        "message": "Bad request.",
+                        "statusCode": 400,
+                        "details": {
+                          "reason": "The new password cannot be the same as the current password."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "default": "access-control.authentication"
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Authentication failed."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "default": 401
+                            },
+                            "details": {
+                              "type": "object",
+                              "properties": {
+                                "reason": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "reason"
+                              ],
+                              "example": {
+                                "reason": "You are not authenticated."
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User status policy failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "access-control.authorization.unverified",
+                                "access-control.authorization.blocked",
+                                "access-control.authorization.forbidden"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Forbidden."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "enum": [
+                                403
+                              ]
+                            },
+                            "details": {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "reason": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "reason"
+                                  ]
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "reason": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "reason"
+                                  ]
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "reason": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "reason"
+                                  ]
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                },
+                "examples": {
+                  "access-control.authorization.unverified_1": {
+                    "summary": "Email not confirmed",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "access-control.authorization.unverified",
+                        "message": "Authorization failed",
+                        "statusCode": 403,
+                        "details": {
+                          "reason": "Email not confirmed. Please verify your email address in your profile settings."
+                        }
+                      }
+                    }
+                  },
+                  "access-control.authorization.blocked_2": {
+                    "summary": "User account is blocked",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "access-control.authorization.blocked",
+                        "message": "Authorization failed",
+                        "statusCode": 403,
+                        "details": {
+                          "reason": "Your account has been blocked. Please contact support."
+                        }
+                      }
+                    }
+                  },
+                  "access-control.authorization.forbidden_3": {
+                    "summary": "Forbidden resource (fallback)",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "access-control.authorization.forbidden",
+                        "message": "Authorization failed",
+                        "statusCode": 403,
+                        "details": {
+                          "reason": "Access denied. Please contact support."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The password has already been set",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "default": "conflict"
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Conflict."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "default": 409
+                            },
+                            "details": {
+                              "type": "object",
+                              "properties": {
+                                "reason": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "reason"
+                              ],
+                              "example": {
+                                "reason": "No password has been set for this account."
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "default": "validation"
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Validation failed."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "default": 422
+                            },
+                            "details": {
+                              "example": [
+                                {
+                                  "property": "currentPassword",
+                                  "value": "Invalid-password",
+                                  "constraints": {
+                                    "containsDigits": "Value must contains at least one digit."
+                                  }
+                                },
+                                {
+                                  "property": "newPassword",
+                                  "value": "Invalid-password",
+                                  "constraints": {
+                                    "containsDigits": "Value must contains at least one digit."
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
           }
         },
+        "security": [
+          {
+            "Access token": []
+          }
+        ],
+        "summary": "Change password for user",
         "tags": [
           "Password management"
         ]
@@ -1100,7 +3360,7 @@
             }
           },
           "400": {
-            "description": "User have already confirmed email address.",
+            "description": "User have already confirmed email address",
             "content": {
               "application/json": {
                 "schema": {
@@ -1354,9 +3614,67 @@
                               "example": {
                                 "entityType": "User",
                                 "identity": {
-                                  "id": "6wvHiPEGR5X3wTPtTkjEhS"
+                                  "email": "john.doe@mail.com"
                                 }
                               }
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "default": "validation"
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Validation failed."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "default": 422
+                            },
+                            "details": {
+                              "example": [
+                                {
+                                  "property": "email",
+                                  "value": "invalid-mail@mailcom",
+                                  "constraints": {
+                                    "isEmail": "Value must be an email."
+                                  }
+                                }
+                              ]
                             }
                           }
                         }
@@ -1835,7 +4153,7 @@
                         "details": {
                           "entityType": "User",
                           "identity": {
-                            "id": "6wvHiPEGR5X3wTPtTkjEhS"
+                            "email": "john.doe@mail.com"
                           }
                         }
                       }
@@ -1909,6 +4227,71 @@
                               "example": {
                                 "reason": "OTP code is expired."
                               }
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "default": "validation"
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Validation failed."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "default": 422
+                            },
+                            "details": {
+                              "example": [
+                                {
+                                  "property": "ticket",
+                                  "constraints": {
+                                    "isId": "Value must be a valid ID.",
+                                    "value": "invalid-ticket"
+                                  }
+                                },
+                                {
+                                  "property": "code",
+                                  "value": "123abcd",
+                                  "constraints": {
+                                    "isNumberString": "Value must be a number string."
+                                  }
+                                }
+                              ]
                             }
                           }
                         }
@@ -2040,34 +4423,6 @@
         },
         "required": [
           "ticket"
-        ]
-      },
-      "AuthValidationDetailsApiModel": {
-        "type": "object",
-        "properties": {
-          "entries": {
-            "type": "array",
-            "description": "List of errors by fields",
-            "example": [
-              {
-                "property": "email",
-                "value": "invalid-mail@mailcom",
-                "constraints": {
-                  "isEmail": "Value must be an email."
-                }
-              },
-              {
-                "property": "password",
-                "value": "Invalid-password",
-                "constraints": {
-                  "containsDigits": "Value must contains at least one digit."
-                }
-              }
-            ]
-          }
-        },
-        "required": [
-          "entries"
         ]
       },
       "RegisterUserDto": {
@@ -2204,6 +4559,19 @@
           "password"
         ]
       },
+      "SuccessMessageApiModel": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Success message",
+            "example": "Success"
+          }
+        },
+        "required": [
+          "message"
+        ]
+      },
       "ResetPasswordDto": {
         "type": "object",
         "properties": {
@@ -2247,7 +4615,7 @@
           "newPassword": {
             "type": "string",
             "description": "User password",
-            "example": "Temp!234",
+            "example": "New!2345",
             "minLength": 8,
             "maxLength": 32
           }
@@ -2293,19 +4661,6 @@
         "required": [
           "currentPassword",
           "newPassword"
-        ]
-      },
-      "SuccessMessageApiModel": {
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "string",
-            "description": "Success message",
-            "example": "Success"
-          }
-        },
-        "required": [
-          "message"
         ]
       },
       "SendVerificationMailDto": {
@@ -2371,10 +4726,5 @@
         ]
       }
     }
-  },
-  "security": [
-    {
-      "Access token": []
-    }
-  ]
+  }
 }

@@ -10,7 +10,7 @@ export interface ValidationEntry {
 export class ValidationException extends Exception {
   public type = 'validation'
 
-  public httpStatus: HttpStatus = HttpStatus.BAD_REQUEST
+  public httpStatus: HttpStatus = HttpStatus.UNPROCESSABLE_ENTITY
 
   public constructor(...entries: ValidationEntry[]) {
     super('Validation failed.')

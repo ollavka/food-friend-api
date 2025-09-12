@@ -4,7 +4,7 @@ import { ApiHttpExceptionResponse } from './api-http-exception-response.decorato
 
 export function ApiValidationExceptionResponse(detailsModel: ApiExceptionDetails): MethodDecorator {
   return ApiHttpExceptionResponse({
-    statusCode: HttpStatus.BAD_REQUEST,
+    statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
     description: 'Validation failed',
     details: detailsModel,
     typeKeyOverride: 'validation',
