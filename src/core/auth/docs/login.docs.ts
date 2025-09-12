@@ -17,7 +17,7 @@ export function LoginDocs(): MethodDecorator {
     }),
     ApiBody({ type: LoginUserDto, required: true }),
     ApiOkResponse({
-      description: 'User successfully registered',
+      description: 'User successfully authenticated',
       schema: successApiSchemaRef(AccessTokenApiModel),
     }),
     ApiValidationExceptionResponse({

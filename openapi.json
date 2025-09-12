@@ -258,7 +258,7 @@
         },
         "responses": {
           "200": {
-            "description": "User successfully registered",
+            "description": "User successfully authenticated",
             "content": {
               "application/json": {
                 "schema": {
