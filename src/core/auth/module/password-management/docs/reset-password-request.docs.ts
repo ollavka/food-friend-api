@@ -23,18 +23,17 @@ export function ResetPasswordRequestDocs(): MethodDecorator {
       schema: successApiSchemaRef(OtpTicketApiModel),
     }),
     ApiAppEntityNotFoundExceptionResponse({
+      description: 'User not found',
       entityType: 'User',
       identity: { id: '6wvHiPEGR5X3wTPtTkjEhS' },
     }),
-    ApiValidationExceptionResponse({
-      example: [
-        {
-          property: 'email',
-          value: 'invalid-mail@mailcom',
-          constraints: { isEmail: 'Value must be an email.' },
-        },
-      ],
-    }),
+    ApiValidationExceptionResponse([
+      {
+        property: 'email',
+        value: 'invalid-mail@mailcom',
+        constraints: { isEmail: 'Value must be an email.' },
+      },
+    ]),
     ApiUserStatusPolicyExceptionResponse(),
     ApiRateLimitExceptionResponse('mail'),
     ApiHttpExceptionResponse({

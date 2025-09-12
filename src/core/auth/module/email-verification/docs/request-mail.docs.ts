@@ -43,15 +43,13 @@ export function RequestMailDocs(): MethodDecorator {
       },
     }),
     ApiRateLimitExceptionResponse('mail'),
-    ApiValidationExceptionResponse({
-      example: [
-        {
-          property: 'email',
-          value: 'invalid-mail@mailcom',
-          constraints: { isEmail: 'Value must be an email.' },
-        },
-      ],
-    }),
+    ApiValidationExceptionResponse([
+      {
+        property: 'email',
+        value: 'invalid-mail@mailcom',
+        constraints: { isEmail: 'Value must be an email.' },
+      },
+    ]),
     ApiHttpExceptionResponse({
       statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
       typeKeyOverride: 'internal',

@@ -90,12 +90,13 @@
                               },
                               "required": [
                                 "reason"
-                              ],
-                              "example": {
-                                "reason": "This email address is already taken."
-                              }
+                              ]
                             }
-                          }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
                         }
                       },
                       "required": [
@@ -104,6 +105,17 @@
                       ]
                     }
                   ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "conflict",
+                    "message": "Conflict.",
+                    "statusCode": 409,
+                    "details": {
+                      "reason": "This email address is already taken."
+                    }
+                  }
                 }
               }
             }
@@ -143,24 +155,42 @@
                               "default": 422
                             },
                             "details": {
-                              "example": [
+                              "nullable": true,
+                              "oneOf": [
                                 {
-                                  "property": "email",
-                                  "value": "invalid-mail@mailcom",
-                                  "constraints": {
-                                    "isEmail": "Value must be an email."
-                                  }
+                                  "type": "object",
+                                  "title": "Object",
+                                  "description": "Any JSON",
+                                  "additionalProperties": true
                                 },
                                 {
-                                  "property": "password",
-                                  "value": "Invalid-password",
-                                  "constraints": {
-                                    "containsDigits": "Value must contains at least one digit."
-                                  }
+                                  "type": "array",
+                                  "items": {},
+                                  "title": "Array",
+                                  "description": "Any array"
+                                },
+                                {
+                                  "type": "string",
+                                  "title": "String",
+                                  "description": "Any string"
+                                },
+                                {
+                                  "type": "number",
+                                  "title": "Number",
+                                  "description": "Any number"
+                                },
+                                {
+                                  "type": "boolean",
+                                  "title": "String",
+                                  "description": "True or false"
                                 }
                               ]
                             }
-                          }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
                         }
                       },
                       "required": [
@@ -169,6 +199,32 @@
                       ]
                     }
                   ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "validation",
+                    "message": "Validation failed.",
+                    "statusCode": 422,
+                    "details": {
+                      "entries": [
+                        {
+                          "property": "email",
+                          "value": "invalid-mail@mailcom",
+                          "constraints": {
+                            "isEmail": "Value must be an email."
+                          }
+                        },
+                        {
+                          "property": "password",
+                          "value": "Invalid-password",
+                          "constraints": {
+                            "containsDigits": "Value must contains at least one digit."
+                          }
+                        }
+                      ]
+                    }
+                  }
                 }
               }
             }
@@ -216,12 +272,13 @@
                               },
                               "required": [
                                 "reason"
-                              ],
-                              "example": {
-                                "reason": "The welcome mail could not be sent."
-                              }
+                              ]
                             }
-                          }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
                         }
                       },
                       "required": [
@@ -230,6 +287,17 @@
                       ]
                     }
                   ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "internal",
+                    "message": "Internal server error.",
+                    "statusCode": 500,
+                    "details": {
+                      "reason": "The welcome mail could not be sent."
+                    }
+                  }
                 }
               }
             }
@@ -329,12 +397,13 @@
                               },
                               "required": [
                                 "reason"
-                              ],
-                              "example": {
-                                "reason": "Invalid credentials."
-                              }
+                              ]
                             }
-                          }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
                         }
                       },
                       "required": [
@@ -343,6 +412,17 @@
                       ]
                     }
                   ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "access-control.authentication.credentials",
+                    "message": "Authentication failed.",
+                    "statusCode": 401,
+                    "details": {
+                      "reason": "Invalid credentials."
+                    }
+                  }
                 }
               }
             }
@@ -494,24 +574,42 @@
                               "default": 422
                             },
                             "details": {
-                              "example": [
+                              "nullable": true,
+                              "oneOf": [
                                 {
-                                  "property": "email",
-                                  "value": "invalid-mail@mailcom",
-                                  "constraints": {
-                                    "isEmail": "Value must be an email."
-                                  }
+                                  "type": "object",
+                                  "title": "Object",
+                                  "description": "Any JSON",
+                                  "additionalProperties": true
                                 },
                                 {
-                                  "property": "password",
-                                  "value": "Invalid-password",
-                                  "constraints": {
-                                    "containsDigits": "Value must contains at least one digit."
-                                  }
+                                  "type": "array",
+                                  "items": {},
+                                  "title": "Array",
+                                  "description": "Any array"
+                                },
+                                {
+                                  "type": "string",
+                                  "title": "String",
+                                  "description": "Any string"
+                                },
+                                {
+                                  "type": "number",
+                                  "title": "Number",
+                                  "description": "Any number"
+                                },
+                                {
+                                  "type": "boolean",
+                                  "title": "String",
+                                  "description": "True or false"
                                 }
                               ]
                             }
-                          }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
                         }
                       },
                       "required": [
@@ -520,6 +618,32 @@
                       ]
                     }
                   ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "validation",
+                    "message": "Validation failed.",
+                    "statusCode": 422,
+                    "details": {
+                      "entries": [
+                        {
+                          "property": "email",
+                          "value": "invalid-mail@mailcom",
+                          "constraints": {
+                            "isEmail": "Value must be an email."
+                          }
+                        },
+                        {
+                          "property": "password",
+                          "value": "Invalid-password",
+                          "constraints": {
+                            "containsDigits": "Value must contains at least one digit."
+                          }
+                        }
+                      ]
+                    }
+                  }
                 }
               }
             }
@@ -609,12 +733,13 @@
                               },
                               "required": [
                                 "reason"
-                              ],
-                              "example": {
-                                "reason": "You are not authenticated."
-                              }
+                              ]
                             }
-                          }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
                         }
                       },
                       "required": [
@@ -623,6 +748,17 @@
                       ]
                     }
                   ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "access-control.authentication",
+                    "message": "Authentication failed.",
+                    "statusCode": 401,
+                    "details": {
+                      "reason": "You are not authenticated."
+                    }
+                  }
                 }
               }
             }
@@ -1028,15 +1164,13 @@
                               },
                               "required": [
                                 "entityType"
-                              ],
-                              "example": {
-                                "entityType": "User",
-                                "identity": {
-                                  "id": "6wvHiPEGR5X3wTPtTkjEhS"
-                                }
-                              }
+                              ]
                             }
-                          }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
                         }
                       },
                       "required": [
@@ -1045,6 +1179,20 @@
                       ]
                     }
                   ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "app.entity-not-found",
+                    "message": "Entity not found.",
+                    "statusCode": 404,
+                    "details": {
+                      "entityType": "User",
+                      "identity": {
+                        "id": "6wvHiPEGR5X3wTPtTkjEhS"
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -1219,7 +1367,7 @@
             }
           },
           "404": {
-            "description": "Entity not found",
+            "description": "User not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -1296,15 +1444,13 @@
                               },
                               "required": [
                                 "entityType"
-                              ],
-                              "example": {
-                                "entityType": "User",
-                                "identity": {
-                                  "id": "6wvHiPEGR5X3wTPtTkjEhS"
-                                }
-                              }
+                              ]
                             }
-                          }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
                         }
                       },
                       "required": [
@@ -1313,6 +1459,20 @@
                       ]
                     }
                   ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "app.entity-not-found",
+                    "message": "Entity not found.",
+                    "statusCode": 404,
+                    "details": {
+                      "entityType": "User",
+                      "identity": {
+                        "id": "6wvHiPEGR5X3wTPtTkjEhS"
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -1352,17 +1512,42 @@
                               "default": 422
                             },
                             "details": {
-                              "example": [
+                              "nullable": true,
+                              "oneOf": [
                                 {
-                                  "property": "email",
-                                  "value": "invalid-mail@mailcom",
-                                  "constraints": {
-                                    "isEmail": "Value must be an email."
-                                  }
+                                  "type": "object",
+                                  "title": "Object",
+                                  "description": "Any JSON",
+                                  "additionalProperties": true
+                                },
+                                {
+                                  "type": "array",
+                                  "items": {},
+                                  "title": "Array",
+                                  "description": "Any array"
+                                },
+                                {
+                                  "type": "string",
+                                  "title": "String",
+                                  "description": "Any string"
+                                },
+                                {
+                                  "type": "number",
+                                  "title": "Number",
+                                  "description": "Any number"
+                                },
+                                {
+                                  "type": "boolean",
+                                  "title": "String",
+                                  "description": "True or false"
                                 }
                               ]
                             }
-                          }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
                         }
                       },
                       "required": [
@@ -1371,6 +1556,25 @@
                       ]
                     }
                   ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "validation",
+                    "message": "Validation failed.",
+                    "statusCode": 422,
+                    "details": {
+                      "entries": [
+                        {
+                          "property": "email",
+                          "value": "invalid-mail@mailcom",
+                          "constraints": {
+                            "isEmail": "Value must be an email."
+                          }
+                        }
+                      ]
+                    }
+                  }
                 }
               }
             }
@@ -1422,13 +1626,13 @@
                               "required": [
                                 "reason",
                                 "secondsLeft"
-                              ],
-                              "example": {
-                                "reason": "You have exceeded the rate limit. Please try again in 10 seconds.",
-                                "secondsLeft": 10
-                              }
+                              ]
                             }
-                          }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
                         }
                       },
                       "required": [
@@ -1437,6 +1641,18 @@
                       ]
                     }
                   ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "rate-limit.mail",
+                    "message": "Rate limit.",
+                    "statusCode": 429,
+                    "details": {
+                      "reason": "You have exceeded the rate limit. Please try again in 10 seconds.",
+                      "secondsLeft": 10
+                    }
+                  }
                 }
               }
             }
@@ -1484,12 +1700,13 @@
                               },
                               "required": [
                                 "reason"
-                              ],
-                              "example": {
-                                "reason": "The reset password mail could not be sent."
-                              }
+                              ]
                             }
-                          }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
                         }
                       },
                       "required": [
@@ -1498,6 +1715,17 @@
                       ]
                     }
                   ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "internal",
+                    "message": "Internal server error.",
+                    "statusCode": 500,
+                    "details": {
+                      "reason": "The reset password mail could not be sent."
+                    }
+                  }
                 }
               }
             }
@@ -1911,12 +2139,13 @@
                               },
                               "required": [
                                 "reason"
-                              ],
-                              "example": {
-                                "reason": "OTP code is expired."
-                              }
+                              ]
                             }
-                          }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
                         }
                       },
                       "required": [
@@ -1925,6 +2154,17 @@
                       ]
                     }
                   ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "gone.otp-expired",
+                    "message": "Gone.",
+                    "statusCode": 410,
+                    "details": {
+                      "reason": "OTP code is expired."
+                    }
+                  }
                 }
               }
             }
@@ -1964,24 +2204,42 @@
                               "default": 422
                             },
                             "details": {
-                              "example": [
+                              "nullable": true,
+                              "oneOf": [
                                 {
-                                  "property": "ticket",
-                                  "constraints": {
-                                    "isId": "Value must be a valid ID.",
-                                    "value": "invalid-ticket"
-                                  }
+                                  "type": "object",
+                                  "title": "Object",
+                                  "description": "Any JSON",
+                                  "additionalProperties": true
                                 },
                                 {
-                                  "property": "code",
-                                  "value": "123abcd",
-                                  "constraints": {
-                                    "isNumberString": "Value must be a number string."
-                                  }
+                                  "type": "array",
+                                  "items": {},
+                                  "title": "Array",
+                                  "description": "Any array"
+                                },
+                                {
+                                  "type": "string",
+                                  "title": "String",
+                                  "description": "Any string"
+                                },
+                                {
+                                  "type": "number",
+                                  "title": "Number",
+                                  "description": "Any number"
+                                },
+                                {
+                                  "type": "boolean",
+                                  "title": "String",
+                                  "description": "True or false"
                                 }
                               ]
                             }
-                          }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
                         }
                       },
                       "required": [
@@ -1990,6 +2248,32 @@
                       ]
                     }
                   ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "validation",
+                    "message": "Validation failed.",
+                    "statusCode": 422,
+                    "details": {
+                      "entries": [
+                        {
+                          "property": "ticket",
+                          "constraints": {
+                            "isId": "Value must be a valid ID.",
+                            "value": "invalid-ticket"
+                          }
+                        },
+                        {
+                          "property": "code",
+                          "value": "123abcd",
+                          "constraints": {
+                            "isNumberString": "Value must be a number string."
+                          }
+                        }
+                      ]
+                    }
+                  }
                 }
               }
             }
@@ -2041,13 +2325,13 @@
                               "required": [
                                 "reason",
                                 "secondsLeft"
-                              ],
-                              "example": {
-                                "reason": "You have exceeded the rate limit. Please try again in 10 seconds.",
-                                "secondsLeft": 10
-                              }
+                              ]
                             }
-                          }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
                         }
                       },
                       "required": [
@@ -2056,6 +2340,18 @@
                       ]
                     }
                   ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "rate-limit.otp",
+                    "message": "Rate limit.",
+                    "statusCode": 429,
+                    "details": {
+                      "reason": "You have exceeded the rate limit. Please try again in 10 seconds.",
+                      "secondsLeft": 10
+                    }
+                  }
                 }
               }
             }
@@ -2448,24 +2744,42 @@
                               "default": 422
                             },
                             "details": {
-                              "example": [
+                              "nullable": true,
+                              "oneOf": [
                                 {
-                                  "property": "ticket",
-                                  "constraints": {
-                                    "isId": "Value must be a valid ID.",
-                                    "value": "invalid-ticket"
-                                  }
+                                  "type": "object",
+                                  "title": "Object",
+                                  "description": "Any JSON",
+                                  "additionalProperties": true
                                 },
                                 {
-                                  "property": "newPassword",
-                                  "value": "Invalid-password",
-                                  "constraints": {
-                                    "containsDigits": "Value must contains at least one digit."
-                                  }
+                                  "type": "array",
+                                  "items": {},
+                                  "title": "Array",
+                                  "description": "Any array"
+                                },
+                                {
+                                  "type": "string",
+                                  "title": "String",
+                                  "description": "Any string"
+                                },
+                                {
+                                  "type": "number",
+                                  "title": "Number",
+                                  "description": "Any number"
+                                },
+                                {
+                                  "type": "boolean",
+                                  "title": "String",
+                                  "description": "True or false"
                                 }
                               ]
                             }
-                          }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
                         }
                       },
                       "required": [
@@ -2474,6 +2788,32 @@
                       ]
                     }
                   ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "validation",
+                    "message": "Validation failed.",
+                    "statusCode": 422,
+                    "details": {
+                      "entries": [
+                        {
+                          "property": "ticket",
+                          "constraints": {
+                            "isId": "Value must be a valid ID.",
+                            "value": "invalid-ticket"
+                          }
+                        },
+                        {
+                          "property": "newPassword",
+                          "value": "Invalid-password",
+                          "constraints": {
+                            "containsDigits": "Value must contains at least one digit."
+                          }
+                        }
+                      ]
+                    }
+                  }
                 }
               }
             }
@@ -2560,12 +2900,13 @@
                               },
                               "required": [
                                 "reason"
-                              ],
-                              "example": {
-                                "reason": "You are not authenticated."
-                              }
+                              ]
                             }
-                          }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
                         }
                       },
                       "required": [
@@ -2574,6 +2915,17 @@
                       ]
                     }
                   ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "access-control.authentication",
+                    "message": "Authentication failed.",
+                    "statusCode": 401,
+                    "details": {
+                      "reason": "You are not authenticated."
+                    }
+                  }
                 }
               }
             }
@@ -2759,12 +3111,13 @@
                               },
                               "required": [
                                 "reason"
-                              ],
-                              "example": {
-                                "reason": "The password has already been set."
-                              }
+                              ]
                             }
-                          }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
                         }
                       },
                       "required": [
@@ -2773,6 +3126,17 @@
                       ]
                     }
                   ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "conflict",
+                    "message": "Conflict.",
+                    "statusCode": 409,
+                    "details": {
+                      "reason": "The password has already been set."
+                    }
+                  }
                 }
               }
             }
@@ -2812,17 +3176,42 @@
                               "default": 422
                             },
                             "details": {
-                              "example": [
+                              "nullable": true,
+                              "oneOf": [
                                 {
-                                  "property": "password",
-                                  "value": "Invalid-password",
-                                  "constraints": {
-                                    "containsDigits": "Value must contains at least one digit."
-                                  }
+                                  "type": "object",
+                                  "title": "Object",
+                                  "description": "Any JSON",
+                                  "additionalProperties": true
+                                },
+                                {
+                                  "type": "array",
+                                  "items": {},
+                                  "title": "Array",
+                                  "description": "Any array"
+                                },
+                                {
+                                  "type": "string",
+                                  "title": "String",
+                                  "description": "Any string"
+                                },
+                                {
+                                  "type": "number",
+                                  "title": "Number",
+                                  "description": "Any number"
+                                },
+                                {
+                                  "type": "boolean",
+                                  "title": "String",
+                                  "description": "True or false"
                                 }
                               ]
                             }
-                          }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
                         }
                       },
                       "required": [
@@ -2831,6 +3220,25 @@
                       ]
                     }
                   ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "validation",
+                    "message": "Validation failed.",
+                    "statusCode": 422,
+                    "details": {
+                      "entries": [
+                        {
+                          "property": "password",
+                          "value": "Invalid-password",
+                          "constraints": {
+                            "containsDigits": "Value must contains at least one digit."
+                          }
+                        }
+                      ]
+                    }
+                  }
                 }
               }
             }
@@ -3020,12 +3428,13 @@
                               },
                               "required": [
                                 "reason"
-                              ],
-                              "example": {
-                                "reason": "You are not authenticated."
-                              }
+                              ]
                             }
-                          }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
                         }
                       },
                       "required": [
@@ -3034,6 +3443,17 @@
                       ]
                     }
                   ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "access-control.authentication",
+                    "message": "Authentication failed.",
+                    "statusCode": 401,
+                    "details": {
+                      "reason": "You are not authenticated."
+                    }
+                  }
                 }
               }
             }
@@ -3219,12 +3639,13 @@
                               },
                               "required": [
                                 "reason"
-                              ],
-                              "example": {
-                                "reason": "No password has been set for this account."
-                              }
+                              ]
                             }
-                          }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
                         }
                       },
                       "required": [
@@ -3233,6 +3654,17 @@
                       ]
                     }
                   ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "conflict",
+                    "message": "Conflict.",
+                    "statusCode": 409,
+                    "details": {
+                      "reason": "No password has been set for this account."
+                    }
+                  }
                 }
               }
             }
@@ -3272,24 +3704,42 @@
                               "default": 422
                             },
                             "details": {
-                              "example": [
+                              "nullable": true,
+                              "oneOf": [
                                 {
-                                  "property": "currentPassword",
-                                  "value": "Invalid-password",
-                                  "constraints": {
-                                    "containsDigits": "Value must contains at least one digit."
-                                  }
+                                  "type": "object",
+                                  "title": "Object",
+                                  "description": "Any JSON",
+                                  "additionalProperties": true
                                 },
                                 {
-                                  "property": "newPassword",
-                                  "value": "Invalid-password",
-                                  "constraints": {
-                                    "containsDigits": "Value must contains at least one digit."
-                                  }
+                                  "type": "array",
+                                  "items": {},
+                                  "title": "Array",
+                                  "description": "Any array"
+                                },
+                                {
+                                  "type": "string",
+                                  "title": "String",
+                                  "description": "Any string"
+                                },
+                                {
+                                  "type": "number",
+                                  "title": "Number",
+                                  "description": "Any number"
+                                },
+                                {
+                                  "type": "boolean",
+                                  "title": "String",
+                                  "description": "True or false"
                                 }
                               ]
                             }
-                          }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
                         }
                       },
                       "required": [
@@ -3298,6 +3748,32 @@
                       ]
                     }
                   ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "validation",
+                    "message": "Validation failed.",
+                    "statusCode": 422,
+                    "details": {
+                      "entries": [
+                        {
+                          "property": "currentPassword",
+                          "value": "Invalid-password",
+                          "constraints": {
+                            "containsDigits": "Value must contains at least one digit."
+                          }
+                        },
+                        {
+                          "property": "newPassword",
+                          "value": "Invalid-password",
+                          "constraints": {
+                            "containsDigits": "Value must contains at least one digit."
+                          }
+                        }
+                      ]
+                    }
+                  }
                 }
               }
             }
@@ -3402,12 +3878,13 @@
                               },
                               "required": [
                                 "reason"
-                              ],
-                              "example": {
-                                "reason": "You have already confirmed your email address."
-                              }
+                              ]
                             }
-                          }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
                         }
                       },
                       "required": [
@@ -3416,6 +3893,17 @@
                       ]
                     }
                   ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "bad-request",
+                    "message": "Bad request.",
+                    "statusCode": 400,
+                    "details": {
+                      "reason": "You have already confirmed your email address."
+                    }
+                  }
                 }
               }
             }
@@ -3610,15 +4098,13 @@
                               },
                               "required": [
                                 "entityType"
-                              ],
-                              "example": {
-                                "entityType": "User",
-                                "identity": {
-                                  "email": "john.doe@mail.com"
-                                }
-                              }
+                              ]
                             }
-                          }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
                         }
                       },
                       "required": [
@@ -3627,6 +4113,20 @@
                       ]
                     }
                   ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "app.entity-not-found",
+                    "message": "Entity not found.",
+                    "statusCode": 404,
+                    "details": {
+                      "entityType": "User",
+                      "identity": {
+                        "email": "john.doe@mail.com"
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -3666,17 +4166,42 @@
                               "default": 422
                             },
                             "details": {
-                              "example": [
+                              "nullable": true,
+                              "oneOf": [
                                 {
-                                  "property": "email",
-                                  "value": "invalid-mail@mailcom",
-                                  "constraints": {
-                                    "isEmail": "Value must be an email."
-                                  }
+                                  "type": "object",
+                                  "title": "Object",
+                                  "description": "Any JSON",
+                                  "additionalProperties": true
+                                },
+                                {
+                                  "type": "array",
+                                  "items": {},
+                                  "title": "Array",
+                                  "description": "Any array"
+                                },
+                                {
+                                  "type": "string",
+                                  "title": "String",
+                                  "description": "Any string"
+                                },
+                                {
+                                  "type": "number",
+                                  "title": "Number",
+                                  "description": "Any number"
+                                },
+                                {
+                                  "type": "boolean",
+                                  "title": "String",
+                                  "description": "True or false"
                                 }
                               ]
                             }
-                          }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
                         }
                       },
                       "required": [
@@ -3685,6 +4210,25 @@
                       ]
                     }
                   ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "validation",
+                    "message": "Validation failed.",
+                    "statusCode": 422,
+                    "details": {
+                      "entries": [
+                        {
+                          "property": "email",
+                          "value": "invalid-mail@mailcom",
+                          "constraints": {
+                            "isEmail": "Value must be an email."
+                          }
+                        }
+                      ]
+                    }
+                  }
                 }
               }
             }
@@ -3736,13 +4280,13 @@
                               "required": [
                                 "reason",
                                 "secondsLeft"
-                              ],
-                              "example": {
-                                "reason": "You have exceeded the rate limit. Please try again in 10 seconds.",
-                                "secondsLeft": 10
-                              }
+                              ]
                             }
-                          }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
                         }
                       },
                       "required": [
@@ -3751,6 +4295,18 @@
                       ]
                     }
                   ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "rate-limit.mail",
+                    "message": "Rate limit.",
+                    "statusCode": 429,
+                    "details": {
+                      "reason": "You have exceeded the rate limit. Please try again in 10 seconds.",
+                      "secondsLeft": 10
+                    }
+                  }
                 }
               }
             }
@@ -3798,12 +4354,13 @@
                               },
                               "required": [
                                 "reason"
-                              ],
-                              "example": {
-                                "reason": "The confirmation email mail could not be sent."
-                              }
+                              ]
                             }
-                          }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
                         }
                       },
                       "required": [
@@ -3812,6 +4369,17 @@
                       ]
                     }
                   ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "internal",
+                    "message": "Internal server error.",
+                    "statusCode": 500,
+                    "details": {
+                      "reason": "The confirmation email mail could not be sent."
+                    }
+                  }
                 }
               }
             }
@@ -4223,12 +4791,13 @@
                               },
                               "required": [
                                 "reason"
-                              ],
-                              "example": {
-                                "reason": "OTP code is expired."
-                              }
+                              ]
                             }
-                          }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
                         }
                       },
                       "required": [
@@ -4237,6 +4806,17 @@
                       ]
                     }
                   ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "gone.otp-expired",
+                    "message": "Gone.",
+                    "statusCode": 410,
+                    "details": {
+                      "reason": "OTP code is expired."
+                    }
+                  }
                 }
               }
             }
@@ -4276,24 +4856,42 @@
                               "default": 422
                             },
                             "details": {
-                              "example": [
+                              "nullable": true,
+                              "oneOf": [
                                 {
-                                  "property": "ticket",
-                                  "constraints": {
-                                    "isId": "Value must be a valid ID.",
-                                    "value": "invalid-ticket"
-                                  }
+                                  "type": "object",
+                                  "title": "Object",
+                                  "description": "Any JSON",
+                                  "additionalProperties": true
                                 },
                                 {
-                                  "property": "code",
-                                  "value": "123abcd",
-                                  "constraints": {
-                                    "isNumberString": "Value must be a number string."
-                                  }
+                                  "type": "array",
+                                  "items": {},
+                                  "title": "Array",
+                                  "description": "Any array"
+                                },
+                                {
+                                  "type": "string",
+                                  "title": "String",
+                                  "description": "Any string"
+                                },
+                                {
+                                  "type": "number",
+                                  "title": "Number",
+                                  "description": "Any number"
+                                },
+                                {
+                                  "type": "boolean",
+                                  "title": "String",
+                                  "description": "True or false"
                                 }
                               ]
                             }
-                          }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
                         }
                       },
                       "required": [
@@ -4302,6 +4900,32 @@
                       ]
                     }
                   ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "validation",
+                    "message": "Validation failed.",
+                    "statusCode": 422,
+                    "details": {
+                      "entries": [
+                        {
+                          "property": "ticket",
+                          "constraints": {
+                            "isId": "Value must be a valid ID.",
+                            "value": "invalid-ticket"
+                          }
+                        },
+                        {
+                          "property": "code",
+                          "value": "123abcd",
+                          "constraints": {
+                            "isNumberString": "Value must be a number string."
+                          }
+                        }
+                      ]
+                    }
+                  }
                 }
               }
             }
@@ -4353,13 +4977,13 @@
                               "required": [
                                 "reason",
                                 "secondsLeft"
-                              ],
-                              "example": {
-                                "reason": "You have exceeded the rate limit. Please try again in 10 seconds.",
-                                "secondsLeft": 10
-                              }
+                              ]
                             }
-                          }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
                         }
                       },
                       "required": [
@@ -4368,6 +4992,18 @@
                       ]
                     }
                   ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "rate-limit.otp",
+                    "message": "Rate limit.",
+                    "statusCode": 429,
+                    "details": {
+                      "reason": "You have exceeded the rate limit. Please try again in 10 seconds.",
+                      "secondsLeft": 10
+                    }
+                  }
                 }
               }
             }

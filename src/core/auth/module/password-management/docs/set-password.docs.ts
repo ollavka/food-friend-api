@@ -32,15 +32,13 @@ export function SetPasswordDocs(): MethodDecorator {
     ApiBearerAccessTokenAuth(),
     ApiBearerAuthExceptionResponse(),
     ApiUserStatusPolicyExceptionResponse(true),
-    ApiValidationExceptionResponse({
-      example: [
-        {
-          property: 'password',
-          value: 'Invalid-password',
-          constraints: { containsDigits: 'Value must contains at least one digit.' },
-        },
-      ],
-    }),
+    ApiValidationExceptionResponse([
+      {
+        property: 'password',
+        value: 'Invalid-password',
+        constraints: { containsDigits: 'Value must contains at least one digit.' },
+      },
+    ]),
     ApiHttpExceptionResponse({
       statusCode: HttpStatus.CONFLICT,
       description: 'The password has already been set',

@@ -20,20 +20,18 @@ export function LoginDocs(): MethodDecorator {
       description: 'User successfully authenticated',
       schema: successApiSchemaRef(AccessTokenApiModel),
     }),
-    ApiValidationExceptionResponse({
-      example: [
-        {
-          property: 'email',
-          value: 'invalid-mail@mailcom',
-          constraints: { isEmail: 'Value must be an email.' },
-        },
-        {
-          property: 'password',
-          value: 'Invalid-password',
-          constraints: { containsDigits: 'Value must contains at least one digit.' },
-        },
-      ],
-    }),
+    ApiValidationExceptionResponse([
+      {
+        property: 'email',
+        value: 'invalid-mail@mailcom',
+        constraints: { isEmail: 'Value must be an email.' },
+      },
+      {
+        property: 'password',
+        value: 'Invalid-password',
+        constraints: { containsDigits: 'Value must contains at least one digit.' },
+      },
+    ]),
     ApiAuthenticationExceptionResponse({
       type: 'credentials',
       description: 'Invalid credentials',

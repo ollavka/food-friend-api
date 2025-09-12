@@ -108,37 +108,64 @@ export function ApiHttpExceptionResponse({
   const exceptionType = typeKeyOverride ?? type
   const exceptionMessage = messageOverride ?? message
 
+  const detailsExampleFromSchema =
+    !isRef && details && typeof details === 'object' && 'example' in (details as any)
+      ? (details as any).example
+      : undefined
+
   const detailsSchema = match({ details, isRef })
     .with({ isRef: true }, () => <ReferenceObject>{ $ref: getSchemaPath(<Type<unknown>>details) })
     .with({ details: P.nullish }, () => ANY_DOCS_JSON)
-    .otherwise(() => <SchemaObject>details)
+    .otherwise(() => {
+      const d = details as SchemaObject
+      const { example: _omit, ...rest } = d as any
+      return <SchemaObject>rest
+    })
+
+  const normalizedExample =
+    example === undefined && detailsExampleFromSchema === undefined
+      ? undefined
+      : {
+          status: 'error' as const,
+          error: {
+            type: exceptionType,
+            message: exceptionMessage,
+            statusCode,
+            details: example ?? detailsExampleFromSchema,
+          },
+        }
 
   return applyDecorators(
     ApiExtraModels(...(isRef ? [<Type<unknown>>details] : [])),
     ApiResponse({
       status: statusCode,
       description,
-      schema: {
-        allOf: [
-          { $ref: getSchemaPath(ErrorResponseApiModel) },
-          {
-            type: 'object',
-            properties: {
-              status: { type: 'string', enum: ['error'], default: 'error' },
-              error: {
+      content: {
+        'application/json': {
+          schema: {
+            allOf: [
+              { $ref: getSchemaPath(ErrorResponseApiModel) },
+              {
                 type: 'object',
                 properties: {
-                  type: { type: 'string', default: exceptionType },
-                  message: { type: 'string', default: exceptionMessage },
-                  statusCode: { type: 'number', default: statusCode },
-                  details: detailsSchema,
+                  status: { type: 'string', enum: ['error'], default: 'error' },
+                  error: {
+                    type: 'object',
+                    properties: {
+                      type: { type: 'string', default: exceptionType },
+                      message: { type: 'string', default: exceptionMessage },
+                      statusCode: { type: 'number', default: statusCode },
+                      details: detailsSchema,
+                    },
+                    required: ['type', 'statusCode'],
+                  },
                 },
+                required: ['status', 'error'],
               },
-            },
-            required: ['status', 'error'],
+            ],
           },
-        ],
-        ...(example !== undefined ? { example } : {}),
+          ...(normalizedExample ? { example: normalizedExample } : {}),
+        },
       },
     }),
   )

@@ -47,20 +47,18 @@ export function ChangePasswordDocs(): MethodDecorator {
         },
       },
     }),
-    ApiValidationExceptionResponse({
-      example: [
-        {
-          property: 'currentPassword',
-          value: 'Invalid-password',
-          constraints: { containsDigits: 'Value must contains at least one digit.' },
-        },
-        {
-          property: 'newPassword',
-          value: 'Invalid-password',
-          constraints: { containsDigits: 'Value must contains at least one digit.' },
-        },
-      ],
-    }),
+    ApiValidationExceptionResponse([
+      {
+        property: 'currentPassword',
+        value: 'Invalid-password',
+        constraints: { containsDigits: 'Value must contains at least one digit.' },
+      },
+      {
+        property: 'newPassword',
+        value: 'Invalid-password',
+        constraints: { containsDigits: 'Value must contains at least one digit.' },
+      },
+    ]),
     ApiBadRequestExceptionResponse({
       description: 'The current password is incorrect or matches the new one',
       variants: [

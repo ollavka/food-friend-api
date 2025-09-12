@@ -61,22 +61,20 @@ export function ResetPasswordCompleteDocs(): MethodDecorator {
         },
       ],
     }),
-    ApiValidationExceptionResponse({
-      example: [
-        {
-          property: 'ticket',
-          constraints: {
-            isId: 'Value must be a valid ID.',
-            value: 'invalid-ticket',
-          },
+    ApiValidationExceptionResponse([
+      {
+        property: 'ticket',
+        constraints: {
+          isId: 'Value must be a valid ID.',
+          value: 'invalid-ticket',
         },
-        {
-          property: 'newPassword',
-          value: 'Invalid-password',
-          constraints: { containsDigits: 'Value must contains at least one digit.' },
-        },
-      ],
-    }),
+      },
+      {
+        property: 'newPassword',
+        value: 'Invalid-password',
+        constraints: { containsDigits: 'Value must contains at least one digit.' },
+      },
+    ]),
     ApiUserStatusPolicyExceptionResponse(),
   )
 }

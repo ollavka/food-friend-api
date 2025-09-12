@@ -74,24 +74,22 @@ export function ResetPasswordConfirmDocs(): MethodDecorator {
         },
       },
     }),
-    ApiValidationExceptionResponse({
-      example: [
-        {
-          property: 'ticket',
-          constraints: {
-            isId: 'Value must be a valid ID.',
-            value: 'invalid-ticket',
-          },
+    ApiValidationExceptionResponse([
+      {
+        property: 'ticket',
+        constraints: {
+          isId: 'Value must be a valid ID.',
+          value: 'invalid-ticket',
         },
-        {
-          property: 'code',
-          value: '123abcd',
-          constraints: {
-            isNumberString: 'Value must be a number string.',
-          },
+      },
+      {
+        property: 'code',
+        value: '123abcd',
+        constraints: {
+          isNumberString: 'Value must be a number string.',
         },
-      ],
-    }),
+      },
+    ]),
     ApiUserStatusPolicyExceptionResponse(),
     ApiRateLimitExceptionResponse('otp'),
   )
