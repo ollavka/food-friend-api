@@ -1,1 +1,1 @@
-export * from './jwt.repository'
+export * from './session.repository'

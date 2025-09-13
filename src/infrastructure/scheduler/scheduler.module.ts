@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
 import { ScheduleModule } from '@nestjs/schedule'
-import { CleanupExpiredEntitiesJob } from './job'
+import { CleanupOtpCodesJob, CleanupSessionsJob } from './job'
 
 @Module({
   imports: [
@@ -10,6 +10,6 @@ import { CleanupExpiredEntitiesJob } from './job'
       timeouts: false,
     }),
   ],
-  providers: [CleanupExpiredEntitiesJob],
+  providers: [CleanupOtpCodesJob, CleanupSessionsJob],
 })
 export class SchedulerModule {}

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { AuthMethod, UserRole, UserStatus } from '@prisma/client'
+import { UserRole, UserStatus } from '@prisma/client'
 import { Request, Response } from 'express'
 import { AccessControlAuthenticationException } from '@access-control/exception'
 import { AppConflictException } from '@common/exception'
@@ -34,7 +34,6 @@ export class AuthService {
       password: hashedPassword,
       status: UserStatus.UNVERIFIED,
       role: UserRole.REGULAR,
-      authMethod: AuthMethod.CREDENTIALS,
       lastEmailVerificationMailSentAt: null,
       lastResetPasswordMailSentAt: null,
     })

@@ -11,31 +11,31 @@ import { JwtEnvConfig } from '../../../config/jwt'
 import { JwtUserPayload } from '../../../type'
 
 @Injectable()
-export class JwtRepository {
+export class SessionRepository {
   public constructor(
     private readonly prismaService: PrismaService,
     private readonly jwtService: JwtService,
   ) {}
 
   public async removeRefreshTokenById(tokenId: string): Promise<boolean> {
-    await this.prismaService.refreshToken.deleteMany({ where: { id: tokenId } })
+    await this.prismaService.session.deleteMany({ where: { id: tokenId } })
     return true
   }
 
   public async removeRefreshTokenByHash(tokenHash: string): Promise<boolean> {
-    await this.prismaService.refreshToken.deleteMany({ where: { tokenHash } })
+    await this.prismaService.session.deleteMany({ where: { tokenHash } })
     return true
   }
 
   public async removeRefreshTokenByUserId(userId: string): Promise<boolean> {
-    await this.prismaService.refreshToken.deleteMany({ where: { userId } })
+    await this.prismaService.session.deleteMany({ where: { userId } })
     return true
   }
 
   public async validateRefreshToken(token: string): Promise<JwtUserPayload> {
     const tokenHash = hashValue(token)
 
-    const refreshToken = await this.prismaService.refreshToken.findUnique({
+    const refreshToken = await this.prismaService.session.findUnique({
       where: {
         tokenHash,
       },
@@ -64,20 +64,14 @@ export class JwtRepository {
     const tokenHash = hashValue(token)
     const expiresAt = addMilliseconds(new Date(), convertToMs(tokenTtl))
 
-    await this.prismaService.refreshToken.upsert({
-      where: {
-        userId,
-      },
-      create: {
+    await this.prismaService.session.create({
+      data: {
+        expiresAt,
+        tokenHash,
+        isRevoked: false,
         user: {
           connect: { id: userId },
         },
-        tokenHash,
-        expiresAt,
-      },
-      update: {
-        tokenHash,
-        expiresAt,
       },
     })
   }

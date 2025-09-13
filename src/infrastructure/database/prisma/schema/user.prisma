@@ -9,10 +9,8 @@ model User {
   role   UserRole   @default(REGULAR)
   status UserStatus @default(UNVERIFIED)
 
-  otpCodes     OtpCode[]
-  refreshToken RefreshToken?
-
-  authMethod AuthMethod @map("auth_method")
+  otpCodes OtpCode[]
+  sessions Session[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("update_at")
@@ -33,9 +31,4 @@ enum UserStatus {
   UNVERIFIED
   ACTIVE
   BLOCKED
-}
-
-enum AuthMethod {
-  CREDENTIALS
-  GOOGLE
 }

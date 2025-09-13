@@ -8,7 +8,7 @@ import { convertToMs, hashValue, isDev } from '@common/util'
 import { UserService } from '@core/user'
 import { AccessTokenApiModel } from '../../../api-model'
 import { JWT_ENV_CONFIG_KEY, JwtEnvConfig } from '../../../config/jwt'
-import { JwtRepository } from '../repository'
+import { SessionRepository } from '../repository'
 
 @Injectable()
 export class AuthSessionService {
@@ -16,7 +16,7 @@ export class AuthSessionService {
 
   public constructor(
     private readonly userService: UserService,
-    private readonly jwtRepository: JwtRepository,
+    private readonly sessionRepository: SessionRepository,
     configService: ConfigService<{ [JWT_ENV_CONFIG_KEY]: JwtEnvConfig }, true>,
   ) {
     this.jwtEnvConfig = configService.get(JWT_ENV_CONFIG_KEY)
@@ -26,7 +26,7 @@ export class AuthSessionService {
     const refreshToken = req.cookies['refresh-token'] ?? ''
 
     try {
-      const payload = await this.jwtRepository.validateRefreshToken(refreshToken)
+      const payload = await this.sessionRepository.validateRefreshToken(refreshToken)
       const user = await this.userService.findById(payload.id)
 
       if (!user) {
@@ -45,7 +45,7 @@ export class AuthSessionService {
     const tokenHash = hashValue(refreshToken)
 
     if (refreshToken) {
-      await this.jwtRepository.removeRefreshTokenByHash(tokenHash)
+      await this.sessionRepository.removeRefreshTokenByHash(tokenHash)
     }
 
     res.clearCookie('refresh-token')
@@ -56,12 +56,12 @@ export class AuthSessionService {
     await StatusPolicy.enforce(user)
 
     const { jwtAccessTokenTtl, jwtRefreshTokenTtl } = this.jwtEnvConfig
-    const { accessToken, refreshToken } = await this.jwtRepository.generateTokens(user, {
+    const { accessToken, refreshToken } = await this.sessionRepository.generateTokens(user, {
       jwtAccessTokenTtl,
       jwtRefreshTokenTtl,
     })
 
-    await this.jwtRepository.saveRefreshToken(refreshToken, user.id, jwtRefreshTokenTtl)
+    await this.sessionRepository.saveRefreshToken(refreshToken, user.id, jwtRefreshTokenTtl)
 
     this.setRefreshTokenCookie(res, refreshToken)
 
