@@ -4,6 +4,7 @@ import { render } from '@react-email/render'
 import { addMinutes, differenceInSeconds, isAfter, isEqual } from 'date-fns'
 import { MAIL_RESEND_WINDOW_MINS } from '@common/constant'
 import { Exception } from '@common/exception'
+import { Nullable } from '@common/type'
 import { LocalizationFactory } from '@localization'
 import { ResetPasswordMailTemplate, VerificationEmailMailTemplate, WelcomeMailTemplate } from '../template'
 
@@ -14,7 +15,7 @@ export class MailService {
     private readonly localizationFactory: LocalizationFactory,
   ) {}
 
-  public async sendWelcomeMail(toEmail: string, userName?: string): Promise<void> {
+  public async sendWelcomeMail(toEmail: string, userName: Nullable<string>): Promise<void> {
     try {
       const t = this.localizationFactory.createFor('email.welcome', { parseHtml: true })
       const html = await render(WelcomeMailTemplate({ userName, t }))
@@ -30,7 +31,7 @@ export class MailService {
     }
   }
 
-  public async sendVerificationEmailMail(code: string, toEmail: string, userName?: string): Promise<void> {
+  public async sendVerificationEmailMail(code: string, toEmail: string, userName: Nullable<string>): Promise<void> {
     try {
       const t = this.localizationFactory.createFor('email.verification', { parseHtml: true })
       const html = await render(VerificationEmailMailTemplate({ code, userName, t }))
@@ -46,7 +47,7 @@ export class MailService {
     }
   }
 
-  public async sendResetPasswordMail(code: string, toEmail: string, userName?: string): Promise<void> {
+  public async sendResetPasswordMail(code: string, toEmail: string, userName: Nullable<string>): Promise<void> {
     try {
       const t = this.localizationFactory.createFor('email.password.reset', { parseHtml: true })
       const html = await render(ResetPasswordMailTemplate({ code, userName, t }))

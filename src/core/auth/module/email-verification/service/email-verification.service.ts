@@ -46,7 +46,7 @@ export class EmailVerificationService {
 
     const otpCode = this.otpService.generateCode()
     const hashedCode = this.otpService.hashCode(otpCode, { scope: OtpCodeType.EMAIL_VERIFICATION, identity: email })
-    await this.mailService.sendVerificationEmailMail(otpCode, email, user.firstName)
+    await this.mailService.sendVerificationEmailMail(otpCode, email, user?.firstName)
     await this.userService.update(user.id, {
       lastEmailVerificationMailSentAt: new Date(),
     })

@@ -18,12 +18,9 @@ export function ResetPasswordCompleteDocs(): MethodDecorator {
     ApiOkResponse({
       description: 'Message about successful password reset',
       example: {
-        summary: 'Success message',
-        value: {
-          status: 'success',
-          data: {
-            message: 'The password has been successfully reset.',
-          },
+        status: 'success',
+        data: {
+          message: 'The password has been successfully reset.',
         },
       },
     }),

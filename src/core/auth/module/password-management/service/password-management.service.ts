@@ -99,7 +99,7 @@ export class PasswordManagementService {
 
     const otpCode = this.otpService.generateCode()
     const hashedCode = this.otpService.hashCode(otpCode, { scope: OtpCodeType.PASSWORD_RESET, identity: email })
-    await this.mailService.sendResetPasswordMail(otpCode, email, user.firstName)
+    await this.mailService.sendResetPasswordMail(otpCode, email, user?.firstName)
     await this.userService.update(user.id, {
       lastResetPasswordMailSentAt: new Date(),
     })

@@ -20,12 +20,9 @@ export function SetPasswordDocs(): MethodDecorator {
     ApiOkResponse({
       description: 'Message about successful password set',
       example: {
-        summary: 'Success message',
-        value: {
-          status: 'success',
-          data: {
-            message: 'The password has been successfully set.',
-          },
+        status: 'success',
+        data: {
+          message: 'The password has been successfully set.',
         },
       },
     }),

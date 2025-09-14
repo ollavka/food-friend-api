@@ -39,7 +39,7 @@ export class AuthService {
     })
 
     const [, emailVerificationTicketModel] = await Promise.all([
-      this.mailService.sendWelcomeMail(createdUser.email, createdUser.firstName),
+      this.mailService.sendWelcomeMail(createdUser.email, createdUser?.firstName),
       this.emailVerificationService.sendVerificationMail(createdUser.email, false),
     ])
 

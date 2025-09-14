@@ -305,7 +305,7 @@
         },
         "summary": "Register a new user",
         "tags": [
-          "Auth flow"
+          "Auth"
         ]
       }
     },
@@ -651,7 +651,7 @@
         },
         "summary": "Log in with credentials",
         "tags": [
-          "Auth flow"
+          "Auth"
         ]
       }
     },
@@ -771,7 +771,7 @@
         ],
         "summary": "Log out",
         "tags": [
-          "Auth flow"
+          "Auth"
         ]
       }
     },
@@ -1205,7 +1205,7 @@
         ],
         "summary": "Refresh tokens",
         "tags": [
-          "Auth flow"
+          "Auth"
         ]
       }
     },
@@ -2384,12 +2384,9 @@
             "content": {
               "application/json": {
                 "example": {
-                  "summary": "Success message",
-                  "value": {
-                    "status": "success",
-                    "data": {
-                      "message": "The password has been successfully reset."
-                    }
+                  "status": "success",
+                  "data": {
+                    "message": "The password has been successfully reset."
                   }
                 }
               }
@@ -2846,12 +2843,9 @@
             "content": {
               "application/json": {
                 "example": {
-                  "summary": "Success message",
-                  "value": {
-                    "status": "success",
-                    "data": {
-                      "message": "The password has been successfully set."
-                    }
+                  "status": "success",
+                  "data": {
+                    "message": "The password has been successfully set."
                   }
                 }
               }
@@ -3276,12 +3270,9 @@
             "content": {
               "application/json": {
                 "example": {
-                  "summary": "Success message",
-                  "value": {
-                    "status": "success",
-                    "data": {
-                      "message": "The password has been successfully changed."
-                    }
+                  "status": "success",
+                  "data": {
+                    "message": "The password has been successfully changed."
                   }
                 }
               }
@@ -5014,6 +5005,1159 @@
           "Email verification"
         ]
       }
+    },
+    "/auth/google": {
+      "post": {
+        "description": "Authentication or registration via Google provider using a Google ID token (JWT)",
+        "operationId": "GoogleProviderController_googleAuth",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleAuthDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User successfully authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessResponseApiModel"
+                    },
+                    {
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "default": "success"
+                        },
+                        "data": {
+                          "$ref": "#/components/schemas/AccessTokenApiModel"
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "data"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Errors related to Google ID token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "bad-request",
+                                "bad-request",
+                                "bad-request",
+                                "bad-request"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Bad request."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "enum": [
+                                400
+                              ]
+                            },
+                            "details": {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "additionalProperties": true
+                                },
+                                {
+                                  "type": "object",
+                                  "additionalProperties": true
+                                },
+                                {
+                                  "type": "object",
+                                  "additionalProperties": true
+                                },
+                                {
+                                  "type": "object",
+                                  "additionalProperties": true
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                },
+                "examples": {
+                  "bad-request_1": {
+                    "summary": "Invalid Google token payload",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "bad-request",
+                        "message": "Bad request.",
+                        "statusCode": 400,
+                        "details": {
+                          "reason": "Invalid Google token payload."
+                        }
+                      }
+                    }
+                  },
+                  "bad-request_2": {
+                    "summary": "Invalid or expired Google ID token",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "bad-request",
+                        "message": "Bad request.",
+                        "statusCode": 400,
+                        "details": {
+                          "reason": "Invalid or expired Google ID token."
+                        }
+                      }
+                    }
+                  },
+                  "bad-request_3": {
+                    "summary": "Google email is required",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "bad-request",
+                        "message": "Bad request.",
+                        "statusCode": 400,
+                        "details": {
+                          "reason": "Google email is required."
+                        }
+                      }
+                    }
+                  },
+                  "bad-request_4": {
+                    "summary": "Google email must be verified",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "bad-request",
+                        "message": "Bad request.",
+                        "statusCode": 400,
+                        "details": {
+                          "reason": "Google email must be verified to sign in."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "default": "validation"
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Validation failed."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "default": 422
+                            },
+                            "details": {
+                              "nullable": true,
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "title": "Object",
+                                  "description": "Any JSON",
+                                  "additionalProperties": true
+                                },
+                                {
+                                  "type": "array",
+                                  "items": {},
+                                  "title": "Array",
+                                  "description": "Any array"
+                                },
+                                {
+                                  "type": "string",
+                                  "title": "String",
+                                  "description": "Any string"
+                                },
+                                {
+                                  "type": "number",
+                                  "title": "Number",
+                                  "description": "Any number"
+                                },
+                                {
+                                  "type": "boolean",
+                                  "title": "String",
+                                  "description": "True or false"
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "validation",
+                    "message": "Validation failed.",
+                    "statusCode": 422,
+                    "details": {
+                      "entries": [
+                        {
+                          "property": "idToken",
+                          "value": "invalid-jwt",
+                          "constraints": {
+                            "isJWT": "Value must be a JWT."
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Authentication or registration via Google provider",
+        "tags": [
+          "Google auth"
+        ]
+      }
+    },
+    "/auth/google/link": {
+      "post": {
+        "description": "Link Google account using a Google ID token (JWT) to user",
+        "operationId": "GoogleProviderController_linkGoogleAccount",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleAuthDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Message about successful link Google account",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "success",
+                  "data": {
+                    "message": "Google account has been successfully linked to your account."
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Errors related to Google ID token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "bad-request",
+                                "bad-request",
+                                "bad-request",
+                                "bad-request"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Bad request."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "enum": [
+                                400
+                              ]
+                            },
+                            "details": {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "additionalProperties": true
+                                },
+                                {
+                                  "type": "object",
+                                  "additionalProperties": true
+                                },
+                                {
+                                  "type": "object",
+                                  "additionalProperties": true
+                                },
+                                {
+                                  "type": "object",
+                                  "additionalProperties": true
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                },
+                "examples": {
+                  "bad-request_1": {
+                    "summary": "Invalid Google token payload",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "bad-request",
+                        "message": "Bad request.",
+                        "statusCode": 400,
+                        "details": {
+                          "reason": "Invalid Google token payload."
+                        }
+                      }
+                    }
+                  },
+                  "bad-request_2": {
+                    "summary": "Invalid or expired Google ID token",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "bad-request",
+                        "message": "Bad request.",
+                        "statusCode": 400,
+                        "details": {
+                          "reason": "Invalid or expired Google ID token."
+                        }
+                      }
+                    }
+                  },
+                  "bad-request_3": {
+                    "summary": "Google email is required",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "bad-request",
+                        "message": "Bad request.",
+                        "statusCode": 400,
+                        "details": {
+                          "reason": "Google email is required."
+                        }
+                      }
+                    }
+                  },
+                  "bad-request_4": {
+                    "summary": "Google email must be verified",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "bad-request",
+                        "message": "Bad request.",
+                        "statusCode": 400,
+                        "details": {
+                          "reason": "Google email must be verified to sign in."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "default": "access-control.authentication"
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Authentication failed."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "default": 401
+                            },
+                            "details": {
+                              "type": "object",
+                              "properties": {
+                                "reason": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "reason"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "access-control.authentication",
+                    "message": "Authentication failed.",
+                    "statusCode": 401,
+                    "details": {
+                      "reason": "You are not authenticated."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User status policy failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "access-control.authorization.blocked",
+                                "access-control.authorization.forbidden"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Forbidden."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "enum": [
+                                403
+                              ]
+                            },
+                            "details": {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "reason": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "reason"
+                                  ]
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "reason": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "reason"
+                                  ]
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                },
+                "examples": {
+                  "access-control.authorization.blocked_1": {
+                    "summary": "User account is blocked",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "access-control.authorization.blocked",
+                        "message": "Authorization failed",
+                        "statusCode": 403,
+                        "details": {
+                          "reason": "Your account has been blocked. Please contact support."
+                        }
+                      }
+                    }
+                  },
+                  "access-control.authorization.forbidden_2": {
+                    "summary": "Forbidden resource (fallback)",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "access-control.authorization.forbidden",
+                        "message": "Authorization failed",
+                        "statusCode": 403,
+                        "details": {
+                          "reason": "Access denied. Please contact support."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "This Google account is linked to another user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                null,
+                                null
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Conflict."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "enum": [
+                                409
+                              ]
+                            },
+                            "details": {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "reason": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "reason"
+                                  ]
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "reason": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "reason"
+                                  ]
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                },
+                "examples": {
+                  "undefined_1": {
+                    "summary": "This Google account is linked to another user",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "message": "Conflict.",
+                        "statusCode": 409,
+                        "details": {
+                          "reason": "This Google account is linked to another user."
+                        }
+                      }
+                    }
+                  },
+                  "undefined_2": {
+                    "summary": "You already has a Google account linked",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "message": "Conflict.",
+                        "statusCode": 409,
+                        "details": {
+                          "reason": "You already has a Google account linked."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "default": "validation"
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Validation failed."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "default": 422
+                            },
+                            "details": {
+                              "nullable": true,
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "title": "Object",
+                                  "description": "Any JSON",
+                                  "additionalProperties": true
+                                },
+                                {
+                                  "type": "array",
+                                  "items": {},
+                                  "title": "Array",
+                                  "description": "Any array"
+                                },
+                                {
+                                  "type": "string",
+                                  "title": "String",
+                                  "description": "Any string"
+                                },
+                                {
+                                  "type": "number",
+                                  "title": "Number",
+                                  "description": "Any number"
+                                },
+                                {
+                                  "type": "boolean",
+                                  "title": "String",
+                                  "description": "True or false"
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "validation",
+                    "message": "Validation failed.",
+                    "statusCode": 422,
+                    "details": {
+                      "entries": [
+                        {
+                          "property": "idToken",
+                          "value": "invalid-jwt",
+                          "constraints": {
+                            "isJWT": "Value must be a jwt string."
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Access token": []
+          }
+        ],
+        "summary": "Link Google account to existed user",
+        "tags": [
+          "Google auth"
+        ]
+      }
+    },
+    "/auth/google/unlink": {
+      "post": {
+        "description": "Unlink Google account from existing user",
+        "operationId": "GoogleProviderController_unlinkGoogleAccount",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Message about successful unlink Google account",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "success",
+                  "data": {
+                    "message": "Google account has been successfully unlinked from your account."
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "It is impossible to unlink the provider, as there are no other ways to authorize",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "default": "bad-request"
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Bad request."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "default": 400
+                            },
+                            "details": {
+                              "type": "object",
+                              "properties": {
+                                "reason": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "reason"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "bad-request",
+                    "message": "Bad request.",
+                    "statusCode": 400,
+                    "details": {
+                      "reason": "It is impossible to unlink the provider, as there are no other ways to authorize."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "default": "access-control.authentication"
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Authentication failed."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "default": 401
+                            },
+                            "details": {
+                              "type": "object",
+                              "properties": {
+                                "reason": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "reason"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "access-control.authentication",
+                    "message": "Authentication failed.",
+                    "statusCode": 401,
+                    "details": {
+                      "reason": "You are not authenticated."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User status policy failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "access-control.authorization.blocked",
+                                "access-control.authorization.forbidden"
+                              ]
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Forbidden."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "enum": [
+                                403
+                              ]
+                            },
+                            "details": {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "reason": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "reason"
+                                  ]
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "reason": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "reason"
+                                  ]
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                },
+                "examples": {
+                  "access-control.authorization.blocked_1": {
+                    "summary": "User account is blocked",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "access-control.authorization.blocked",
+                        "message": "Authorization failed",
+                        "statusCode": 403,
+                        "details": {
+                          "reason": "Your account has been blocked. Please contact support."
+                        }
+                      }
+                    }
+                  },
+                  "access-control.authorization.forbidden_2": {
+                    "summary": "Forbidden resource (fallback)",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "access-control.authorization.forbidden",
+                        "message": "Authorization failed",
+                        "statusCode": 403,
+                        "details": {
+                          "reason": "Access denied. Please contact support."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Access token": []
+          }
+        ],
+        "summary": "Unlink Google account from existed user",
+        "tags": [
+          "Google auth"
+        ]
+      }
     }
   },
   "info": {
@@ -5310,6 +6454,19 @@
         },
         "required": [
           "email"
+        ]
+      },
+      "GoogleAuthDto": {
+        "type": "object",
+        "properties": {
+          "idToken": {
+            "type": "string",
+            "description": "Google auth ID token (JWT)",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiO..."
+          }
+        },
+        "required": [
+          "idToken"
         ]
       },
       "SuccessResponseApiModel": {

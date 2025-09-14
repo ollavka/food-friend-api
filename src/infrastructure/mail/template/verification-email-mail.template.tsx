@@ -1,11 +1,12 @@
 import { Container, Head, Heading, Html, Section, Text } from '@react-email/components'
 import * as React from 'react'
 import { OTP_CODE_LENGTH, OTP_CODE_TTL_MINS } from '@common/constant'
+import { Nullable } from '@common/type'
 import { NamespacedTranslateFunction } from '@localization'
 
 interface VerificationEmailMailProps {
   code: string
-  userName?: string
+  userName: Nullable<string>
   t: NamespacedTranslateFunction
 }
 

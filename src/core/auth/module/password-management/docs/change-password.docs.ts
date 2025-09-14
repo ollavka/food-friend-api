@@ -21,12 +21,9 @@ export function ChangePasswordDocs(): MethodDecorator {
     ApiOkResponse({
       description: 'Message about successful password change',
       example: {
-        summary: 'Success message',
-        value: {
-          status: 'success',
-          data: {
-            message: 'The password has been successfully changed.',
-          },
+        status: 'success',
+        data: {
+          message: 'The password has been successfully changed.',
         },
       },
     }),

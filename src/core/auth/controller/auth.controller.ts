@@ -8,7 +8,7 @@ import { RegisterDocs } from '../docs/register.docs'
 import { LoginUserDto, RegisterUserDto } from '../dto'
 import { AuthService } from '../service'
 
-@ApiTags('Auth flow')
+@ApiTags('Auth')
 @ApiExtraModels(AccessTokenApiModel, OtpTicketApiModel)
 @Controller('auth')
 export class AuthController {

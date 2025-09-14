@@ -1,9 +1,10 @@
 import { Container, Head, Heading, Html, Link, Section, Text } from '@react-email/components'
 import * as React from 'react'
+import { Nullable } from '@common/type'
 import { NamespacedTranslateFunction } from '@localization'
 
 interface WelcomeMailProps {
-  userName?: string
+  userName: Nullable<string>
   t: NamespacedTranslateFunction
   ctaUrl?: string
 }
