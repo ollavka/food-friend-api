@@ -5,9 +5,9 @@ import { Request, Response } from 'express'
 import { StatusPolicy } from '@access-control/util'
 import { AppEntityNotFoundException } from '@common/exception'
 import { convertToMs, hashValue, isDev } from '@common/util'
+import { AccessTokenApiModel } from '@core/auth/api-model'
+import { JWT_ENV_CONFIG_KEY, JwtEnvConfig } from '@core/auth/config/jwt'
 import { UserService } from '@core/user'
-import { AccessTokenApiModel } from '../../../api-model'
-import { JWT_ENV_CONFIG_KEY, JwtEnvConfig } from '../../../config/jwt'
 import { SessionRepository } from '../repository'
 
 @Injectable()

@@ -5,10 +5,10 @@ import { addMilliseconds, isBefore } from 'date-fns'
 import { AccessControlAuthenticationException } from '@access-control/exception'
 import { DurationString } from '@common/type'
 import { convertToMs, hashValue } from '@common/util'
+import { AuthTokensApiModel } from '@core/auth/api-model'
+import { JwtEnvConfig } from '@core/auth/config/jwt'
+import { JwtUserPayload } from '@core/auth/type'
 import { PrismaService } from '@infrastructure/database'
-import { AuthTokensApiModel } from '../../../api-model'
-import { JwtEnvConfig } from '../../../config/jwt'
-import { JwtUserPayload } from '../../../type'
 
 @Injectable()
 export class SessionRepository {

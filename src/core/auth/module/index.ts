@@ -1,3 +1,5 @@
 export * from './email-verification'
 export * from './password-management'
 export * from './auth-session'
+export * from './provider-account'
+export * from './auth-provider'

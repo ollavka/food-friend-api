@@ -4,11 +4,10 @@ import { Response } from 'express'
 import { OAuth2Client, TokenPayload } from 'google-auth-library'
 import { Nullable, Uuid } from '@common/type'
 import { def } from '@common/util'
+import { AccessTokenApiModel } from '@core/auth/api-model'
+import { AuthSessionService, ProviderAccountService } from '@core/auth/module'
 import { UserService } from '@core/user'
 import { PrismaService } from '@infrastructure/database'
-import { AccessTokenApiModel } from '../../../../api-model'
-import { AuthSessionService } from '../../../auth-session'
-import { ProviderAccountService } from '../../../provider-account'
 import { GOOGLE_AUTH_CLIENT_TOKEN } from '../constant'
 
 @Injectable()

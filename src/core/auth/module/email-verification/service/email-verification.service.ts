@@ -4,11 +4,11 @@ import { Response } from 'express'
 import { StatusPolicy } from '@access-control/util'
 import { ConfirmOtpCodeDto } from '@common/dto'
 import { AppEntityNotFoundException, AppRateLimitException } from '@common/exception'
+import { AccessTokenApiModel, OtpTicketApiModel } from '@core/auth/api-model'
 import { UserService } from '@core/user'
 import { PrismaService } from '@infrastructure/database'
 import { MailService } from '@infrastructure/mail'
 import { OtpService } from '@infrastructure/otp'
-import { AccessTokenApiModel, OtpTicketApiModel } from '../../../api-model'
 import { AuthSessionService } from '../../auth-session'
 
 @Injectable()
