@@ -25,7 +25,7 @@ function getMailConfigFactory(config: ConfigType<typeof mailEnvConfig>): MailerO
         pass: config.mailSmtpPassword,
       },
       debug: isDevEnv,
-      logger: isDevEnv,
+      logger: true,
     },
   }
 }
