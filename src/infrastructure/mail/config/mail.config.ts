@@ -19,7 +19,7 @@ function getMailConfigFactory(config: ConfigType<typeof mailEnvConfig>): MailerO
     transport: {
       host: config.mailSmtpHost,
       port: config.mailSmtpPort,
-      secure: false,
+      secure: !isDevEnv,
       auth: {
         user: config.mailSmtpEmail,
         pass: config.mailSmtpPassword,

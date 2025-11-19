@@ -1,32 +1,48 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common'
-import { MailerService } from '@nestjs-modules/mailer'
+import { Inject, Injectable } from '@nestjs/common'
 import { render } from '@react-email/render'
 import { addMinutes, differenceInSeconds, isAfter, isEqual } from 'date-fns'
+import { Resend } from 'resend'
 import { MAIL_RESEND_WINDOW_MINS } from '@common/constant'
-import { Exception } from '@common/exception'
+import { AppInternalException } from '@common/exception'
 import { Nullable } from '@common/type'
 import { LocalizationFactory } from '@localization'
-import { ResetPasswordMailTemplate, VerificationEmailMailTemplate, WelcomeMailTemplate } from '../template'
+import { RESEND_CLIENT_TOKEN, RESEND_FROM_TOKEN } from '../config'
+import { ResetPasswordMailTemplate, VerificationEmailMailTemplate } from '../template'
+import { SendMailParams } from '../type'
 
 @Injectable()
 export class MailService {
   public constructor(
-    private readonly mailerService: MailerService,
+    @Inject(RESEND_CLIENT_TOKEN) private readonly resend: Resend,
+    @Inject(RESEND_FROM_TOKEN) private readonly resendFrom: string,
+    // private readonly mailerService: MailerService,
     private readonly localizationFactory: LocalizationFactory,
   ) {}
 
-  public async sendWelcomeMail(toEmail: string, userName: Nullable<string>): Promise<void> {
-    try {
-      const t = this.localizationFactory.createFor('email.welcome', { parseHtml: true })
-      const html = await render(WelcomeMailTemplate({ userName, t }))
+  private async sendMail({ to, from = '', ...restSendMailParams }: SendMailParams): Promise<void> {
+    // await this.mailerService.sendMail(sendMailParams)
+    const isDevMail = from.includes('resend.dev')
 
-      await this.mailerService.sendMail({
-        to: toEmail,
-        subject: t('subject', { parseHtml: false }),
-        html,
-      })
-    } catch {
-      throw new InternalServerErrorException('The welcome mail could not be sent.')
+    await this.resend.emails.send({
+      ...restSendMailParams,
+      from,
+      // we can send dev mails only to own account for testing (need to buy domain for general usage)
+      to: isDevMail ? 'oleksii.lavka.dev@gmail.com' : to,
+    })
+  }
+
+  public async sendWelcomeMail(_toEmail: string, _userName: Nullable<string>): Promise<void> {
+    try {
+      // const t = this.localizationFactory.createFor('email.welcome', { parseHtml: true })
+      // const html = await render(WelcomeMailTemplate({ userName, t }))
+      // await this.sendMail({
+      //   from: this.resendFrom,
+      //   to: toEmail,
+      //   subject: t('subject', { parseHtml: false }),
+      //   html,
+      // })
+    } catch (_err) {
+      throw new AppInternalException('mail.welcome-send', 'The welcome mail could not be sent.')
     }
   }
 
@@ -35,13 +51,14 @@ export class MailService {
       const t = this.localizationFactory.createFor('email.verification', { parseHtml: true })
       const html = await render(VerificationEmailMailTemplate({ code, userName, t }))
 
-      await this.mailerService.sendMail({
+      await this.sendMail({
+        from: this.resendFrom,
         to: toEmail,
         subject: t('subject', { parseHtml: false }),
         html,
       })
-    } catch {
-      throw new InternalServerErrorException('The confirmation email mail could not be sent.')
+    } catch (_err) {
+      throw new AppInternalException('mail.verification-send', 'The confirmation email mail could not be sent.')
     }
   }
 
@@ -50,16 +67,14 @@ export class MailService {
       const t = this.localizationFactory.createFor('email.password.reset', { parseHtml: true })
       const html = await render(ResetPasswordMailTemplate({ code, userName, t }))
 
-      await this.mailerService.sendMail({
+      await this.sendMail({
+        from: this.resendFrom,
         to: toEmail,
         subject: t('subject', { parseHtml: false }),
         html,
       })
-    } catch (err) {
-      const reason = err?.message ?? null
-      throw new Exception('The reset password mail could not be sent.', {
-        details: reason ? { reason } : null,
-      }).internal()
+    } catch (_err) {
+      throw new AppInternalException('mail.reset-send', 'The reset password mail could not be sent.')
     }
   }
 

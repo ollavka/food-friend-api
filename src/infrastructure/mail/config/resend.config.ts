@@ -1,0 +1,43 @@
+import { Provider } from '@nestjs/common'
+import { ConfigType, getConfigToken, registerAs } from '@nestjs/config'
+import { Resend } from 'resend'
+import { RESEND_CLIENT_TOKEN, RESEND_ENV_CONFIG_KEY, RESEND_FROM_TOKEN } from './constant'
+import { ResendEnvConfig } from './type'
+
+export const resendEnvConfig: () => ResendEnvConfig = registerAs(RESEND_ENV_CONFIG_KEY, () => ({
+  resendApiKey: process.env.RESEND_API_KEY,
+  resendFromEmail: process.env.RESEND_FROM_EMAIL,
+  resendFromName: process.env.RESEND_FROM_NAME,
+}))
+
+function getResendClientFactory(config: ConfigType<typeof resendEnvConfig>): Resend {
+  if (!config.resendApiKey) {
+    throw new Error('RESEND_API_KEY is missing')
+  }
+
+  const resend = new Resend(config.resendApiKey)
+  return resend
+}
+
+function getResendFromFactory(config: ConfigType<typeof resendEnvConfig>): string {
+  const { resendFromEmail, resendFromName } = config
+
+  if (!resendFromEmail || !resendFromName) {
+    throw new Error('RESEND_FROM_EMAIL or RESEND_FROM_NAME is missing')
+  }
+
+  return `${resendFromName} <${resendFromEmail}>`
+}
+
+export const resendModuleProviders: Provider[] = [
+  {
+    provide: RESEND_CLIENT_TOKEN,
+    useFactory: getResendClientFactory,
+    inject: [getConfigToken(RESEND_ENV_CONFIG_KEY)],
+  },
+  {
+    provide: RESEND_FROM_TOKEN,
+    useFactory: getResendFromFactory,
+    inject: [getConfigToken(RESEND_ENV_CONFIG_KEY)],
+  },
+]

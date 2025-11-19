@@ -1,12 +1,24 @@
+// import { Global, Module } from '@nestjs/common'
+// import { MailerModule } from '@nestjs-modules/mailer'
+// import { mailModuleConfig } from './config'
+// import { MailService } from './service'
+
+// @Global()
+// @Module({
+//   imports: [MailerModule.forRootAsync(mailModuleConfig)],
+//   providers: [MailService],
+//   exports: [MailService],
+// })
+// export class MailModule {}
 import { Global, Module } from '@nestjs/common'
-import { MailerModule } from '@nestjs-modules/mailer'
-import { mailModuleConfig } from './config'
+import { ConfigModule } from '@nestjs/config'
+import { resendEnvConfig, resendModuleProviders } from './config'
 import { MailService } from './service'
 
 @Global()
 @Module({
-  imports: [MailerModule.forRootAsync(mailModuleConfig)],
-  providers: [MailService],
-  exports: [MailService],
+  imports: [ConfigModule.forFeature(resendEnvConfig)],
+  providers: [...resendModuleProviders, MailService],
+  exports: [...resendModuleProviders, MailService],
 })
 export class MailModule {}

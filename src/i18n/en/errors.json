@@ -1,7 +1,17 @@
 {
   "internal": {
-    "generic": {
-      "message": "Internal error occurred. Please contact Food Friend support for more information regarding further actions."
+    "message": "Internal server error.",
+    "reason": "An unexpected error occurred. Please try again later.",
+    "mail": {
+      "welcome-send": {
+        "reason": "The welcome mail could not be sent."
+      },
+      "verification-send": {
+        "reason": "The confirmation email mail could not be sent."
+      },
+      "reset-send": {
+        "reason": "The reset password mail could not be sent."
+      }
     }
   },
   "validation": {
