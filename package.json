@@ -9,7 +9,7 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start:dev": "nest start --watch",
-    "start:prod": "node dist/main",
+    "start:prod": "node dist/src/main.js",
     "start:db": "docker compose up --build",
     "dev": "yarn start:db -d && yarn start:dev",
     "docker:down": "docker compose down --volumes",
