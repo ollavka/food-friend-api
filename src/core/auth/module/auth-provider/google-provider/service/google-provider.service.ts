@@ -1,7 +1,8 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common'
+import { Inject, Injectable } from '@nestjs/common'
 import { AuthProvider, User, UserRole, UserStatus } from '@prisma/client'
 import { Response } from 'express'
 import { OAuth2Client, TokenPayload } from 'google-auth-library'
+import { AppBadRequestException } from '@common/exception'
 import { Nullable, Uuid } from '@common/type'
 import { def } from '@common/util'
 import { AccessTokenApiModel } from '@core/auth/api-model'
@@ -42,7 +43,11 @@ export class GoogleProviderService {
     const canUnlinkAccount = restAccounts.length > 0 || def(user?.password || null)
 
     if (!canUnlinkAccount) {
-      throw new BadRequestException('It is impossible to unlink the provider, as there are no other ways to authorize.')
+      throw new AppBadRequestException(
+        'provider-account.unlink-forbidden',
+        'It is impossible to unlink the provider, as there are no other ways to authorize.',
+        { userId },
+      )
     }
 
     await this.providerAccountService.removeAccount(userId, AuthProvider.GOOGLE)
@@ -50,13 +55,13 @@ export class GoogleProviderService {
 
   private async handleGoogleToken(idToken: string, userEmail: Nullable<string>, strict = true): Promise<User> {
     const googleTicket = await this.googleAuthClient.verifyIdToken({ idToken }).catch(() => {
-      throw new BadRequestException('Invalid or expired Google ID token.')
+      throw new AppBadRequestException('google.invalid-id-token', 'Invalid or expired Google ID token.')
     })
 
     const tokenPayload = googleTicket.getPayload() ?? null
 
     if (!this.validateTokenPayload(tokenPayload)) {
-      throw new BadRequestException('Invalid Google token payload.')
+      throw new AppBadRequestException('google.invalid-payload', 'Invalid Google token payload.')
     }
 
     const user = await this.prismaService.$transaction(async (tx) => {
@@ -85,15 +90,15 @@ export class GoogleProviderService {
     email_verified: true
   } {
     if (!payload || !payload.sub) {
-      throw new BadRequestException('Invalid or expired Google ID token.')
+      throw new AppBadRequestException('google.invalid-id-token', 'Invalid or expired Google ID token.')
     }
 
     if (!payload?.email) {
-      throw new BadRequestException('Google email is required.')
+      throw new AppBadRequestException('google.email-required', 'Google email is required.')
     }
 
     if (!payload?.email_verified) {
-      throw new BadRequestException('Google email must be verified to sign in.')
+      throw new AppBadRequestException('google.email-not-verified', 'Google email must be verified to sign in.')
     }
 
     return true

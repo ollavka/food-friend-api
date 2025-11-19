@@ -27,6 +27,7 @@ export function UnlinkGoogleAccountDocs(): MethodDecorator {
     ApiUserStatusPolicyExceptionResponse(),
     ApiBadRequestExceptionResponse({
       description: 'It is impossible to unlink the provider, as there are no other ways to authorize',
+      type: 'bad-request.provider-account.unlink-forbidden',
       details: {
         type: 'object',
         properties: {

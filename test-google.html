@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>Google Test</title>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+
+<body>
+  <div id="g_id_onload" data-client_id="656361673838-0cgekcmgutfdiao215i1liju85umgr2b.apps.googleusercontent.com"
+    data-ux_mode="popup" data-callback="handleResponse"></div>
+  <div class="g_id_signin" data-type="standard"></div>
+
+  <script>
+    function handleResponse(res) {
+      console.log("ID Token:", res.credential)
+      alert("Check console — ID Token logged")
+    }
+  </script>
+</body>
+
+</html>

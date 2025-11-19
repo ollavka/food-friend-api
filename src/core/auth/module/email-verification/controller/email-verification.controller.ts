@@ -6,6 +6,7 @@ import { SuccessMessageApiModel } from '@common/api-model'
 import { AuthorizedUser } from '@common/decorator'
 import { ConfirmOtpCodeDto } from '@common/dto'
 import { AccessTokenApiModel, OtpTicketApiModel } from '@core/auth/api-model'
+import { LocalizationFactory } from '@localization'
 import { ConfirmEmailDocs, RequestMailDocs } from '../docs'
 import { SendVerificationMailDto } from '../dto'
 import { EmailVerificationService } from '../service'
@@ -14,7 +15,10 @@ import { EmailVerificationService } from '../service'
 @Controller('auth/email/verification')
 @ApiExtraModels(AccessTokenApiModel, SuccessMessageApiModel, OtpTicketApiModel)
 export class EmailVerificationController {
-  public constructor(private readonly emailVerificationService: EmailVerificationService) {}
+  public constructor(
+    private readonly emailVerificationService: EmailVerificationService,
+    private readonly localizationFactory: LocalizationFactory,
+  ) {}
 
   @Post('request')
   @HttpCode(HttpStatus.ACCEPTED)
@@ -31,6 +35,7 @@ export class EmailVerificationController {
     @AuthorizedUser() user: User,
   ): Promise<AccessTokenApiModel | SuccessMessageApiModel> {
     const accessTokenApiModel = await this.emailVerificationService.confirmEmail(res, confirmOtpCodeDto, !user)
-    return accessTokenApiModel ?? { message: 'The email has been successfully confirmed.' }
+    const t = this.localizationFactory.createFor('success-message')
+    return accessTokenApiModel ?? { message: t('email.confirmed') }
   }
 }

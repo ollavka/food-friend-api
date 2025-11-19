@@ -31,6 +31,7 @@ export class RolesGuard implements CanActivate {
     throw new AccessControlAuthorizationException(
       'roles',
       `To access the resource, you must have one of the following roles: ${formattedRequiredRoles}`,
+      { requiredRoles: formattedRequiredRoles },
     )
   }
 }

@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsNotEmpty } from 'class-validator'
-import { IsOTPCode, ToUuid } from '@common/validation'
+import { IsNotEmpty, IsOTPCode, ToUuid } from '@common/validation'
 
 export class ConfirmOtpCodeDto {
   @IsNotEmpty()

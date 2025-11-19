@@ -1,0 +1,14 @@
+{
+  "password": {
+    "reset": "The password has been successfully reset.",
+    "set": "The password has been successfully set.",
+    "change": "The password has been successfully changed."
+  },
+  "email": {
+    "confirmed": "The email has been successfully confirmed."
+  },
+  "google-account": {
+    "linked": "Google account has been successfully linked to your account.",
+    "unlinked": "Google account has been successfully unlinked from your account."
+  }
+}

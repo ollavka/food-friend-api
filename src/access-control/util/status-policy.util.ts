@@ -27,7 +27,7 @@ export class StatusPolicy {
         return true
 
       case UserStatus.UNVERIFIED:
-        return onlyActiveStatus ? this.unverified() : true
+        return !onlyActiveStatus || this.unverified()
 
       case UserStatus.BLOCKED:
         return this.blocked()

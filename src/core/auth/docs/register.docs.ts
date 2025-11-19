@@ -20,6 +20,7 @@ export function RegisterDocs(): MethodDecorator {
     ApiHttpExceptionResponse({
       statusCode: HttpStatus.CONFLICT,
       description: 'User email is already taken',
+      typeKeyOverride: 'conflict.email-taken',
       details: {
         type: 'object',
         properties: {

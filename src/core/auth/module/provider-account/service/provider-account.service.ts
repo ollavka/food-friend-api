@@ -1,6 +1,7 @@
-import { ConflictException, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { Account, AuthProvider, Prisma, User } from '@prisma/client'
 import { TokenPayload } from 'google-auth-library'
+import { AppConflictException } from '@common/exception'
 import { Nullable, Uuid } from '@common/type'
 import { capitalize } from '@common/util'
 import { ProviderAccountRepository } from '../repository'
@@ -89,11 +90,17 @@ export class ProviderAccountService {
     const providerLabel = capitalize(provider)
 
     if (account.userId !== userId) {
-      throw new ConflictException(`This ${providerLabel} account is linked to another user.`)
+      throw new AppConflictException(
+        'provider-account.linked-to-another-user',
+        `This ${providerLabel} account is linked to another user.`,
+      )
     }
 
     if (account.email === payloadEmail) {
-      throw new ConflictException(`You already has a ${providerLabel} account linked.`)
+      throw new AppConflictException(
+        'provider-account.already-linked',
+        `You already has a ${providerLabel} account linked.`,
+      )
     }
   }
 }

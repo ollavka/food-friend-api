@@ -1,0 +1,153 @@
+{
+  "internal": {
+    "generic": {
+      "message": "Internal error occurred. Please contact Food Friend support for more information regarding further actions."
+    }
+  },
+  "validation": {
+    "message": "Validation failed."
+  },
+  "app": {
+    "entity-not-found": {
+      "message": "Entity not found."
+    }
+  },
+  "bad-request": {
+    "message": "Bad request.",
+    "otp": {
+      "status-mismatch": {
+        "reason": "The OTP ticket is not available for this action."
+      },
+      "code-unavailable": {
+        "reason": "This OTP code is no longer valid."
+      },
+      "invalid": {
+        "reason": "Invalid OTP code."
+      }
+    },
+    "email": {
+      "already-confirmed": {
+        "reason": "You have already confirmed your email address."
+      }
+    },
+    "password": {
+      "same-as-current": {
+        "reason": "The new password cannot be the same as the current password."
+      },
+      "invalid-current": {
+        "reason": "The current password is incorrect."
+      }
+    },
+    "provider-account": {
+      "unlink-forbidden": {
+        "reason": "It is impossible to unlink the provider, as there are no other ways to authorize."
+      }
+    },
+    "google": {
+      "invalid-id-token": {
+        "reason": "Invalid or expired Google ID token."
+      },
+      "invalid-payload": {
+        "reason": "Invalid Google token payload."
+      },
+      "email-required": {
+        "reason": "Google email is required."
+      },
+      "email-not-verified": {
+        "reason": "Google email must be verified to sign in."
+      }
+    }
+  },
+  "conflict": {
+    "message": "Conflict.",
+    "email-taken": {
+      "reason": "This email address is already taken."
+    },
+    "provider-account": {
+      "linked-to-another-user": {
+        "reason": "This {{providerLabel}} account is linked to another user."
+      },
+      "already-linked": {
+        "reason": "You already have a {{providerLabel}} account linked."
+      }
+    },
+    "password": {
+      "already-set": {
+        "reason": "The password has already been set."
+      },
+      "not-set": {
+        "reason": "No password has been set for this account."
+      }
+    }
+  },
+  "gone": {
+    "message": "Gone.",
+    "otp-expired": {
+      "reason": "OTP code is expired."
+    }
+  },
+  "rate-limit": {
+    "message": "Rate limit.",
+    "otp": {
+      "reason": "You have exceeded the rate limit. Please try again in {{secondsLeft}} seconds."
+    },
+    "mail": {
+      "reason": "You have exceeded the rate limit. Please try again in {{secondsLeft}} seconds."
+    }
+  },
+  "access-control": {
+    "authentication": {
+      "message": "Authentication failed.",
+      "credentials": {
+        "reason": "Invalid credentials."
+      },
+      "refresh-token-not-found": {
+        "reason": "Refresh token does not exist."
+      },
+      "refresh-token-expired": {
+        "reason": "Refresh token is expired."
+      },
+      "refresh-token-invalid": {
+        "reason": "Invalid refresh token."
+      }
+    },
+    "authorization": {
+      "message": "Authorization failed.",
+      "roles": {
+        "reason": "To access the resource, you must have one of the following roles: {{requiredRoles}}."
+      },
+      "user-blocked": {
+        "reason": "Your account has been blocked. Please contact support."
+      },
+      "forbidden": {
+        "reason": "Access denied. Please contact support."
+      },
+      "email-confirmation": {
+        "reason": "Email not confirmed. Please verify your email address in your profile settings."
+      }
+    }
+  },
+  "db": {
+    "unique-violation": {
+      "message": "Unique constraint violation."
+    },
+    "not-found": {
+      "message": "Requested resource was not found."
+    },
+    "relation-conflict": {
+      "message": "Operation conflicts with existing relations."
+    },
+    "validation": {
+      "message": "Validation failed for the provided data."
+    },
+    "init": {
+      "message": "Database initialization failed. Please try again later."
+    },
+    "rust-panic": {
+      "message": "Database engine encountered an unexpected error."
+    }
+  },
+  "not-found": {
+    "message": "Resource not found."
+  }
+}

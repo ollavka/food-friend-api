@@ -25,17 +25,17 @@ export function ResetPasswordCompleteDocs(): MethodDecorator {
       },
     }),
     ApiBadRequestExceptionResponse({
-      description: 'OTP code is not available or password are the same',
+      description: 'OTP ticket is unavailable or passwords match',
       variants: [
         {
-          typeKey: 'otp-not-available',
-          summary: 'OTP code is not available',
+          typeKey: 'bad-request.otp.status-mismatch',
+          summary: 'OTP ticket is unavailable for this action',
           example: {
-            reason: 'OTP code is not available.',
+            reason: 'The OTP ticket is not available for this action.',
           },
         },
         {
-          typeKey: 'same-password',
+          typeKey: 'bad-request.password.same-as-current',
           summary: 'The new password cannot be the same as the current password',
           example: {
             reason: 'The new password cannot be the same as the current password.',

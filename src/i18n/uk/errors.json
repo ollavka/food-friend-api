@@ -1,0 +1,153 @@
+{
+  "internal": {
+    "generic": {
+      "message": "Сталася внутрішня помилка. Зверніться до підтримки Food Friend, щоб дізнатись про подальші дії."
+    }
+  },
+  "validation": {
+    "message": "Дані не пройшли перевірку."
+  },
+  "app": {
+    "entity-not-found": {
+      "message": "Обʼєкт не знайдено."
+    }
+  },
+  "bad-request": {
+    "message": "Некоректний запит.",
+    "otp": {
+      "status-mismatch": {
+        "reason": "OTP-квиток недоступний для цієї дії."
+      },
+      "code-unavailable": {
+        "reason": "Цей OTP-код більше не дійсний."
+      },
+      "invalid": {
+        "reason": "Некоректний OTP-код."
+      }
+    },
+    "email": {
+      "already-confirmed": {
+        "reason": "Ви вже підтвердили свою електронну пошту."
+      }
+    },
+    "password": {
+      "same-as-current": {
+        "reason": "Новий пароль не може збігатися з поточним."
+      },
+      "invalid-current": {
+        "reason": "Поточний пароль невірний."
+      }
+    },
+    "provider-account": {
+      "unlink-forbidden": {
+        "reason": "Неможливо відʼєднати провайдера, оскільки немає інших способів авторизації."
+      }
+    },
+    "google": {
+      "invalid-id-token": {
+        "reason": "Недійсний або прострочений Google ID-токен."
+      },
+      "invalid-payload": {
+        "reason": "Недійсний вміст Google-токена."
+      },
+      "email-required": {
+        "reason": "Потрібна електронна пошта Google."
+      },
+      "email-not-verified": {
+        "reason": "Електронна пошта Google має бути підтверджена для входу."
+      }
+    }
+  },
+  "conflict": {
+    "message": "Конфлікт.",
+    "email-taken": {
+      "reason": "Цю електронну адресу вже використано."
+    },
+    "provider-account": {
+      "linked-to-another-user": {
+        "reason": "Цей акаунт {{providerLabel}} вже привʼязаний до іншого користувача."
+      },
+      "already-linked": {
+        "reason": "У вас вже привʼязаний акаунт {{providerLabel}}."
+      }
+    },
+    "password": {
+      "already-set": {
+        "reason": "Пароль уже встановлено."
+      },
+      "not-set": {
+        "reason": "Для цього акаунта пароль ще не було встановлено."
+      }
+    }
+  },
+  "gone": {
+    "message": "Термін дії завершено.",
+    "otp-expired": {
+      "reason": "Термін дії цього коду минув."
+    }
+  },
+  "rate-limit": {
+    "message": "Перевищено ліміт запитів.",
+    "otp": {
+      "reason": "Забагато спроб. Повторіть через {{secondsLeft}} секунд."
+    },
+    "mail": {
+      "reason": "Надто багато запитів. Повторіть через {{secondsLeft}} секунд."
+    }
+  },
+  "access-control": {
+    "authentication": {
+      "message": "Не вдалося виконати автентифікацію.",
+      "credentials": {
+        "reason": "Невірний email або пароль."
+      },
+      "refresh-token-not-found": {
+        "reason": "Refresh-токен не знайдено."
+      },
+      "refresh-token-expired": {
+        "reason": "Refresh-токен прострочений."
+      },
+      "refresh-token-invalid": {
+        "reason": "Refresh-токен недійсний."
+      }
+    },
+    "authorization": {
+      "message": "Немає доступу.",
+      "roles": {
+        "reason": "Потрібна одна з таких ролей: {{requiredRoles}}."
+      },
+      "user-blocked": {
+        "reason": "Ваш акаунт заблоковано. Зверніться до підтримки."
+      },
+      "forbidden": {
+        "reason": "Доступ заборонено. Якщо це помилка — зверніться до підтримки."
+      },
+      "email-confirmation": {
+        "reason": "Підтвердіть email у профілі, щоб продовжити."
+      }
+    }
+  },
+  "db": {
+    "unique-violation": {
+      "message": "Запис із таким значенням вже існує."
+    },
+    "not-found": {
+      "message": "Не вдалося знайти потрібний запис."
+    },
+    "relation-conflict": {
+      "message": "Операція конфліктує з чинними звʼязками."
+    },
+    "validation": {
+      "message": "Дані не пройшли перевірку перед збереженням."
+    },
+    "init": {
+      "message": "Не вдалося ініціалізувати базу даних. Спробуйте пізніше."
+    },
+    "rust-panic": {
+      "message": "Двигун бази даних зіткнувся з непередбаченою помилкою."
+    }
+  },
+  "not-found": {
+    "message": "Ресурс не знайдено."
+  }
+}

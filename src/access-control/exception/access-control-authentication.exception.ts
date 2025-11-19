@@ -9,7 +9,6 @@ export class AccessControlAuthenticationException extends AccessControlException
   public constructor(type: string | null, reason: string | null, details?: ExceptionDetails) {
     const baseType = 'authentication'
     const exceptionType = def(type) ? `${baseType}.${type}` : baseType
-
     super(exceptionType, 'Authentication failed.', { ...details, reason })
   }
 }

@@ -6,6 +6,7 @@ import { SuccessMessageApiModel } from '@common/api-model'
 import { AuthorizedUser } from '@common/decorator'
 import { ConfirmOtpCodeDto } from '@common/dto'
 import { OtpTicketApiModel } from '@core/auth/api-model'
+import { LocalizationFactory } from '@localization'
 import {
   ChangePasswordDocs,
   ResetPasswordCompleteDocs,
@@ -20,7 +21,10 @@ import { PasswordManagementService } from '../service'
 @Controller('auth/password')
 @ApiExtraModels(SuccessMessageApiModel, OtpTicketApiModel)
 export class PasswordManagementController {
-  public constructor(private readonly passwordManagementService: PasswordManagementService) {}
+  public constructor(
+    private readonly passwordManagementService: PasswordManagementService,
+    private readonly localizationFactory: LocalizationFactory,
+  ) {}
 
   @Post('reset/request')
   @HttpCode(HttpStatus.ACCEPTED)
@@ -41,7 +45,8 @@ export class PasswordManagementController {
     @Body() resetPasswordCompleteDto: ResetPasswordCompleteDto,
   ): Promise<SuccessMessageApiModel> {
     await this.passwordManagementService.completeResetPassword(resetPasswordCompleteDto)
-    return { message: 'The password has been successfully reset.' }
+    const t = this.localizationFactory.createFor('success-message')
+    return { message: t('password.reset') }
   }
 
   @Post('set')
@@ -52,7 +57,8 @@ export class PasswordManagementController {
     @Body() { password }: SetPasswordDto,
   ): Promise<SuccessMessageApiModel> {
     await this.passwordManagementService.setPassword(user, password)
-    return { message: 'The password has been successfully set.' }
+    const t = this.localizationFactory.createFor('success-message')
+    return { message: t('password.set') }
   }
 
   @Post('change')
@@ -63,6 +69,7 @@ export class PasswordManagementController {
     @Body() changePasswordDto: ChangePasswordDto,
   ): Promise<SuccessMessageApiModel> {
     await this.passwordManagementService.changePassword(user, changePasswordDto)
-    return { message: 'The password has been successfully changed.' }
+    const t = this.localizationFactory.createFor('success-message')
+    return { message: t('password.change') }
   }
 }

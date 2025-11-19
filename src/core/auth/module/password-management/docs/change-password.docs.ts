@@ -32,7 +32,8 @@ export function ChangePasswordDocs(): MethodDecorator {
     ApiUserStatusPolicyExceptionResponse(true),
     ApiHttpExceptionResponse({
       statusCode: HttpStatus.CONFLICT,
-      description: 'The password has already been set',
+      description: 'No password has been set for this account',
+      typeKeyOverride: 'conflict.password.not-set',
       details: {
         type: 'object',
         properties: {
@@ -60,14 +61,14 @@ export function ChangePasswordDocs(): MethodDecorator {
       description: 'The current password is incorrect or matches the new one',
       variants: [
         {
-          typeKey: 'current-password-incorrect',
+          typeKey: 'bad-request.password.invalid-current',
           summary: 'The current password is incorrect',
           example: {
             reason: 'The current password is incorrect.',
           },
         },
         {
-          typeKey: 'same-password',
+          typeKey: 'bad-request.password.same-as-current',
           summary: 'The new password cannot be the same as the current password',
           example: {
             reason: 'The new password cannot be the same as the current password.',

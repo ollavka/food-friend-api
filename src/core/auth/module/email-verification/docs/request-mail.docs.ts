@@ -31,6 +31,7 @@ export function RequestMailDocs(): MethodDecorator {
     ApiUserStatusPolicyExceptionResponse(),
     ApiBadRequestExceptionResponse({
       description: 'User have already confirmed email address',
+      type: 'bad-request.email.already-confirmed',
       details: {
         type: 'object',
         properties: {

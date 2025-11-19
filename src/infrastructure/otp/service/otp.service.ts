@@ -1,10 +1,15 @@
 import { randomInt } from 'node:crypto'
-import { BadRequestException, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { OtpCode, OtpCodeStatus, OtpCodeType, Prisma, User } from '@prisma/client'
 import { addMilliseconds, addMinutes, differenceInSeconds, isBefore } from 'date-fns'
 import { HASH_PEPPER_KEY, OTP_CODE_LENGTH, OTP_CODE_TTL_MINS } from '@common/constant'
-import { AppEntityNotFoundException, AppGoneException, AppRateLimitException } from '@common/exception'
+import {
+  AppBadRequestException,
+  AppEntityNotFoundException,
+  AppGoneException,
+  AppRateLimitException,
+} from '@common/exception'
 import { Uuid } from '@common/type'
 import { hashValue } from '@common/util'
 import { MAX_OTP_ATTEMPTS_PER_WINDOW, OTP_WINDOW_MS } from '../constant'
@@ -36,7 +41,10 @@ export class OtpService {
 
   public validateStatus(otpCode: OtpCode | null, status: OtpCodeStatus): OtpCode {
     if (!otpCode || otpCode.status !== status) {
-      throw new BadRequestException('OTP is not available.')
+      throw new AppBadRequestException('otp.status-mismatch', 'The OTP ticket is not available for this action.', {
+        expectedStatus: status,
+        actualStatus: otpCode?.status ?? null,
+      })
     }
 
     return otpCode
@@ -79,7 +87,9 @@ export class OtpService {
     }
 
     if (foundOtpCode.status !== OtpCodeStatus.PENDING) {
-      throw new BadRequestException('OTP code is not available.')
+      throw new AppBadRequestException('otp.code-unavailable', 'This OTP code is no longer valid.', {
+        status: foundOtpCode.status,
+      })
     }
 
     const started = foundOtpCode.windowStartedAt ?? now
@@ -107,7 +117,7 @@ export class OtpService {
 
     if (!isValidOtp) {
       await this.otpRepository.update(ticket, { attempts, windowStartedAt })
-      throw new BadRequestException('Invalid OTP code.')
+      throw new AppBadRequestException('otp.invalid', 'Invalid OTP code.')
     }
 
     const consumedCodesCount = await this.otpRepository.updateMany(
@@ -116,7 +126,9 @@ export class OtpService {
     )
 
     if (consumedCodesCount !== 1) {
-      throw new BadRequestException('OTP code is not available.')
+      throw new AppBadRequestException('otp.code-unavailable', 'This OTP code is no longer valid.', {
+        consumedCodesCount,
+      })
     }
 
     return { email: foundOtpCode.email }

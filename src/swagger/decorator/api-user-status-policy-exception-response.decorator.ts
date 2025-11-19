@@ -1,7 +1,7 @@
 import { ApiAuthorizationExceptionResponse } from './api-authorization-exception-response.decorator'
 
 export function ApiUserStatusPolicyExceptionResponse(onlyActiveStatus?: boolean): MethodDecorator {
-  const messageOverride = 'Authorization failed'
+  const messageOverride = 'Authorization failed.'
 
   return ApiAuthorizationExceptionResponse({
     description: 'User status policy failed',

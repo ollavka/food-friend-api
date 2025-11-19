@@ -6,6 +6,7 @@ import { Authorization } from '@access-control/decorator'
 import { SuccessMessageApiModel } from '@common/api-model'
 import { AuthorizedUser } from '@common/decorator'
 import { AccessTokenApiModel } from '@core/auth/api-model'
+import { LocalizationFactory } from '@localization'
 import { GoogleAuthDocs, LinkGoogleAccountDocs, UnlinkGoogleAccountDocs } from '../docs'
 import { GoogleAuthDto } from '../dto'
 import { GoogleProviderService } from '../service'
@@ -13,7 +14,10 @@ import { GoogleProviderService } from '../service'
 @ApiTags('Google auth')
 @Controller('auth/google')
 export class GoogleProviderController {
-  public constructor(private readonly googleProviderService: GoogleProviderService) {}
+  public constructor(
+    private readonly googleProviderService: GoogleProviderService,
+    private readonly localizationFactory: LocalizationFactory,
+  ) {}
 
   @Post()
   @GoogleAuthDocs()
@@ -32,7 +36,8 @@ export class GoogleProviderController {
     @Body() { idToken }: GoogleAuthDto,
   ): Promise<SuccessMessageApiModel> {
     await this.googleProviderService.linkGoogleAccount(idToken, user.email)
-    return { message: 'Google account has been successfully linked to your account.' }
+    const t = this.localizationFactory.createFor('success-message')
+    return { message: t('google-account.linked') }
   }
 
   @Authorization()
@@ -40,6 +45,7 @@ export class GoogleProviderController {
   @UnlinkGoogleAccountDocs()
   public async unlinkGoogleAccount(@AuthorizedUser() user: User): Promise<SuccessMessageApiModel> {
     await this.googleProviderService.unlinkGoogleAccount(user.id)
-    return { message: 'Google account has been successfully unlinked from your account.' }
+    const t = this.localizationFactory.createFor('success-message')
+    return { message: t('google-account.unlinked') }
   }
 }

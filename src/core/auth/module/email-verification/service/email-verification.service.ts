@@ -1,9 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { OtpCodeStatus, OtpCodeType, UserStatus } from '@prisma/client'
 import { Response } from 'express'
 import { StatusPolicy } from '@access-control/util'
 import { ConfirmOtpCodeDto } from '@common/dto'
-import { AppEntityNotFoundException, AppRateLimitException } from '@common/exception'
+import { AppBadRequestException, AppEntityNotFoundException, AppRateLimitException } from '@common/exception'
 import { AccessTokenApiModel, OtpTicketApiModel } from '@core/auth/api-model'
 import { UserService } from '@core/user'
 import { PrismaService } from '@infrastructure/database'
@@ -32,7 +32,7 @@ export class EmailVerificationService {
       const isActiveUserStatus = await StatusPolicy.enforce(user)
 
       if (isActiveUserStatus) {
-        throw new BadRequestException('You have already confirmed your email address.')
+        throw new AppBadRequestException('email.already-confirmed', 'You have already confirmed your email address.')
       }
     }
 

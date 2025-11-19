@@ -25,17 +25,24 @@ export function ResetPasswordConfirmDocs(): MethodDecorator {
       schema: successApiSchemaRef(OtpTicketApiModel),
     }),
     ApiBadRequestExceptionResponse({
-      description: 'OTP code is not available or invalid',
+      description: 'OTP ticket is unavailable or the code is invalid',
       variants: [
         {
-          typeKey: 'otp-not-available',
-          summary: 'OTP code is not available',
+          typeKey: 'bad-request.otp.status-mismatch',
+          summary: 'OTP ticket is unavailable for this action',
           example: {
-            reason: 'OTP code is not available.',
+            reason: 'The OTP ticket is not available for this action.',
           },
         },
         {
-          typeKey: 'otp-not-invalid',
+          typeKey: 'bad-request.otp.code-unavailable',
+          summary: 'OTP code is no longer valid',
+          example: {
+            reason: 'This OTP code is no longer valid.',
+          },
+        },
+        {
+          typeKey: 'bad-request.otp.invalid',
           summary: 'OTP code is invalid',
           example: {
             reason: 'Invalid OTP code.',

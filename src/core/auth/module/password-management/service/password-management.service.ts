@@ -1,8 +1,13 @@
-import { BadRequestException, ConflictException, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { OtpCodeStatus, OtpCodeType, User, UserStatus } from '@prisma/client'
 import { StatusPolicy } from '@access-control/util'
 import { ConfirmOtpCodeDto } from '@common/dto'
-import { AppEntityNotFoundException, AppRateLimitException } from '@common/exception'
+import {
+  AppBadRequestException,
+  AppConflictException,
+  AppEntityNotFoundException,
+  AppRateLimitException,
+} from '@common/exception'
 import { Uuid } from '@common/type'
 import { OtpTicketApiModel } from '@core/auth/api-model'
 import { UserService } from '@core/user'
@@ -46,7 +51,10 @@ export class PasswordManagementService {
       const isPasswordsMatches = await this.bcryptService.compare(newPassword, user?.password)
 
       if (isPasswordsMatches) {
-        throw new BadRequestException('The new password cannot be the same as the current password.')
+        throw new AppBadRequestException(
+          'password.same-as-current',
+          'The new password cannot be the same as the current password.',
+        )
       }
 
       const newHashedPassword = await this.bcryptService.hash(newPassword)
@@ -111,7 +119,9 @@ export class PasswordManagementService {
     await StatusPolicy.enforce(user, true)
 
     if (user.password) {
-      throw new ConflictException('The password has already been set.')
+      throw new AppConflictException('password.already-set', 'The password has already been set.', {
+        userId: user.id,
+      })
     }
 
     await this.updateUserPassword(user.id, password)
@@ -122,17 +132,27 @@ export class PasswordManagementService {
     const { currentPassword, newPassword } = changePasswordDto
 
     if (!user.password) {
-      throw new ConflictException('No password has been set for this account.')
+      throw new AppConflictException('password.not-set', 'No password has been set for this account.', {
+        userId: user.id,
+      })
     }
 
     const isCurrentPasswordsMatches = await this.bcryptService.compare(currentPassword, user.password)
 
     if (!isCurrentPasswordsMatches) {
-      throw new BadRequestException('The current password is incorrect.')
+      throw new AppBadRequestException('password.invalid-current', 'The current password is incorrect.', {
+        userId: user.id,
+      })
     }
 
     if (currentPassword === newPassword) {
-      throw new BadRequestException('The new password cannot be the same as the current password.')
+      throw new AppBadRequestException(
+        'password.same-as-current',
+        'The new password cannot be the same as the current password.',
+        {
+          userId: user.id,
+        },
+      )
     }
 
     await this.updateUserPassword(user.id, newPassword)

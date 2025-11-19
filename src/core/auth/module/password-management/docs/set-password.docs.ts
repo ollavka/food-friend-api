@@ -39,6 +39,7 @@ export function SetPasswordDocs(): MethodDecorator {
     ApiHttpExceptionResponse({
       statusCode: HttpStatus.CONFLICT,
       description: 'The password has already been set',
+      typeKeyOverride: 'conflict.password.already-set',
       details: {
         type: 'object',
         properties: {

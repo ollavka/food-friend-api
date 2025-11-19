@@ -71,7 +71,7 @@
                           "properties": {
                             "type": {
                               "type": "string",
-                              "default": "conflict"
+                              "default": "conflict.email-taken"
                             },
                             "message": {
                               "type": "string",
@@ -109,7 +109,7 @@
                 "example": {
                   "status": "error",
                   "error": {
-                    "type": "conflict",
+                    "type": "conflict.email-taken",
                     "message": "Conflict.",
                     "statusCode": 409,
                     "details": {
@@ -513,7 +513,7 @@
                       "status": "error",
                       "error": {
                         "type": "access-control.authorization.blocked",
-                        "message": "Authorization failed",
+                        "message": "Authorization failed.",
                         "statusCode": 403,
                         "details": {
                           "reason": "Your account has been blocked. Please contact support."
@@ -527,7 +527,7 @@
                       "status": "error",
                       "error": {
                         "type": "access-control.authorization.forbidden",
-                        "message": "Authorization failed",
+                        "message": "Authorization failed.",
                         "statusCode": 403,
                         "details": {
                           "reason": "Access denied. Please contact support."
@@ -1060,7 +1060,7 @@
                       "status": "error",
                       "error": {
                         "type": "access-control.authorization.blocked",
-                        "message": "Authorization failed",
+                        "message": "Authorization failed.",
                         "statusCode": 403,
                         "details": {
                           "reason": "Your account has been blocked. Please contact support."
@@ -1074,7 +1074,7 @@
                       "status": "error",
                       "error": {
                         "type": "access-control.authorization.forbidden",
-                        "message": "Authorization failed",
+                        "message": "Authorization failed.",
                         "statusCode": 403,
                         "details": {
                           "reason": "Access denied. Please contact support."
@@ -1340,7 +1340,7 @@
                       "status": "error",
                       "error": {
                         "type": "access-control.authorization.blocked",
-                        "message": "Authorization failed",
+                        "message": "Authorization failed.",
                         "statusCode": 403,
                         "details": {
                           "reason": "Your account has been blocked. Please contact support."
@@ -1354,7 +1354,7 @@
                       "status": "error",
                       "error": {
                         "type": "access-control.authorization.forbidden",
-                        "message": "Authorization failed",
+                        "message": "Authorization failed.",
                         "statusCode": 403,
                         "details": {
                           "reason": "Access denied. Please contact support."
@@ -1783,7 +1783,7 @@
             }
           },
           "400": {
-            "description": "OTP code is not available or invalid",
+            "description": "OTP ticket is unavailable or the code is invalid",
             "content": {
               "application/json": {
                 "schema": {
@@ -1807,8 +1807,9 @@
                             "type": {
                               "type": "string",
                               "enum": [
-                                "bad-request",
-                                "bad-request"
+                                "bad-request.otp.status-mismatch",
+                                "bad-request.otp.code-unavailable",
+                                "bad-request.otp.invalid"
                               ]
                             },
                             "message": {
@@ -1823,6 +1824,10 @@
                             },
                             "details": {
                               "oneOf": [
+                                {
+                                  "type": "object",
+                                  "additionalProperties": true
+                                },
                                 {
                                   "type": "object",
                                   "additionalProperties": true
@@ -1848,26 +1853,40 @@
                   ]
                 },
                 "examples": {
-                  "bad-request_1": {
-                    "summary": "OTP code is not available",
+                  "bad-request.otp.status-mismatch_1": {
+                    "summary": "OTP ticket is unavailable for this action",
                     "value": {
                       "status": "error",
                       "error": {
-                        "type": "bad-request",
+                        "type": "bad-request.otp.status-mismatch",
                         "message": "Bad request.",
                         "statusCode": 400,
                         "details": {
-                          "reason": "OTP code is not available."
+                          "reason": "The OTP ticket is not available for this action."
                         }
                       }
                     }
                   },
-                  "bad-request_2": {
+                  "bad-request.otp.code-unavailable_2": {
+                    "summary": "OTP code is no longer valid",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "bad-request.otp.code-unavailable",
+                        "message": "Bad request.",
+                        "statusCode": 400,
+                        "details": {
+                          "reason": "This OTP code is no longer valid."
+                        }
+                      }
+                    }
+                  },
+                  "bad-request.otp.invalid_3": {
                     "summary": "OTP code is invalid",
                     "value": {
                       "status": "error",
                       "error": {
-                        "type": "bad-request",
+                        "type": "bad-request.otp.invalid",
                         "message": "Bad request.",
                         "statusCode": 400,
                         "details": {
@@ -1966,7 +1985,7 @@
                       "status": "error",
                       "error": {
                         "type": "access-control.authorization.blocked",
-                        "message": "Authorization failed",
+                        "message": "Authorization failed.",
                         "statusCode": 403,
                         "details": {
                           "reason": "Your account has been blocked. Please contact support."
@@ -1980,7 +1999,7 @@
                       "status": "error",
                       "error": {
                         "type": "access-control.authorization.forbidden",
-                        "message": "Authorization failed",
+                        "message": "Authorization failed.",
                         "statusCode": 403,
                         "details": {
                           "reason": "Access denied. Please contact support."
@@ -2393,7 +2412,7 @@
             }
           },
           "400": {
-            "description": "OTP code is not available or password are the same",
+            "description": "OTP ticket is unavailable or passwords match",
             "content": {
               "application/json": {
                 "schema": {
@@ -2417,8 +2436,8 @@
                             "type": {
                               "type": "string",
                               "enum": [
-                                "bad-request",
-                                "bad-request"
+                                "bad-request.otp.status-mismatch",
+                                "bad-request.password.same-as-current"
                               ]
                             },
                             "message": {
@@ -2458,26 +2477,26 @@
                   ]
                 },
                 "examples": {
-                  "bad-request_1": {
-                    "summary": "OTP code is not available",
+                  "bad-request.otp.status-mismatch_1": {
+                    "summary": "OTP ticket is unavailable for this action",
                     "value": {
                       "status": "error",
                       "error": {
-                        "type": "bad-request",
+                        "type": "bad-request.otp.status-mismatch",
                         "message": "Bad request.",
                         "statusCode": 400,
                         "details": {
-                          "reason": "OTP code is not available."
+                          "reason": "The OTP ticket is not available for this action."
                         }
                       }
                     }
                   },
-                  "bad-request_2": {
+                  "bad-request.password.same-as-current_2": {
                     "summary": "The new password cannot be the same as the current password",
                     "value": {
                       "status": "error",
                       "error": {
-                        "type": "bad-request",
+                        "type": "bad-request.password.same-as-current",
                         "message": "Bad request.",
                         "statusCode": 400,
                         "details": {
@@ -2576,7 +2595,7 @@
                       "status": "error",
                       "error": {
                         "type": "access-control.authorization.blocked",
-                        "message": "Authorization failed",
+                        "message": "Authorization failed.",
                         "statusCode": 403,
                         "details": {
                           "reason": "Your account has been blocked. Please contact support."
@@ -2590,7 +2609,7 @@
                       "status": "error",
                       "error": {
                         "type": "access-control.authorization.forbidden",
-                        "message": "Authorization failed",
+                        "message": "Authorization failed.",
                         "statusCode": 403,
                         "details": {
                           "reason": "Access denied. Please contact support."
@@ -3022,7 +3041,7 @@
                       "status": "error",
                       "error": {
                         "type": "access-control.authorization.unverified",
-                        "message": "Authorization failed",
+                        "message": "Authorization failed.",
                         "statusCode": 403,
                         "details": {
                           "reason": "Email not confirmed. Please verify your email address in your profile settings."
@@ -3036,7 +3055,7 @@
                       "status": "error",
                       "error": {
                         "type": "access-control.authorization.blocked",
-                        "message": "Authorization failed",
+                        "message": "Authorization failed.",
                         "statusCode": 403,
                         "details": {
                           "reason": "Your account has been blocked. Please contact support."
@@ -3050,7 +3069,7 @@
                       "status": "error",
                       "error": {
                         "type": "access-control.authorization.forbidden",
-                        "message": "Authorization failed",
+                        "message": "Authorization failed.",
                         "statusCode": 403,
                         "details": {
                           "reason": "Access denied. Please contact support."
@@ -3086,7 +3105,7 @@
                           "properties": {
                             "type": {
                               "type": "string",
-                              "default": "conflict"
+                              "default": "conflict.password.already-set"
                             },
                             "message": {
                               "type": "string",
@@ -3124,7 +3143,7 @@
                 "example": {
                   "status": "error",
                   "error": {
-                    "type": "conflict",
+                    "type": "conflict.password.already-set",
                     "message": "Conflict.",
                     "statusCode": 409,
                     "details": {
@@ -3303,8 +3322,8 @@
                             "type": {
                               "type": "string",
                               "enum": [
-                                "bad-request",
-                                "bad-request"
+                                "bad-request.password.invalid-current",
+                                "bad-request.password.same-as-current"
                               ]
                             },
                             "message": {
@@ -3344,12 +3363,12 @@
                   ]
                 },
                 "examples": {
-                  "bad-request_1": {
+                  "bad-request.password.invalid-current_1": {
                     "summary": "The current password is incorrect",
                     "value": {
                       "status": "error",
                       "error": {
-                        "type": "bad-request",
+                        "type": "bad-request.password.invalid-current",
                         "message": "Bad request.",
                         "statusCode": 400,
                         "details": {
@@ -3358,12 +3377,12 @@
                       }
                     }
                   },
-                  "bad-request_2": {
+                  "bad-request.password.same-as-current_2": {
                     "summary": "The new password cannot be the same as the current password",
                     "value": {
                       "status": "error",
                       "error": {
-                        "type": "bad-request",
+                        "type": "bad-request.password.same-as-current",
                         "message": "Bad request.",
                         "statusCode": 400,
                         "details": {
@@ -3547,7 +3566,7 @@
                       "status": "error",
                       "error": {
                         "type": "access-control.authorization.unverified",
-                        "message": "Authorization failed",
+                        "message": "Authorization failed.",
                         "statusCode": 403,
                         "details": {
                           "reason": "Email not confirmed. Please verify your email address in your profile settings."
@@ -3561,7 +3580,7 @@
                       "status": "error",
                       "error": {
                         "type": "access-control.authorization.blocked",
-                        "message": "Authorization failed",
+                        "message": "Authorization failed.",
                         "statusCode": 403,
                         "details": {
                           "reason": "Your account has been blocked. Please contact support."
@@ -3575,7 +3594,7 @@
                       "status": "error",
                       "error": {
                         "type": "access-control.authorization.forbidden",
-                        "message": "Authorization failed",
+                        "message": "Authorization failed.",
                         "statusCode": 403,
                         "details": {
                           "reason": "Access denied. Please contact support."
@@ -3588,7 +3607,7 @@
             }
           },
           "409": {
-            "description": "The password has already been set",
+            "description": "No password has been set for this account",
             "content": {
               "application/json": {
                 "schema": {
@@ -3611,7 +3630,7 @@
                           "properties": {
                             "type": {
                               "type": "string",
-                              "default": "conflict"
+                              "default": "conflict.password.not-set"
                             },
                             "message": {
                               "type": "string",
@@ -3649,7 +3668,7 @@
                 "example": {
                   "status": "error",
                   "error": {
-                    "type": "conflict",
+                    "type": "conflict.password.not-set",
                     "message": "Conflict.",
                     "statusCode": 409,
                     "details": {
@@ -3850,7 +3869,7 @@
                           "properties": {
                             "type": {
                               "type": "string",
-                              "default": "bad-request"
+                              "default": "bad-request.email.already-confirmed"
                             },
                             "message": {
                               "type": "string",
@@ -3888,7 +3907,7 @@
                 "example": {
                   "status": "error",
                   "error": {
-                    "type": "bad-request",
+                    "type": "bad-request.email.already-confirmed",
                     "message": "Bad request.",
                     "statusCode": 400,
                     "details": {
@@ -3985,7 +4004,7 @@
                       "status": "error",
                       "error": {
                         "type": "access-control.authorization.blocked",
-                        "message": "Authorization failed",
+                        "message": "Authorization failed.",
                         "statusCode": 403,
                         "details": {
                           "reason": "Your account has been blocked. Please contact support."
@@ -3999,7 +4018,7 @@
                       "status": "error",
                       "error": {
                         "type": "access-control.authorization.forbidden",
-                        "message": "Authorization failed",
+                        "message": "Authorization failed.",
                         "statusCode": 403,
                         "details": {
                           "reason": "Access denied. Please contact support."
@@ -4426,7 +4445,7 @@
             }
           },
           "400": {
-            "description": "OTP code is not available or invalid",
+            "description": "OTP ticket is unavailable or the code is invalid",
             "content": {
               "application/json": {
                 "schema": {
@@ -4450,8 +4469,9 @@
                             "type": {
                               "type": "string",
                               "enum": [
-                                "bad-request",
-                                "bad-request"
+                                "bad-request.otp.status-mismatch",
+                                "bad-request.otp.code-unavailable",
+                                "bad-request.otp.invalid"
                               ]
                             },
                             "message": {
@@ -4466,6 +4486,10 @@
                             },
                             "details": {
                               "oneOf": [
+                                {
+                                  "type": "object",
+                                  "additionalProperties": true
+                                },
                                 {
                                   "type": "object",
                                   "additionalProperties": true
@@ -4491,26 +4515,40 @@
                   ]
                 },
                 "examples": {
-                  "bad-request_1": {
-                    "summary": "OTP code is not available",
+                  "bad-request.otp.status-mismatch_1": {
+                    "summary": "OTP ticket is unavailable for this action",
                     "value": {
                       "status": "error",
                       "error": {
-                        "type": "bad-request",
+                        "type": "bad-request.otp.status-mismatch",
                         "message": "Bad request.",
                         "statusCode": 400,
                         "details": {
-                          "reason": "OTP code is not available."
+                          "reason": "The OTP ticket is not available for this action."
                         }
                       }
                     }
                   },
-                  "bad-request_2": {
+                  "bad-request.otp.code-unavailable_2": {
+                    "summary": "OTP code is no longer valid",
+                    "value": {
+                      "status": "error",
+                      "error": {
+                        "type": "bad-request.otp.code-unavailable",
+                        "message": "Bad request.",
+                        "statusCode": 400,
+                        "details": {
+                          "reason": "This OTP code is no longer valid."
+                        }
+                      }
+                    }
+                  },
+                  "bad-request.otp.invalid_3": {
                     "summary": "OTP code is invalid",
                     "value": {
                       "status": "error",
                       "error": {
-                        "type": "bad-request",
+                        "type": "bad-request.otp.invalid",
                         "message": "Bad request.",
                         "statusCode": 400,
                         "details": {
@@ -4609,7 +4647,7 @@
                       "status": "error",
                       "error": {
                         "type": "access-control.authorization.blocked",
-                        "message": "Authorization failed",
+                        "message": "Authorization failed.",
                         "statusCode": 403,
                         "details": {
                           "reason": "Your account has been blocked. Please contact support."
@@ -4623,7 +4661,7 @@
                       "status": "error",
                       "error": {
                         "type": "access-control.authorization.forbidden",
-                        "message": "Authorization failed",
+                        "message": "Authorization failed.",
                         "statusCode": 403,
                         "details": {
                           "reason": "Access denied. Please contact support."
@@ -5076,10 +5114,10 @@
                             "type": {
                               "type": "string",
                               "enum": [
-                                "bad-request",
-                                "bad-request",
-                                "bad-request",
-                                "bad-request"
+                                "bad-request.google.invalid-payload",
+                                "bad-request.google.invalid-id-token",
+                                "bad-request.google.email-required",
+                                "bad-request.google.email-not-verified"
                               ]
                             },
                             "message": {
@@ -5127,12 +5165,12 @@
                   ]
                 },
                 "examples": {
-                  "bad-request_1": {
+                  "bad-request.google.invalid-payload_1": {
                     "summary": "Invalid Google token payload",
                     "value": {
                       "status": "error",
                       "error": {
-                        "type": "bad-request",
+                        "type": "bad-request.google.invalid-payload",
                         "message": "Bad request.",
                         "statusCode": 400,
                         "details": {
@@ -5141,12 +5179,12 @@
                       }
                     }
                   },
-                  "bad-request_2": {
+                  "bad-request.google.invalid-id-token_2": {
                     "summary": "Invalid or expired Google ID token",
                     "value": {
                       "status": "error",
                       "error": {
-                        "type": "bad-request",
+                        "type": "bad-request.google.invalid-id-token",
                         "message": "Bad request.",
                         "statusCode": 400,
                         "details": {
@@ -5155,12 +5193,12 @@
                       }
                     }
                   },
-                  "bad-request_3": {
+                  "bad-request.google.email-required_3": {
                     "summary": "Google email is required",
                     "value": {
                       "status": "error",
                       "error": {
-                        "type": "bad-request",
+                        "type": "bad-request.google.email-required",
                         "message": "Bad request.",
                         "statusCode": 400,
                         "details": {
@@ -5169,12 +5207,12 @@
                       }
                     }
                   },
-                  "bad-request_4": {
+                  "bad-request.google.email-not-verified_4": {
                     "summary": "Google email must be verified",
                     "value": {
                       "status": "error",
                       "error": {
-                        "type": "bad-request",
+                        "type": "bad-request.google.email-not-verified",
                         "message": "Bad request.",
                         "statusCode": 400,
                         "details": {
@@ -5350,10 +5388,10 @@
                             "type": {
                               "type": "string",
                               "enum": [
-                                "bad-request",
-                                "bad-request",
-                                "bad-request",
-                                "bad-request"
+                                "bad-request.google.invalid-payload",
+                                "bad-request.google.invalid-id-token",
+                                "bad-request.google.email-required",
+                                "bad-request.google.email-not-verified"
                               ]
                             },
                             "message": {
@@ -5401,12 +5439,12 @@
                   ]
                 },
                 "examples": {
-                  "bad-request_1": {
+                  "bad-request.google.invalid-payload_1": {
                     "summary": "Invalid Google token payload",
                     "value": {
                       "status": "error",
                       "error": {
-                        "type": "bad-request",
+                        "type": "bad-request.google.invalid-payload",
                         "message": "Bad request.",
                         "statusCode": 400,
                         "details": {
@@ -5415,12 +5453,12 @@
                       }
                     }
                   },
-                  "bad-request_2": {
+                  "bad-request.google.invalid-id-token_2": {
                     "summary": "Invalid or expired Google ID token",
                     "value": {
                       "status": "error",
                       "error": {
-                        "type": "bad-request",
+                        "type": "bad-request.google.invalid-id-token",
                         "message": "Bad request.",
                         "statusCode": 400,
                         "details": {
@@ -5429,12 +5467,12 @@
                       }
                     }
                   },
-                  "bad-request_3": {
+                  "bad-request.google.email-required_3": {
                     "summary": "Google email is required",
                     "value": {
                       "status": "error",
                       "error": {
-                        "type": "bad-request",
+                        "type": "bad-request.google.email-required",
                         "message": "Bad request.",
                         "statusCode": 400,
                         "details": {
@@ -5443,12 +5481,12 @@
                       }
                     }
                   },
-                  "bad-request_4": {
+                  "bad-request.google.email-not-verified_4": {
                     "summary": "Google email must be verified",
                     "value": {
                       "status": "error",
                       "error": {
-                        "type": "bad-request",
+                        "type": "bad-request.google.email-not-verified",
                         "message": "Bad request.",
                         "statusCode": 400,
                         "details": {
@@ -5620,7 +5658,7 @@
                       "status": "error",
                       "error": {
                         "type": "access-control.authorization.blocked",
-                        "message": "Authorization failed",
+                        "message": "Authorization failed.",
                         "statusCode": 403,
                         "details": {
                           "reason": "Your account has been blocked. Please contact support."
@@ -5634,7 +5672,7 @@
                       "status": "error",
                       "error": {
                         "type": "access-control.authorization.forbidden",
-                        "message": "Authorization failed",
+                        "message": "Authorization failed.",
                         "statusCode": 403,
                         "details": {
                           "reason": "Access denied. Please contact support."
@@ -5671,8 +5709,8 @@
                             "type": {
                               "type": "string",
                               "enum": [
-                                null,
-                                null
+                                "conflict.provider-account.linked-to-another-user",
+                                "conflict.provider-account.already-linked"
                               ]
                             },
                             "message": {
@@ -5726,11 +5764,12 @@
                   ]
                 },
                 "examples": {
-                  "undefined_1": {
+                  "conflict.provider-account.linked-to-another-user_1": {
                     "summary": "This Google account is linked to another user",
                     "value": {
                       "status": "error",
                       "error": {
+                        "type": "conflict.provider-account.linked-to-another-user",
                         "message": "Conflict.",
                         "statusCode": 409,
                         "details": {
@@ -5739,11 +5778,12 @@
                       }
                     }
                   },
-                  "undefined_2": {
+                  "conflict.provider-account.already-linked_2": {
                     "summary": "You already has a Google account linked",
                     "value": {
                       "status": "error",
                       "error": {
+                        "type": "conflict.provider-account.already-linked",
                         "message": "Conflict.",
                         "statusCode": 409,
                         "details": {
@@ -5913,7 +5953,7 @@
                           "properties": {
                             "type": {
                               "type": "string",
-                              "default": "bad-request"
+                              "default": "bad-request.provider-account.unlink-forbidden"
                             },
                             "message": {
                               "type": "string",
@@ -5951,7 +5991,7 @@
                 "example": {
                   "status": "error",
                   "error": {
-                    "type": "bad-request",
+                    "type": "bad-request.provider-account.unlink-forbidden",
                     "message": "Bad request.",
                     "statusCode": 400,
                     "details": {
@@ -6121,7 +6161,7 @@
                       "status": "error",
                       "error": {
                         "type": "access-control.authorization.blocked",
-                        "message": "Authorization failed",
+                        "message": "Authorization failed.",
                         "statusCode": 403,
                         "details": {
                           "reason": "Your account has been blocked. Please contact support."
@@ -6135,7 +6175,7 @@
                       "status": "error",
                       "error": {
                         "type": "access-control.authorization.forbidden",
-                        "message": "Authorization failed",
+                        "message": "Authorization failed.",
                         "statusCode": 403,
                         "details": {
                           "reason": "Access denied. Please contact support."

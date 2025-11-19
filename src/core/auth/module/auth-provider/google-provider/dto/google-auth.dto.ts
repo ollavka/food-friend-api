@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsJWT } from 'class-validator'
+import { IsJWT } from '@common/validation'
 
 export class GoogleAuthDto {
   @ApiProperty({

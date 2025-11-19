@@ -27,28 +27,28 @@ export function GoogleAuthDocs(): MethodDecorator {
       description: 'Errors related to Google ID token',
       variants: [
         {
-          typeKey: 'invalid-token-payload',
+          typeKey: 'bad-request.google.invalid-payload',
           summary: 'Invalid Google token payload',
           example: {
             reason: 'Invalid Google token payload.',
           },
         },
         {
-          typeKey: 'invalid-or-expired-token',
+          typeKey: 'bad-request.google.invalid-id-token',
           summary: 'Invalid or expired Google ID token',
           example: {
             reason: 'Invalid or expired Google ID token.',
           },
         },
         {
-          typeKey: 'google-email-required',
+          typeKey: 'bad-request.google.email-required',
           summary: 'Google email is required',
           example: {
             reason: 'Google email is required.',
           },
         },
         {
-          typeKey: 'google-email-verified',
+          typeKey: 'bad-request.google.email-not-verified',
           summary: 'Google email must be verified',
           example: {
             reason: 'Google email must be verified to sign in.',

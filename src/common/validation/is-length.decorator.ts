@@ -1,7 +1,16 @@
 import { ValidateBy, ValidationOptions, buildMessage, length } from 'class-validator'
 import { P, match } from 'ts-pattern'
+import { withI18nMessage } from './with-i18n-message.util'
 
 export function IsLength(min: number, max?: number, validationOptions?: ValidationOptions): PropertyDecorator {
+  const { scenario, args } = match({ min, max })
+    .when(
+      ({ min, max }) => min === max,
+      ({ min }) => ({ scenario: 'exact' as const, args: { length: min } }),
+    )
+    .with({ max: P.nonNullable }, ({ min, max }) => ({ scenario: 'range' as const, args: { min, max } }))
+    .otherwise(({ min }) => ({ scenario: 'min' as const, args: { min } }))
+
   return ValidateBy(
     {
       name: 'isLength',
@@ -31,6 +40,6 @@ export function IsLength(min: number, max?: number, validationOptions?: Validati
         }, validationOptions),
       },
     },
-    validationOptions,
+    withI18nMessage(`validation.length.${scenario}`, validationOptions, args),
   )
 }

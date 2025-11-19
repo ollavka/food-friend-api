@@ -21,8 +21,7 @@ export class MailService {
       const html = await render(WelcomeMailTemplate({ userName, t }))
 
       await this.mailerService.sendMail({
-        to: 'lavka.alexey37@gmail.com',
-        // to: toEmail,
+        to: toEmail,
         subject: t('subject', { parseHtml: false }),
         html,
       })
@@ -37,8 +36,7 @@ export class MailService {
       const html = await render(VerificationEmailMailTemplate({ code, userName, t }))
 
       await this.mailerService.sendMail({
-        to: 'lavka.alexey37@gmail.com',
-        // to: toEmail,
+        to: toEmail,
         subject: t('subject', { parseHtml: false }),
         html,
       })
@@ -53,8 +51,7 @@ export class MailService {
       const html = await render(ResetPasswordMailTemplate({ code, userName, t }))
 
       await this.mailerService.sendMail({
-        to: 'lavka.alexey37@gmail.com',
-        // to: toEmail,
+        to: toEmail,
         subject: t('subject', { parseHtml: false }),
         html,
       })

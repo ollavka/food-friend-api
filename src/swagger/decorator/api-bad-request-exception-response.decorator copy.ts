@@ -2,9 +2,10 @@ import { HttpStatus } from '@nestjs/common'
 import { ApiExceptionResponseParams } from '@swagger/type'
 import { ApiHttpExceptionResponse } from './api-http-exception-response.decorator'
 
-export type ApiBadRequestExceptionResponseParams = Omit<ApiExceptionResponseParams, 'type'>
+export type ApiBadRequestExceptionResponseParams = ApiExceptionResponseParams
 
 export function ApiBadRequestExceptionResponse({
+  type,
   description,
   details,
   variants = [],
@@ -14,7 +15,7 @@ export function ApiBadRequestExceptionResponse({
       statusCode: HttpStatus.BAD_REQUEST,
       description: description ?? 'Bad request',
       variants: variants.map(({ typeKey, details, ...restVariant }) => ({
-        typeKey: 'bad-request',
+        typeKey: typeKey ?? type ?? 'bad-request',
         details: details ?? null,
         ...restVariant,
       })),
@@ -25,7 +26,7 @@ export function ApiBadRequestExceptionResponse({
     statusCode: HttpStatus.BAD_REQUEST,
     description: description ?? 'Bad request',
     details,
-    typeKeyOverride: 'bad-request',
+    typeKeyOverride: type ?? 'bad-request',
     messageOverride: 'Bad request.',
   })
 }
