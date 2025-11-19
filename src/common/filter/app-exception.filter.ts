@@ -70,8 +70,8 @@ export class AppExceptionFilter implements ExceptionFilter {
   }
 
   private translateErrorMessage(type: string, fallback: string, args?: Record<string, unknown>): string {
-    const messageKey = this.buildMessageTranslationKey(type)
-    return this.translateWithFallback(messageKey, fallback, args)
+    const messageKeys = this.buildMessageTranslationKeys(type)
+    return this.translateWithFallback(messageKeys, fallback, args)
   }
 
   private translateErrorReason(type: string, fallback: string, args?: Record<string, unknown>): string {
@@ -79,13 +79,20 @@ export class AppExceptionFilter implements ExceptionFilter {
     return this.translateWithFallback(reasonKey, fallback, args)
   }
 
-  private buildMessageTranslationKey(type: string): string | null {
+  private buildMessageTranslationKeys(type: string): string[] {
     if (!type) {
-      return null
+      return []
     }
 
-    const mainSegment = type.split('.')?.[0]
-    return mainSegment ? `errors.${mainSegment}.message` : null
+    const segments = type.split('.')
+    const keys: string[] = []
+
+    for (let i = segments.length; i > 0; i--) {
+      const current = segments.slice(0, i).join('.')
+      keys.push(`errors.${current}.message`)
+    }
+
+    return keys
   }
 
   private buildReasonTranslationKey(type: string): string | null {
@@ -96,18 +103,36 @@ export class AppExceptionFilter implements ExceptionFilter {
     return `errors.${type}.reason`
   }
 
-  private translateWithFallback(key: string | null, fallback: string, args?: Record<string, unknown>): string {
+  private translateWithFallback(
+    key: string | string[] | null,
+    fallback: string,
+    args?: Record<string, unknown>,
+  ): string {
     const i18n = I18nContext.current()
 
     if (!i18n || !key) {
       return fallback
     }
 
-    try {
-      return <string>i18n.t(key, { defaultValue: fallback, args })
-    } catch {
-      return fallback
+    const keys = Array.isArray(key) ? key : [key]
+
+    for (const item of keys) {
+      if (!item) {
+        continue
+      }
+
+      try {
+        const value = i18n.t(item, { args })
+
+        if (typeof value === 'string') {
+          return value
+        }
+      } catch {
+        continue
+      }
     }
+
+    return fallback
   }
 
   private localizeDetails(
