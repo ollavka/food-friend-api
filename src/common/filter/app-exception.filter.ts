@@ -124,6 +124,10 @@ export class AppExceptionFilter implements ExceptionFilter {
       try {
         const value = i18n.t(item, { args })
 
+        if (value === item) {
+          continue
+        }
+
         if (typeof value === 'string') {
           return value
         }

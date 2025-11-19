@@ -1,13 +1,15 @@
 import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
+import { NestExpressApplication } from '@nestjs/platform-express'
 import * as cookieParser from 'cookie-parser'
 import { APP_ENV_CONFIG_KEY, AppEnvConfig } from '@config/app'
 import { getCorsOptions } from '@config/cors'
+import { setupQs } from '@config/qs'
 import { setupSwagger } from '@config/swagger'
 import { AppModule } from './app.module'
 
 async function bootstrap(): Promise<void> {
-  const app = await NestFactory.create(AppModule)
+  const app = await NestFactory.create<NestExpressApplication>(AppModule)
   const configService = app.get<ConfigService<{ [APP_ENV_CONFIG_KEY]: AppEnvConfig }, true>>(ConfigService)
   const { host, logLevels, port, allowedOrigins } = configService.get<AppEnvConfig>(APP_ENV_CONFIG_KEY)
 
@@ -15,6 +17,7 @@ async function bootstrap(): Promise<void> {
   app.enableCors(getCorsOptions(allowedOrigins))
   app.use(cookieParser())
   setupSwagger(app)
+  setupQs(app)
 
   await app.listen(port, host)
 }
