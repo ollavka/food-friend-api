@@ -6,7 +6,7 @@ import { MAIL_RESEND_WINDOW_MINS } from '@common/constant'
 import { AppInternalException } from '@common/exception'
 import { Nullable } from '@common/type'
 import { LocalizationFactory } from '@localization'
-import { RESEND_CLIENT_TOKEN, RESEND_FROM_TOKEN } from '../config'
+import { RESEND_CLIENT_TOKEN, RESEND_FROM_TOKEN, RESEND_TO_EMAIL_TOKEN } from '../config'
 import { ResetPasswordMailTemplate, VerificationEmailMailTemplate } from '../template'
 import { SendMailParams } from '../type'
 
@@ -15,6 +15,7 @@ export class MailService {
   public constructor(
     @Inject(RESEND_CLIENT_TOKEN) private readonly resend: Resend,
     @Inject(RESEND_FROM_TOKEN) private readonly resendFrom: string,
+    @Inject(RESEND_TO_EMAIL_TOKEN) private readonly resendToEmail: string,
     // private readonly mailerService: MailerService,
     private readonly localizationFactory: LocalizationFactory,
   ) {}
@@ -27,7 +28,7 @@ export class MailService {
       ...restSendMailParams,
       from,
       // we can send dev mails only to own account for testing (need to buy domain for general usage)
-      to: isDevMail ? 'oleksii.lavka.dev@gmail.com' : to,
+      to: isDevMail ? this.resendToEmail : to,
     })
   }
 

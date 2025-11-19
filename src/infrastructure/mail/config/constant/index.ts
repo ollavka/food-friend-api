@@ -1,4 +1,5 @@
 export * from './mail-env-config-key.constant'
 export * from './resend-client-token.constant'
 export * from './resend-from-token.constant'
+export * from './resend-to-email-token.constant'
 export * from './resend-env-config-key.constant'

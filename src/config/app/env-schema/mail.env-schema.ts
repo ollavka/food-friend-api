@@ -31,6 +31,11 @@ export class MailEnvSchema {
   @IsNotEmpty()
   @IsString()
   public readonly RESEND_FROM_NAME: string
+
+  @IsNotEmpty()
+  @IsString()
+  @IsEmail()
+  public readonly RESEND_TO_EMAIL: string
 }
 
 declare global {
