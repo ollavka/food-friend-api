@@ -64,6 +64,8 @@ export class SessionRepository {
     const tokenHash = hashValue(token)
     const expiresAt = addMilliseconds(new Date(), convertToMs(tokenTtl))
 
+    await this.removeRefreshTokenByUserId(userId)
+
     await this.prismaService.session.create({
       data: {
         expiresAt,

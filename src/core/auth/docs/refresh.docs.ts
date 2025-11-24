@@ -3,7 +3,6 @@ import { ApiOkResponse, ApiOperation } from '@nestjs/swagger'
 import {
   ApiAppEntityNotFoundExceptionResponse,
   ApiAuthenticationExceptionResponse,
-  ApiBearerAccessTokenAuth,
   ApiUserStatusPolicyExceptionResponse,
 } from '@swagger/decorator'
 import { successApiSchemaRef } from '@swagger/util'
@@ -19,20 +18,9 @@ export function RefreshDocs(): MethodDecorator {
       description: 'New access and refresh tokens',
       schema: successApiSchemaRef(AccessTokenApiModel),
     }),
-    ApiBearerAccessTokenAuth(),
     ApiAuthenticationExceptionResponse({
-      description: 'User not authenticated or refresh token missing, expired or invalid',
+      description: 'Refresh token missing, expired or invalid',
       variants: [
-        {
-          messageOverride: 'Authentication failed.',
-          summary: 'User not authenticated',
-          details: {
-            type: 'object',
-            properties: { reason: { type: 'string' } },
-            required: ['reason'],
-          },
-          example: { reason: 'You are not authenticated.' },
-        },
         {
           typeKey: 'refresh-token-not-found',
           messageOverride: 'Authentication failed.',

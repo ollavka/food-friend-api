@@ -38,7 +38,6 @@ export class AuthController {
   }
 
   @Post('refresh')
-  @Authorization()
   @RefreshDocs()
   public async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<AccessTokenApiModel> {
     return this.authService.refresh(req, res)
