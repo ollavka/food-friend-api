@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { PassportStrategy } from '@nestjs/passport'
-import { User } from '@prisma/client'
+import { LanguageCode, User } from '@prisma/client'
 import { ExtractJwt, Strategy } from 'passport-jwt'
 import { AppEntityNotFoundException } from '@common/exception'
 import { UserService } from '@core/user'
@@ -24,13 +24,24 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     })
   }
 
-  public async validate(payload: JwtUserPayload): Promise<User> {
-    const user = await this.userService.findById(payload.id)
+  public async validate(payload: JwtUserPayload): Promise<User & { languageCode?: LanguageCode }> {
+    const user = await this.userService.findById(payload.id, {
+      include: {
+        language: {
+          select: { code: true },
+        },
+      },
+    })
 
     if (!user) {
       throw AppEntityNotFoundException.byId('User', payload.id)
     }
 
-    return user
+    const { language, ...userData } = user
+
+    return {
+      ...userData,
+      languageCode: language?.code,
+    }
   }
 }

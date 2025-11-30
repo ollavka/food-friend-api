@@ -1,5 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsEmail, IsNotEmpty, IsPassword, IsString } from '@common/validation'
+import { LanguageCode } from '@prisma/client'
+import { IsOptional } from 'class-validator'
+import { IsEmail, IsLanguageCode, IsNotEmpty, IsPassword, IsString } from '@common/validation'
 
 export class RegisterUserDto {
   @IsNotEmpty()
@@ -21,4 +23,9 @@ export class RegisterUserDto {
   @IsString()
   @ApiProperty({ description: 'User last name', example: 'Doe', required: true })
   public lastName: string
+
+  @IsOptional()
+  @IsLanguageCode()
+  @ApiProperty({ description: 'Language code (UK, uk_UA, uk-UA, etc.)', example: 'UK', required: false })
+  public languageCode?: LanguageCode
 }

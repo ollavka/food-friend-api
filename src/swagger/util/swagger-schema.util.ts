@@ -18,6 +18,24 @@ export function successApiSchemaRef(Model: Function | string): Pick<SchemaObject
   }
 }
 
+export function successApiArraySchemaRef(Model: Function | string): Pick<SchemaObject, 'allOf'> {
+  return {
+    allOf: [
+      { $ref: getSchemaPath(SuccessResponseApiModel) },
+      {
+        properties: {
+          status: { type: 'string', default: 'success' },
+          data: {
+            type: 'array',
+            items: { $ref: getSchemaPath(Model) },
+          },
+        },
+        required: ['status', 'data'],
+      },
+    ],
+  }
+}
+
 export function successApiSchemaLiteral(literal: any): Pick<SchemaObject, 'allOf'> {
   return {
     allOf: [

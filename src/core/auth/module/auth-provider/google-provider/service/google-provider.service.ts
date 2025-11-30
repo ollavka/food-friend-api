@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { AuthProvider, User, UserRole, UserStatus } from '@prisma/client'
+import { AuthProvider, LanguageCode, User, UserRole, UserStatus } from '@prisma/client'
 import { Response } from 'express'
 import { OAuth2Client, TokenPayload } from 'google-auth-library'
 import { AppBadRequestException } from '@common/exception'
@@ -7,9 +7,11 @@ import { Nullable, Uuid } from '@common/type'
 import { def } from '@common/util'
 import { AccessTokenApiModel } from '@core/auth/api-model'
 import { AuthSessionService, ProviderAccountService } from '@core/auth/module'
+import { LanguageService } from '@core/language'
 import { UserService } from '@core/user'
 import { PrismaService } from '@infrastructure/database'
 import { GOOGLE_AUTH_CLIENT_TOKEN } from '../constant'
+import { HandleGoogleTokenType } from '../type'
 
 @Injectable()
 export class GoogleProviderService {
@@ -19,15 +21,20 @@ export class GoogleProviderService {
     private readonly userService: UserService,
     private readonly providerAccountService: ProviderAccountService,
     private readonly prismaService: PrismaService,
+    private readonly languageService: LanguageService,
   ) {}
 
-  public async googleAuth(res: Response, idToken: string): Promise<AccessTokenApiModel> {
-    const user = await this.handleGoogleToken(idToken, null, false)
+  public async googleAuth(res: Response, idToken: string, languageCode: LanguageCode): Promise<AccessTokenApiModel> {
+    const user = await this.handleGoogleToken({ idToken, userEmail: null, languageCode }, false)
     return this.authSessionService.auth(res, user)
   }
 
-  public async linkGoogleAccount(idToken: string, userEmail: Nullable<string>): Promise<void> {
-    await this.handleGoogleToken(idToken, userEmail, true)
+  public async linkGoogleAccount(
+    idToken: string,
+    userEmail: Nullable<string>,
+    languageCode: LanguageCode,
+  ): Promise<void> {
+    await this.handleGoogleToken({ idToken, userEmail, languageCode }, true)
   }
 
   public async unlinkGoogleAccount(userId: Uuid): Promise<void> {
@@ -53,7 +60,10 @@ export class GoogleProviderService {
     await this.providerAccountService.removeAccount(userId, AuthProvider.GOOGLE)
   }
 
-  private async handleGoogleToken(idToken: string, userEmail: Nullable<string>, strict = true): Promise<User> {
+  private async handleGoogleToken(
+    { idToken, languageCode, userEmail }: HandleGoogleTokenType,
+    strict = true,
+  ): Promise<User> {
     const googleTicket = await this.googleAuthClient.verifyIdToken({ idToken }).catch(() => {
       throw new AppBadRequestException('google.invalid-id-token', 'Invalid or expired Google ID token.')
     })
@@ -64,6 +74,10 @@ export class GoogleProviderService {
       throw new AppBadRequestException('google.invalid-payload', 'Invalid Google token payload.')
     }
 
+    const currentLanguage = await (
+      languageCode ? this.languageService.getLanguageByCode(languageCode) : this.languageService.getDefaultLanguage()
+    )!
+
     const user = await this.prismaService.$transaction(async (tx) => {
       const user = await this.userService.findOrCreate(
         userEmail ?? tokenPayload.email,
@@ -73,6 +87,7 @@ export class GoogleProviderService {
           lastName: tokenPayload?.family_name ?? null,
           status: UserStatus.ACTIVE,
           role: UserRole.REGULAR,
+          languageId: currentLanguage!.id,
         },
         tx,
       )

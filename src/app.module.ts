@@ -1,10 +1,12 @@
-import { Module } from '@nestjs/common'
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { filters } from '@common/filter/all'
 import { interceptors } from '@common/interceptor/all'
+import { DefaultLanguageMiddleware } from '@common/middleware'
 import { pipes } from '@common/pipe/all'
 import { configModuleOptions } from '@config/app'
 import { AuthModule } from '@core/auth'
+import { LanguageModule } from '@core/language'
 import { UserModule } from '@core/user'
 import { BcryptModule } from '@infrastructure/cryptography'
 import { PrismaModule } from '@infrastructure/database'
@@ -24,7 +26,12 @@ import { SchedulerModule } from '@infrastructure/scheduler'
     UserModule,
     OtpModule,
     MailModule,
+    LanguageModule,
   ],
   providers: [...pipes, ...interceptors, ...filters],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  public configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(DefaultLanguageMiddleware).forRoutes('*')
+  }
+}

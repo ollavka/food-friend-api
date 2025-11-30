@@ -1,0 +1,33 @@
+model Language {
+  id String @id @default(uuid())
+
+  code          LanguageCode @unique @default(UK)
+  isDefault     Boolean      @default(false) @map("is_default")
+  defaultLocale String?
+
+  translations LanguageTranslation[]
+  users        User[]
+
+  @@index([code])
+  @@map("languages")
+}
+
+model LanguageTranslation {
+  id String @id @default(uuid())
+
+  translationCode LanguageCode @map("translation_code")
+  fullLabel       String       @map("full_label")
+  shortLabel      String       @map("short_label")
+
+  language   Language @relation(fields: [languageId], references: [id])
+  languageId String   @map("language_id")
+
+  @@unique([languageId, translationCode])
+  @@index([translationCode])
+  @@map("language_translations")
+}
+
+enum LanguageCode {
+  EN
+  UK
+}

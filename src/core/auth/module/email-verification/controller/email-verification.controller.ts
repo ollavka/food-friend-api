@@ -3,7 +3,7 @@ import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import { User } from '@prisma/client'
 import { Response } from 'express'
 import { SuccessMessageApiModel } from '@common/api-model'
-import { AuthorizedUser } from '@common/decorator'
+import { AuthUser } from '@common/decorator'
 import { ConfirmOtpCodeDto } from '@common/dto'
 import { AccessTokenApiModel, OtpTicketApiModel } from '@core/auth/api-model'
 import { LocalizationFactory } from '@localization'
@@ -32,7 +32,7 @@ export class EmailVerificationController {
   public async confirmEmail(
     @Res({ passthrough: true }) res: Response,
     @Body() confirmOtpCodeDto: ConfirmOtpCodeDto,
-    @AuthorizedUser() user: User,
+    @AuthUser() user: User,
   ): Promise<AccessTokenApiModel | SuccessMessageApiModel> {
     const accessTokenApiModel = await this.emailVerificationService.confirmEmail(res, confirmOtpCodeDto, !user)
     const t = this.localizationFactory.createFor('success-message')

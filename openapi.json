@@ -5013,11 +5013,112 @@
         ]
       }
     },
+    "/languages": {
+      "get": {
+        "description": "Retrieve available languages with translated full label, short label, code and locale",
+        "operationId": "LanguageController_getLanguageList",
+        "parameters": [
+          {
+            "name": "lang",
+            "required": false,
+            "in": "query",
+            "description": "Optional language override. Highest priority.\n\nLanguage resolution order:\n1) Query parameter: ?lang\n2) Header: x-lang\n3) Authenticated user language\n4) Default language (Ukrainian – uk)\n\nThe value is case-insensitive and may be either:\n- a plain language code (e.g. \"en\", \"EN\", \"uk\")\n- a locale code (e.g. \"en-US\", \"EN_us\", \"uk-UA\")\n\nThe value will be normalized internally to a supported LanguageCode.",
+            "schema": {
+              "enum": [
+                "EN",
+                "UK"
+              ],
+              "default": "UK"
+            }
+          },
+          {
+            "name": "x-lang",
+            "in": "header",
+            "description": "Optional language override. Lower priority than ?lang.\n\nLanguage resolution order:\n1) Query parameter: ?lang\n2) Header: x-lang\n3) Authenticated user language\n4) Default language (Ukrainian – uk)\n\nThe value is case-insensitive and may be either:\n- a plain language code (e.g. \"en\", \"EN\", \"uk\")\n- a locale code (e.g. \"en-US\", \"EN_us\", \"uk-UA\")\n\nThe value will be normalized internally to a supported LanguageCode.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "EN",
+                "UK"
+              ],
+              "default": "UK"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Language list successfully retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessResponseApiModel"
+                    },
+                    {
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "default": "success"
+                        },
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/LanguageApiModel"
+                          }
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "data"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "Retrieve language list",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
     "/auth/google": {
       "post": {
         "description": "Authentication or registration via Google provider using a Google ID token (JWT)",
         "operationId": "GoogleProviderController_googleAuth",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "lang",
+            "required": false,
+            "in": "query",
+            "description": "Optional language override. Highest priority.\n\nLanguage resolution order:\n1) Query parameter: ?lang\n2) Header: x-lang\n3) Authenticated user language\n4) Default language (Ukrainian – uk)\n\nThe value is case-insensitive and may be either:\n- a plain language code (e.g. \"en\", \"EN\", \"uk\")\n- a locale code (e.g. \"en-US\", \"EN_us\", \"uk-UA\")\n\nThe value will be normalized internally to a supported LanguageCode.",
+            "schema": {
+              "enum": [
+                "EN",
+                "UK"
+              ],
+              "default": "UK"
+            }
+          },
+          {
+            "name": "x-lang",
+            "in": "header",
+            "description": "Optional language override. Lower priority than ?lang.\n\nLanguage resolution order:\n1) Query parameter: ?lang\n2) Header: x-lang\n3) Authenticated user language\n4) Default language (Ukrainian – uk)\n\nThe value is case-insensitive and may be either:\n- a plain language code (e.g. \"en\", \"EN\", \"uk\")\n- a locale code (e.g. \"en-US\", \"EN_us\", \"uk-UA\")\n\nThe value will be normalized internally to a supported LanguageCode.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "EN",
+                "UK"
+              ],
+              "default": "UK"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -5307,7 +5408,35 @@
       "post": {
         "description": "Link Google account using a Google ID token (JWT) to user",
         "operationId": "GoogleProviderController_linkGoogleAccount",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "lang",
+            "required": false,
+            "in": "query",
+            "description": "Optional language override. Highest priority.\n\nLanguage resolution order:\n1) Query parameter: ?lang\n2) Header: x-lang\n3) Authenticated user language\n4) Default language (Ukrainian – uk)\n\nThe value is case-insensitive and may be either:\n- a plain language code (e.g. \"en\", \"EN\", \"uk\")\n- a locale code (e.g. \"en-US\", \"EN_us\", \"uk-UA\")\n\nThe value will be normalized internally to a supported LanguageCode.",
+            "schema": {
+              "enum": [
+                "EN",
+                "UK"
+              ],
+              "default": "UK"
+            }
+          },
+          {
+            "name": "x-lang",
+            "in": "header",
+            "description": "Optional language override. Lower priority than ?lang.\n\nLanguage resolution order:\n1) Query parameter: ?lang\n2) Header: x-lang\n3) Authenticated user language\n4) Default language (Ukrainian – uk)\n\nThe value is case-insensitive and may be either:\n- a plain language code (e.g. \"en\", \"EN\", \"uk\")\n- a locale code (e.g. \"en-US\", \"EN_us\", \"uk-UA\")\n\nThe value will be normalized internally to a supported LanguageCode.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "EN",
+                "UK"
+              ],
+              "default": "UK"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -6238,6 +6367,11 @@
             "type": "string",
             "description": "User last name",
             "example": "Doe"
+          },
+          "languageCode": {
+            "type": "string",
+            "description": "Language code (UK, uk_UA, uk-UA, etc.)",
+            "example": "UK"
           }
         },
         "required": [
@@ -6463,6 +6597,37 @@
         },
         "required": [
           "email"
+        ]
+      },
+      "LanguageApiModel": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Language code",
+            "example": "EN"
+          },
+          "locale": {
+            "type": "string",
+            "description": "Language locale",
+            "example": "en_US"
+          },
+          "fullLabel": {
+            "type": "string",
+            "description": "Language full label",
+            "example": "English"
+          },
+          "shortLabel": {
+            "type": "string",
+            "description": "Language short label",
+            "example": "Eng"
+          }
+        },
+        "required": [
+          "code",
+          "locale",
+          "fullLabel",
+          "shortLabel"
         ]
       },
       "GoogleAuthDto": {

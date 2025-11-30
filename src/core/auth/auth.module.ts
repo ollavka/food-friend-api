@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common'
 import { PassportModule } from '@nestjs/passport'
+import { LanguageModule } from '@core/language'
 import { UserModule } from '@core/user'
 import { AuthController } from './controller'
 import { AuthSessionModule, EmailVerificationModule, PasswordManagementModule } from './module'
@@ -14,6 +15,7 @@ import { JwtStrategy } from './strategy'
     PasswordManagementModule,
     AuthSessionModule,
     EmailVerificationModule,
+    LanguageModule,
     ...authProviderModules,
   ],
   controllers: [AuthController],

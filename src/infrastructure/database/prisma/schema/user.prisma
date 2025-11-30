@@ -9,6 +9,9 @@ model User {
   role   UserRole   @default(REGULAR)
   status UserStatus @default(UNVERIFIED)
 
+  languageId String?   @map("language_id")
+  language   Language? @relation(fields: [languageId], references: [id])
+
   otpCodes OtpCode[]
   sessions Session[]
   accounts Account[]

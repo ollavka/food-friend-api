@@ -3,7 +3,7 @@ import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import { User } from '@prisma/client'
 import { Authorization } from '@access-control/decorator'
 import { SuccessMessageApiModel } from '@common/api-model'
-import { AuthorizedUser } from '@common/decorator'
+import { AuthUser } from '@common/decorator'
 import { ConfirmOtpCodeDto } from '@common/dto'
 import { OtpTicketApiModel } from '@core/auth/api-model'
 import { LocalizationFactory } from '@localization'
@@ -53,7 +53,7 @@ export class PasswordManagementController {
   @Authorization()
   @SetPasswordDocs()
   public async setPassword(
-    @AuthorizedUser() user: User,
+    @AuthUser() user: User,
     @Body() { password }: SetPasswordDto,
   ): Promise<SuccessMessageApiModel> {
     await this.passwordManagementService.setPassword(user, password)
@@ -65,7 +65,7 @@ export class PasswordManagementController {
   @Authorization()
   @ChangePasswordDocs()
   public async changePassword(
-    @AuthorizedUser() user: User,
+    @AuthUser() user: User,
     @Body() changePasswordDto: ChangePasswordDto,
   ): Promise<SuccessMessageApiModel> {
     await this.passwordManagementService.changePassword(user, changePasswordDto)

@@ -2,7 +2,7 @@ import { Controller, Get, Param } from '@nestjs/common'
 import { ApiExcludeController } from '@nestjs/swagger'
 import { User } from '@prisma/client'
 import { Authorization } from '@access-control/decorator'
-import { AuthorizedUser } from '@common/decorator'
+import { AuthUser } from '@common/decorator'
 import { AppEntityNotFoundException } from '@common/exception'
 import { HashToUuidPipe } from '@common/pipe'
 import { Uuid } from '@common/type'
@@ -16,7 +16,7 @@ export class UserController {
 
   @Authorization()
   @Get('me')
-  public getMe(@AuthorizedUser() user: User): UserApiModel {
+  public getMe(@AuthUser() user: User): UserApiModel {
     return UserApiModel.from(user)
   }
 

@@ -1,7 +1,7 @@
 import { applyDecorators } from '@nestjs/common'
 import { ApiBody, ApiOkResponse, ApiOperation } from '@nestjs/swagger'
 import { AccessTokenApiModel } from '@core/auth/api-model'
-import { ApiBadRequestExceptionResponse, ApiValidationExceptionResponse } from '@swagger/decorator'
+import { ApiBadRequestExceptionResponse, ApiLanguage, ApiValidationExceptionResponse } from '@swagger/decorator'
 import { successApiSchemaRef } from '@swagger/util'
 import { GoogleAuthDto } from '../dto'
 
@@ -16,6 +16,7 @@ export function GoogleAuthDocs(): MethodDecorator {
       description: 'User successfully authenticated',
       schema: successApiSchemaRef(AccessTokenApiModel),
     }),
+    ApiLanguage(),
     ApiValidationExceptionResponse([
       {
         property: 'idToken',

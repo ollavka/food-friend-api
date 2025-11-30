@@ -3,6 +3,7 @@ import { UserRole, UserStatus } from '@prisma/client'
 import { Request, Response } from 'express'
 import { AccessControlAuthenticationException } from '@access-control/exception'
 import { AppConflictException } from '@common/exception'
+import { LanguageService } from '@core/language'
 import { UserService } from '@core/user'
 import { BcryptService } from '@infrastructure/cryptography/bcrypt'
 import { MailService } from '@infrastructure/mail'
@@ -18,9 +19,10 @@ export class AuthService {
     private readonly mailService: MailService,
     private readonly authSessionService: AuthSessionService,
     private readonly emailVerificationService: EmailVerificationService,
+    private readonly languageService: LanguageService,
   ) {}
 
-  public async register({ password, ...userDto }: RegisterUserDto): Promise<OtpTicketApiModel> {
+  public async register({ password, languageCode, ...userDto }: RegisterUserDto): Promise<OtpTicketApiModel> {
     const isUserExists = await this.userService.findByEmail(userDto.email, { select: { id: true } })
 
     if (isUserExists) {
@@ -29,6 +31,10 @@ export class AuthService {
 
     const hashedPassword = password ? await this.bcryptService.hash(password) : undefined
 
+    const currentLanguage = await (
+      languageCode ? this.languageService.getLanguageByCode(languageCode) : this.languageService.getDefaultLanguage()
+    )!
+
     const createdUser = await this.userService.create({
       ...userDto,
       password: hashedPassword,
@@ -36,6 +42,7 @@ export class AuthService {
       role: UserRole.REGULAR,
       lastEmailVerificationMailSentAt: null,
       lastResetPasswordMailSentAt: null,
+      languageId: currentLanguage!.id,
     })
 
     const [, emailVerificationTicketModel] = await Promise.all([

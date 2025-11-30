@@ -18,6 +18,7 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "jsx": "react",
+    "typeRoots": ["src/common/declaration"],
     "paths": {
       "@access-control/*": ["src/access-control/*"],
       "@core/*": ["src/core/*"],

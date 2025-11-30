@@ -1,19 +1,20 @@
 {
   "required": "Field {property} cannot be empty.",
   "string": "Field {property} must be text.",
+  "enum": "Field {property} must be one of the allowed values: {values}.",
   "email": "Field {property} must be a valid email address.",
-  "number": "Field {property} must contain only digits.",
+  "number": "Field {property} must contains only digits.",
   "id": "Field {property} must be a valid identifier.",
   "uuid": "Field {property} must be a valid UUID.",
-  "jwt": "Field {property} must contain a valid token.",
+  "jwt": "Field {property} must contains a valid token.",
   "otp": {
     "length": "Field {property} must be exactly {length} digits long."
   },
   "password": {
-    "digit": "Field {property} must include at least one digit.",
-    "lowercase": "Field {property} must include at least one lowercase letter.",
-    "uppercase": "Field {property} must include at least one uppercase letter.",
-    "special": "Field {property} must include at least one special character."
+    "digit": "Field {property} must contains at least one digit.",
+    "lowercase": "Field {property} must contains at least one lowercase letter.",
+    "uppercase": "Field {property} must contains at least one uppercase letter.",
+    "special": "Field {property} must contains at least one special character."
   },
   "length": {
     "exact": "Field {property} must be exactly {length} characters long.",

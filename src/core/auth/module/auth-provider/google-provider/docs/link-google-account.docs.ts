@@ -5,6 +5,7 @@ import {
   ApiBearerAccessTokenAuth,
   ApiBearerAuthExceptionResponse,
   ApiHttpExceptionResponse,
+  ApiLanguage,
   ApiUserStatusPolicyExceptionResponse,
   ApiValidationExceptionResponse,
 } from '@swagger/decorator'
@@ -27,6 +28,7 @@ export function LinkGoogleAccountDocs(): MethodDecorator {
       },
     }),
     ApiBearerAccessTokenAuth(),
+    ApiLanguage(),
     ApiBearerAuthExceptionResponse(),
     ApiUserStatusPolicyExceptionResponse(),
     ApiValidationExceptionResponse([
