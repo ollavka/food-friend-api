@@ -3,7 +3,7 @@ model Language {
 
   code          LanguageCode @unique @default(UK)
   isDefault     Boolean      @default(false) @map("is_default")
-  defaultLocale String?
+  defaultLocale String?      @map("default_locale")
 
   translations LanguageTranslation[]
   users        User[]
