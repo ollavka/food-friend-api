@@ -14,7 +14,7 @@
     "dev": "yarn start:db -d && yarn start:dev",
     "docker:down": "docker compose down --volumes",
     "start:debug": "nest start --debug --watch",
-    "prisma:seed": "tsx --env-file=.env src/infrastructure/database/prisma/seeds/seed.ts",
+    "prisma:seed": "tsx src/infrastructure/database/prisma/seeds/seed.ts",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "postinstall": "prisma generate",
