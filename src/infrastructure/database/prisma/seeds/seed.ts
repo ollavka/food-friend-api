@@ -1,14 +1,15 @@
 import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from '@prisma/client'
-import { config as loadEnv } from 'dotenv'
-import { expand } from 'dotenv-expand'
 import { Pool } from 'pg'
 import { seedLanguages } from './languages/seed'
 import { seedMeasurementBaseTypes } from './measurement-base-type/seed'
 import { seedMeasurementUnits } from './measurement-unit/seed'
 
-const env = loadEnv()
-expand(env)
+// TODO: use it for local seeding
+// import { config as loadEnv } from 'dotenv'
+// import { expand } from 'dotenv-expand'
+// const env = loadEnv({ path: '.env' })
+// expand(env)
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL })
 const prisma = new PrismaClient({
