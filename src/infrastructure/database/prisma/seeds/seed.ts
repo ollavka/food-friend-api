@@ -7,7 +7,7 @@ import { seedLanguages } from './languages/seed'
 import { seedMeasurementBaseTypes } from './measurement-base-type/seed'
 import { seedMeasurementUnits } from './measurement-unit/seed'
 
-const env = loadEnv({ path: '.env' })
+const env = loadEnv()
 expand(env)
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL })
