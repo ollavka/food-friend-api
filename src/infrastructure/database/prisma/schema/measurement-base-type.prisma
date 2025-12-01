@@ -1,0 +1,31 @@
+model MeasurementBaseType {
+  id  String                 @id @default(uuid())
+  key MeasurementBaseTypeKey @unique
+
+  translations     MeasurementBaseTypeTranslation[]
+  measurementUnits MeasurementUnit[]
+
+  @@index([key])
+  @@map("measurement_base_types")
+}
+
+model MeasurementBaseTypeTranslation {
+  id String @id @default(uuid())
+
+  label String
+
+  baseType   MeasurementBaseType @relation(fields: [baseTypeId], references: [id])
+  baseTypeId String              @map("base_type_id")
+
+  language   Language @relation(fields: [languageId], references: [id])
+  languageId String   @map("language_id")
+
+  @@unique([baseTypeId, languageId])
+  @@map("measurement_base_type_translations")
+}
+
+enum MeasurementBaseTypeKey {
+  MASS
+  VOLUME
+  COUNT
+}

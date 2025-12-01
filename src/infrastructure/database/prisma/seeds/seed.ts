@@ -1,7 +1,14 @@
 import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from '@prisma/client'
+import { config as loadEnv } from 'dotenv'
+import { expand } from 'dotenv-expand'
 import { Pool } from 'pg'
 import { seedLanguages } from './languages/seed'
+import { seedMeasurementBaseTypes } from './measurement-base-type/seed'
+import { seedMeasurementUnits } from './measurement-unit/seed'
+
+const env = loadEnv({ path: '.env' })
+expand(env)
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL })
 const prisma = new PrismaClient({
@@ -9,7 +16,9 @@ const prisma = new PrismaClient({
 })
 
 async function main(): Promise<void> {
-  await Promise.all([seedLanguages(prisma)])
+  const languages = await seedLanguages(prisma)
+  const measurementBaseTypes = await seedMeasurementBaseTypes(prisma, languages)
+  await seedMeasurementUnits(prisma, measurementBaseTypes, languages)
 }
 
 main()

@@ -1,0 +1,38 @@
+model MeasurementUnit {
+  id                 String             @id @default(uuid())
+  key                MeasurementUnitKey @unique
+  ratioToBaseConvert Decimal            @default(1) @map("ratio_to_base_convert")
+  isBaseUnit         Boolean            @default(false) @map("is_base_unit")
+  isUserSelectable   Boolean            @default(true) @map("is_user_selectable")
+
+  baseType   MeasurementBaseType @relation(fields: [baseTypeId], references: [id])
+  baseTypeId String              @map("base_type_id")
+
+  translations MeasurementUnitTranslation[]
+
+  @@index([key])
+  @@map("measurement_units")
+}
+
+model MeasurementUnitTranslation {
+  id String @id @default(uuid())
+
+  label String
+
+  unit   MeasurementUnit @relation(fields: [unitId], references: [id])
+  unitId String          @map("unit_id")
+
+  language   Language @relation(fields: [languageId], references: [id])
+  languageId String   @map("language_id")
+
+  @@unique([unitId, languageId])
+  @@map("measurement_unit_translations")
+}
+
+enum MeasurementUnitKey {
+  G
+  KG
+  ML
+  L
+  PC
+}

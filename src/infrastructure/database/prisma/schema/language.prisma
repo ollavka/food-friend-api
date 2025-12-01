@@ -6,7 +6,10 @@ model Language {
   defaultLocale String?      @map("default_locale")
 
   translations LanguageTranslation[]
-  users        User[]
+
+  users                           User[]
+  measurementUnitTranslations     MeasurementUnitTranslation[]
+  measurementBaseTypeTranslations MeasurementBaseTypeTranslation[]
 
   @@index([code])
   @@map("languages")
