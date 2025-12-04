@@ -50,3 +50,7 @@ export function getRequestLanguage(req: Request, options?: { fallback?: Language
 
   return fallbackLanguage
 }
+
+export function isLanguageCode(code: any): code is LanguageCode {
+  return Object.values(LanguageCode).includes(code)
+}

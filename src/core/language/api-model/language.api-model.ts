@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { LanguageCode } from '@prisma/client'
+import { Language, LanguageCode } from '@prisma/client'
 import { Exclude, Expose } from 'class-transformer'
 
 @Exclude()
@@ -36,15 +36,15 @@ export class LanguageApiModel {
   })
   public shortLabel: string
 
-  public constructor(partial: Partial<LanguageApiModel>) {
+  public constructor(partial: Partial<Language>) {
     Object.assign(this, partial)
   }
 
-  public static from(language: Partial<LanguageApiModel>): LanguageApiModel {
+  public static from(language: Partial<Language>): LanguageApiModel {
     return new this(language)
   }
 
-  public static fromList(languages: Array<Partial<LanguageApiModel>>): LanguageApiModel[] {
+  public static fromList(languages: Array<Partial<Language>>): LanguageApiModel[] {
     return languages.map((language) => this.from(language))
   }
 }

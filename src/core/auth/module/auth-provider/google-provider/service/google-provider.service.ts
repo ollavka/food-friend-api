@@ -74,9 +74,7 @@ export class GoogleProviderService {
       throw new AppBadRequestException('google.invalid-payload', 'Invalid Google token payload.')
     }
 
-    const currentLanguage = await (
-      languageCode ? this.languageService.getLanguageByCode(languageCode) : this.languageService.getDefaultLanguage()
-    )!
+    const currentLanguage = await this.languageService.getLanguageOrDefault(languageCode)
 
     const user = await this.prismaService.$transaction(async (tx) => {
       const user = await this.userService.findOrCreate(
@@ -87,7 +85,7 @@ export class GoogleProviderService {
           lastName: tokenPayload?.family_name ?? null,
           status: UserStatus.ACTIVE,
           role: UserRole.REGULAR,
-          languageId: currentLanguage!.id,
+          languageId: currentLanguage.id,
         },
         tx,
       )

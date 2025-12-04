@@ -7,6 +7,8 @@ import { pipes } from '@common/pipe/all'
 import { configModuleOptions } from '@config/app'
 import { AuthModule } from '@core/auth'
 import { LanguageModule } from '@core/language'
+import { MeasurementBaseTypeModule } from '@core/measurement-base-type'
+import { MeasurementUnitModule } from '@core/measurement-unit'
 import { UserModule } from '@core/user'
 import { BcryptModule } from '@infrastructure/cryptography'
 import { PrismaModule } from '@infrastructure/database'
@@ -27,6 +29,8 @@ import { SchedulerModule } from '@infrastructure/scheduler'
     OtpModule,
     MailModule,
     LanguageModule,
+    MeasurementBaseTypeModule,
+    MeasurementUnitModule,
   ],
   providers: [...pipes, ...interceptors, ...filters],
 })

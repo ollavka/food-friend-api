@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common'
-import { Language, LanguageCode } from '@prisma/client'
+import { Language, LanguageCode, LanguageTranslation } from '@prisma/client'
 import { Uuid } from '@common/type'
 import { PrismaService } from '@infrastructure/database'
-import { LanguageApiModel } from '../api-model'
 
 @Injectable()
 export class LanguageRepository {
@@ -48,8 +47,10 @@ export class LanguageRepository {
     })
   }
 
-  public async findAllLanguages(languageCode: LanguageCode): Promise<LanguageApiModel[]> {
-    const languages = await this.prismaService.language.findMany({
+  public async findAllLanguages(
+    languageCode: LanguageCode,
+  ): Promise<Array<Language & { translations: LanguageTranslation[] }>> {
+    return this.prismaService.language.findMany({
       include: {
         translations: {
           where: {
@@ -58,20 +59,6 @@ export class LanguageRepository {
         },
       },
     })
-
-    const normalizedLanguages = languages.map(({ translations, defaultLocale, ...language }) => {
-      const [currentTranslation] = translations
-      const { fullLabel, shortLabel } = currentTranslation
-
-      return {
-        ...language,
-        locale: defaultLocale as string,
-        fullLabel,
-        shortLabel,
-      }
-    })
-
-    return LanguageApiModel.fromList(normalizedLanguages)
   }
 
   public async findLanguageById(id: Uuid): Promise<Language | null> {

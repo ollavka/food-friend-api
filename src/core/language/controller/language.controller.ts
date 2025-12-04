@@ -8,7 +8,7 @@ import { LanguageApiModel } from '../api-model'
 import { GetLanguageListDocs } from '../docs'
 import { LanguageService } from '../service'
 
-@ApiTags('Auth')
+@ApiTags('Languages')
 @ApiExtraModels(LanguageApiModel)
 @Controller('languages')
 export class LanguageController {

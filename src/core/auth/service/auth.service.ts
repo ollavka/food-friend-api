@@ -31,9 +31,7 @@ export class AuthService {
 
     const hashedPassword = password ? await this.bcryptService.hash(password) : undefined
 
-    const currentLanguage = await (
-      languageCode ? this.languageService.getLanguageByCode(languageCode) : this.languageService.getDefaultLanguage()
-    )!
+    const currentLanguage = await this.languageService.getLanguageOrDefault(languageCode)
 
     const createdUser = await this.userService.create({
       ...userDto,
@@ -42,7 +40,7 @@ export class AuthService {
       role: UserRole.REGULAR,
       lastEmailVerificationMailSentAt: null,
       lastResetPasswordMailSentAt: null,
-      languageId: currentLanguage!.id,
+      languageId: currentLanguage.id,
     })
 
     const [, emailVerificationTicketModel] = await Promise.all([

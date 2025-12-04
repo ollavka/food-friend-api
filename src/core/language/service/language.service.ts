@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import { Language, LanguageCode } from '@prisma/client'
-import { Uuid } from '@common/type'
+import { match } from 'ts-pattern'
+import { Nullable, Uuid } from '@common/type'
+import { isLanguageCode, isUuid } from '@common/util'
 import { LanguageApiModel } from '../api-model'
 import { LanguageRepository } from '../repository'
 
@@ -11,7 +13,21 @@ export class LanguageService {
   public constructor(private readonly languageRepository: LanguageRepository) {}
 
   public async getAllLanguages(languageCode: LanguageCode): Promise<LanguageApiModel[]> {
-    return this.languageRepository.findAllLanguages(languageCode)
+    const languages = await this.languageRepository.findAllLanguages(languageCode)
+
+    const normalizedLanguages = languages.map(({ translations, defaultLocale, ...language }) => {
+      const [currentTranslation] = translations
+      const { fullLabel, shortLabel } = currentTranslation
+
+      return {
+        ...language,
+        locale: defaultLocale as string,
+        fullLabel,
+        shortLabel,
+      }
+    })
+
+    return LanguageApiModel.fromList(normalizedLanguages)
   }
 
   public async getLanguageById(id: Uuid): Promise<Language | null> {
@@ -30,6 +46,21 @@ export class LanguageService {
     const defaultLanguage = await this.languageRepository.findDefaultLanguage()
     this.cachedDefaultLanguage = defaultLanguage
     return defaultLanguage
+  }
+
+  public async getLanguageOrDefault(idOrCode: Nullable<Uuid | LanguageCode>): Promise<Language> {
+    const defaultLanguageCode = await this.getDefaultLanguage()
+
+    if (!idOrCode) {
+      return defaultLanguageCode
+    }
+
+    const language = await match(idOrCode)
+      .when(isUuid, async () => await this.getLanguageById(idOrCode))
+      .when(isLanguageCode, async () => await this.getLanguageByCode(idOrCode as LanguageCode))
+      .otherwise(() => defaultLanguageCode)
+
+    return language ?? defaultLanguageCode
   }
 
   public async setDefaultLanguage(languageId: Uuid): Promise<void> {

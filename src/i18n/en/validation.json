@@ -1,7 +1,8 @@
 {
   "required": "Field {property} cannot be empty.",
   "string": "Field {property} must be text.",
-  "enum": "Field {property} must be one of the allowed values: {values}.",
+  "availableValues": "Field {property} must be one of the allowed values: {values}.",
+  "boolean": "Field {property} must be boolean.",
   "email": "Field {property} must be a valid email address.",
   "number": "Field {property} must contains only digits.",
   "id": "Field {property} must be a valid identifier.",

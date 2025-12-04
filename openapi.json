@@ -5013,79 +5013,6 @@
         ]
       }
     },
-    "/languages": {
-      "get": {
-        "description": "Retrieve available languages with translated full label, short label, code and locale",
-        "operationId": "LanguageController_getLanguageList",
-        "parameters": [
-          {
-            "name": "lang",
-            "required": false,
-            "in": "query",
-            "description": "Optional language override. Highest priority.\n\nLanguage resolution order:\n1) Query parameter: ?lang\n2) Header: x-lang\n3) Authenticated user language\n4) Default language (Ukrainian – uk)\n\nThe value is case-insensitive and may be either:\n- a plain language code (e.g. \"en\", \"EN\", \"uk\")\n- a locale code (e.g. \"en-US\", \"EN_us\", \"uk-UA\")\n\nThe value will be normalized internally to a supported LanguageCode.",
-            "schema": {
-              "enum": [
-                "EN",
-                "UK"
-              ],
-              "default": "UK"
-            }
-          },
-          {
-            "name": "x-lang",
-            "in": "header",
-            "description": "Optional language override. Lower priority than ?lang.\n\nLanguage resolution order:\n1) Query parameter: ?lang\n2) Header: x-lang\n3) Authenticated user language\n4) Default language (Ukrainian – uk)\n\nThe value is case-insensitive and may be either:\n- a plain language code (e.g. \"en\", \"EN\", \"uk\")\n- a locale code (e.g. \"en-US\", \"EN_us\", \"uk-UA\")\n\nThe value will be normalized internally to a supported LanguageCode.",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "EN",
-                "UK"
-              ],
-              "default": "UK"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Language list successfully retrieved",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/SuccessResponseApiModel"
-                    },
-                    {
-                      "properties": {
-                        "status": {
-                          "type": "string",
-                          "default": "success"
-                        },
-                        "data": {
-                          "type": "array",
-                          "items": {
-                            "$ref": "#/components/schemas/LanguageApiModel"
-                          }
-                        }
-                      },
-                      "required": [
-                        "status",
-                        "data"
-                      ]
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        },
-        "summary": "Retrieve language list",
-        "tags": [
-          "Auth"
-        ]
-      }
-    },
     "/auth/google": {
       "post": {
         "description": "Authentication or registration via Google provider using a Google ID token (JWT)",
@@ -6296,6 +6223,342 @@
           "Google auth"
         ]
       }
+    },
+    "/languages": {
+      "get": {
+        "description": "Retrieve available languages with translated full label, short label, code and locale",
+        "operationId": "LanguageController_getLanguageList",
+        "parameters": [
+          {
+            "name": "lang",
+            "required": false,
+            "in": "query",
+            "description": "Optional language override. Highest priority.\n\nLanguage resolution order:\n1) Query parameter: ?lang\n2) Header: x-lang\n3) Authenticated user language\n4) Default language (Ukrainian – uk)\n\nThe value is case-insensitive and may be either:\n- a plain language code (e.g. \"en\", \"EN\", \"uk\")\n- a locale code (e.g. \"en-US\", \"EN_us\", \"uk-UA\")\n\nThe value will be normalized internally to a supported LanguageCode.",
+            "schema": {
+              "enum": [
+                "EN",
+                "UK"
+              ],
+              "default": "UK"
+            }
+          },
+          {
+            "name": "x-lang",
+            "in": "header",
+            "description": "Optional language override. Lower priority than ?lang.\n\nLanguage resolution order:\n1) Query parameter: ?lang\n2) Header: x-lang\n3) Authenticated user language\n4) Default language (Ukrainian – uk)\n\nThe value is case-insensitive and may be either:\n- a plain language code (e.g. \"en\", \"EN\", \"uk\")\n- a locale code (e.g. \"en-US\", \"EN_us\", \"uk-UA\")\n\nThe value will be normalized internally to a supported LanguageCode.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "EN",
+                "UK"
+              ],
+              "default": "UK"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Language list successfully retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessResponseApiModel"
+                    },
+                    {
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "default": "success"
+                        },
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/LanguageApiModel"
+                          }
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "data"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "Retrieve language list",
+        "tags": [
+          "Languages"
+        ]
+      }
+    },
+    "/measurement/base-types": {
+      "get": {
+        "description": "Retrieve available measurement base types with key and translated label",
+        "operationId": "MeasurementBaseTypeController_getMeasurementBaseTypeList",
+        "parameters": [
+          {
+            "name": "lang",
+            "required": false,
+            "in": "query",
+            "description": "Optional language override. Highest priority.\n\nLanguage resolution order:\n1) Query parameter: ?lang\n2) Header: x-lang\n3) Authenticated user language\n4) Default language (Ukrainian – uk)\n\nThe value is case-insensitive and may be either:\n- a plain language code (e.g. \"en\", \"EN\", \"uk\")\n- a locale code (e.g. \"en-US\", \"EN_us\", \"uk-UA\")\n\nThe value will be normalized internally to a supported LanguageCode.",
+            "schema": {
+              "enum": [
+                "EN",
+                "UK"
+              ],
+              "default": "UK"
+            }
+          },
+          {
+            "name": "x-lang",
+            "in": "header",
+            "description": "Optional language override. Lower priority than ?lang.\n\nLanguage resolution order:\n1) Query parameter: ?lang\n2) Header: x-lang\n3) Authenticated user language\n4) Default language (Ukrainian – uk)\n\nThe value is case-insensitive and may be either:\n- a plain language code (e.g. \"en\", \"EN\", \"uk\")\n- a locale code (e.g. \"en-US\", \"EN_us\", \"uk-UA\")\n\nThe value will be normalized internally to a supported LanguageCode.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "EN",
+                "UK"
+              ],
+              "default": "UK"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Measurement base type list successfully retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessResponseApiModel"
+                    },
+                    {
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "default": "success"
+                        },
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/MeasurementBaseTypeApiModel"
+                          }
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "data"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "Retrieve measurement base type",
+        "tags": [
+          "Measurements"
+        ]
+      }
+    },
+    "/measurement/units": {
+      "get": {
+        "description": "Retrieve available measurement units with key and translated label",
+        "operationId": "MeasurementUnitController_getMeasurementUnitList",
+        "parameters": [
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/MeasurementUnitFilterQueryDto"
+            }
+          },
+          {
+            "name": "lang",
+            "required": false,
+            "in": "query",
+            "description": "Optional language override. Highest priority.\n\nLanguage resolution order:\n1) Query parameter: ?lang\n2) Header: x-lang\n3) Authenticated user language\n4) Default language (Ukrainian – uk)\n\nThe value is case-insensitive and may be either:\n- a plain language code (e.g. \"en\", \"EN\", \"uk\")\n- a locale code (e.g. \"en-US\", \"EN_us\", \"uk-UA\")\n\nThe value will be normalized internally to a supported LanguageCode.",
+            "schema": {
+              "enum": [
+                "EN",
+                "UK"
+              ],
+              "default": "UK"
+            }
+          },
+          {
+            "name": "x-lang",
+            "in": "header",
+            "description": "Optional language override. Lower priority than ?lang.\n\nLanguage resolution order:\n1) Query parameter: ?lang\n2) Header: x-lang\n3) Authenticated user language\n4) Default language (Ukrainian – uk)\n\nThe value is case-insensitive and may be either:\n- a plain language code (e.g. \"en\", \"EN\", \"uk\")\n- a locale code (e.g. \"en-US\", \"EN_us\", \"uk-UA\")\n\nThe value will be normalized internally to a supported LanguageCode.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "EN",
+                "UK"
+              ],
+              "default": "UK"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Measurement base type list successfully retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessResponseApiModel"
+                    },
+                    {
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "default": "success"
+                        },
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/MeasurementUnitApiModel"
+                          }
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "data"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "default": "validation"
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Validation failed."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "default": 422
+                            },
+                            "details": {
+                              "nullable": true,
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "title": "Object",
+                                  "description": "Any JSON",
+                                  "additionalProperties": true
+                                },
+                                {
+                                  "type": "array",
+                                  "items": {},
+                                  "title": "Array",
+                                  "description": "Any array"
+                                },
+                                {
+                                  "type": "string",
+                                  "title": "String",
+                                  "description": "Any string"
+                                },
+                                {
+                                  "type": "number",
+                                  "title": "Number",
+                                  "description": "Any number"
+                                },
+                                {
+                                  "type": "boolean",
+                                  "title": "String",
+                                  "description": "True or false"
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "validation",
+                    "message": "Validation failed.",
+                    "statusCode": 422,
+                    "details": {
+                      "entries": [
+                        {
+                          "property": "filter.isUserSelectable",
+                          "value": "invalid-boolean-value",
+                          "constraints": {
+                            "isBoolean": "Field filter.isUserSelectable must be boolean."
+                          }
+                        },
+                        {
+                          "property": "filter.isBaseUnit",
+                          "value": "invalid-boolean-value",
+                          "constraints": {
+                            "isBoolean": "Field filter.isBaseUnit must be boolean"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Retrieve measurement units",
+        "tags": [
+          "Measurements"
+        ]
+      }
     }
   },
   "info": {
@@ -6599,6 +6862,19 @@
           "email"
         ]
       },
+      "GoogleAuthDto": {
+        "type": "object",
+        "properties": {
+          "idToken": {
+            "type": "string",
+            "description": "Google auth ID token (JWT)",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiO..."
+          }
+        },
+        "required": [
+          "idToken"
+        ]
+      },
       "LanguageApiModel": {
         "type": "object",
         "properties": {
@@ -6630,17 +6906,73 @@
           "shortLabel"
         ]
       },
-      "GoogleAuthDto": {
+      "MeasurementBaseTypeApiModel": {
         "type": "object",
         "properties": {
-          "idToken": {
+          "key": {
             "type": "string",
-            "description": "Google auth ID token (JWT)",
-            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiO..."
+            "description": "Measurement base type key",
+            "example": "MASS"
+          },
+          "label": {
+            "type": "string",
+            "description": "Measurement base type label",
+            "example": "Mass"
           }
         },
         "required": [
-          "idToken"
+          "key",
+          "label"
+        ]
+      },
+      "MeasurementUnitApiModel": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Measurement unit key",
+            "example": "KG"
+          },
+          "label": {
+            "type": "string",
+            "description": "Measurement unit label",
+            "example": "kg"
+          },
+          "isBaseUnit": {
+            "type": "boolean",
+            "description": "Is base unit",
+            "example": true
+          },
+          "isUserSelectable": {
+            "type": "boolean",
+            "description": "Is user selectable",
+            "example": true
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "isBaseUnit",
+          "isUserSelectable"
+        ]
+      },
+      "MeasurementUnitFilterQueryDto": {
+        "type": "object",
+        "properties": {
+          "isBaseUnit": {
+            "type": "boolean",
+            "description": "Is base unit",
+            "example": true
+          },
+          "isUserSelectable": {
+            "type": "boolean",
+            "description": "Is user selectable",
+            "example": true
+          }
+        },
+        "required": [
+          "isBaseUnit",
+          "isUserSelectable"
         ]
       },
       "SuccessResponseApiModel": {
