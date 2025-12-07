@@ -1,5 +1,5 @@
 import { Provider } from '@nestjs/common'
-import { ConfigType, getConfigToken, registerAs } from '@nestjs/config'
+import { getConfigToken, registerAs } from '@nestjs/config'
 import { OAuth2Client } from 'google-auth-library'
 import { GOOGLE_AUTH_CLIENT_TOKEN, GOOGLE_CLIENT_ID_TOKEN, GOOGLE_CLIENT_SECRET_TOKEN } from '../constant'
 import { GOOGLE_PROVIDER_ENV_CONFIG_KEY } from './constant'
@@ -13,7 +13,7 @@ export const googleProviderEnvConfig: () => GoogleProviderEnvConfig = registerAs
   }),
 )
 
-function getGoogleClientIdFactory(config: ConfigType<typeof googleProviderEnvConfig>): string {
+function getGoogleClientIdFactory(config: GoogleProviderEnvConfig): string {
   if (!config.clientId) {
     throw new Error('GOOGLE_CLIENT_ID is missing')
   }
@@ -21,11 +21,11 @@ function getGoogleClientIdFactory(config: ConfigType<typeof googleProviderEnvCon
   return config.clientId
 }
 
-function getGoogleClientSecretFactory(config: ConfigType<typeof googleProviderEnvConfig>): string | null {
+function getGoogleClientSecretFactory(config: GoogleProviderEnvConfig): string | null {
   return config?.clientSecret ?? null
 }
 
-function getGoogleOauthClientFactory(config: ConfigType<typeof googleProviderEnvConfig>): OAuth2Client {
+function getGoogleOauthClientFactory(config: GoogleProviderEnvConfig): OAuth2Client {
   if (!config.clientId) {
     throw new Error('GOOGLE_CLIENT_ID is missing')
   }

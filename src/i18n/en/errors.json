@@ -2,6 +2,10 @@
   "internal": {
     "message": "Internal server error.",
     "reason": "An unexpected error occurred. Please try again later.",
+    "aws-bucket": {
+      "file-upload": "An error occurred while uploading the file.",
+      "file-delete": "An error occurred while removing the file."
+    },
     "mail": {
       "welcome-send": {
         "reason": "The welcome mail could not be sent."

@@ -5,6 +5,6 @@ import { OtpService } from './service'
 @Global()
 @Module({
   providers: [OtpService, OtpRepository],
-  exports: [OtpService, OtpRepository],
+  exports: [OtpService],
 })
 export class OtpModule {}

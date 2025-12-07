@@ -1,5 +1,5 @@
 import { Provider } from '@nestjs/common'
-import { ConfigType, getConfigToken, registerAs } from '@nestjs/config'
+import { getConfigToken, registerAs } from '@nestjs/config'
 import { Pool } from 'pg'
 import { POSTGRES_DATABASE_CONFIG_KEY, POSTGRES_DATABASE_CONFIG_TOKEN, POSTGRES_POOL_TOKEN } from './constant'
 import { PostgresDatabaseEnvConfig } from './type'
@@ -16,13 +16,11 @@ export const postgresDatabaseEnvConfig: () => PostgresDatabaseEnvConfig = regist
   }),
 )
 
-function getPostgresDatabaseConfigFactory(
-  config: ConfigType<typeof postgresDatabaseEnvConfig>,
-): PostgresDatabaseEnvConfig {
+function getPostgresDatabaseConfigFactory(config: PostgresDatabaseEnvConfig): PostgresDatabaseEnvConfig {
   return config
 }
 
-function getPostgresDatabasePoolFactory(config: ConfigType<typeof postgresDatabaseEnvConfig>): Pool {
+function getPostgresDatabasePoolFactory(config: PostgresDatabaseEnvConfig): Pool {
   return new Pool({
     connectionString: config.databaseUrl,
   })

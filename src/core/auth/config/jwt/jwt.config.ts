@@ -1,4 +1,4 @@
-import { ConfigModule, ConfigType, getConfigToken, registerAs } from '@nestjs/config'
+import { ConfigModule, getConfigToken, registerAs } from '@nestjs/config'
 import { JwtModuleAsyncOptions, JwtModuleOptions } from '@nestjs/jwt'
 import { DurationString } from '@common/type'
 import { JWT_ENV_CONFIG_KEY } from './constant'
@@ -10,7 +10,7 @@ export const jwtEnvConfig: () => JwtEnvConfig = registerAs(JWT_ENV_CONFIG_KEY, (
   jwtRefreshTokenTtl: process.env.JWT_REFRESH_TOKEN_TTL as DurationString,
 }))
 
-function getJwtConfigFactory({ jwtSecretKey }: ConfigType<typeof jwtEnvConfig>): JwtModuleOptions {
+function getJwtConfigFactory({ jwtSecretKey }: JwtEnvConfig): JwtModuleOptions {
   return {
     secret: jwtSecretKey,
     signOptions: {

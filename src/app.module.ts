@@ -10,6 +10,7 @@ import { LanguageModule } from '@core/language'
 import { MeasurementBaseTypeModule } from '@core/measurement-base-type'
 import { MeasurementUnitModule } from '@core/measurement-unit'
 import { UserModule } from '@core/user'
+import { AWSBucketModule } from '@infrastructure/aws-bucket'
 import { BcryptModule } from '@infrastructure/cryptography'
 import { PrismaModule } from '@infrastructure/database'
 import { LocalizationModule } from '@infrastructure/localization'
@@ -28,6 +29,7 @@ import { SchedulerModule } from '@infrastructure/scheduler'
     UserModule,
     OtpModule,
     MailModule,
+    AWSBucketModule,
     LanguageModule,
     MeasurementBaseTypeModule,
     MeasurementUnitModule,

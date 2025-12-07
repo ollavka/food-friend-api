@@ -1,4 +1,4 @@
-import { ConfigModule, ConfigType, getConfigToken, registerAs } from '@nestjs/config'
+import { ConfigModule, getConfigToken, registerAs } from '@nestjs/config'
 import { MailerOptions } from '@nestjs-modules/mailer'
 import { MailerAsyncOptions } from '@nestjs-modules/mailer/dist/interfaces/mailer-async-options.interface'
 import { isDev } from '@common/util'
@@ -12,7 +12,7 @@ export const mailEnvConfig: () => MailEnvConfig = registerAs(MAIL_ENV_CONFIG_KEY
   mailSmtpPassword: process.env.MAIL_SMTP_PASSWORD,
 }))
 
-function getMailConfigFactory(config: ConfigType<typeof mailEnvConfig>): MailerOptions {
+function getMailConfigFactory(config: MailEnvConfig): MailerOptions {
   const isDevEnv = isDev()
 
   return {

@@ -1,5 +1,5 @@
 import { Provider } from '@nestjs/common'
-import { ConfigType, getConfigToken, registerAs } from '@nestjs/config'
+import { getConfigToken, registerAs } from '@nestjs/config'
 import { Resend } from 'resend'
 import { RESEND_CLIENT_TOKEN, RESEND_ENV_CONFIG_KEY, RESEND_FROM_TOKEN, RESEND_TO_EMAIL_TOKEN } from './constant'
 import { ResendEnvConfig } from './type'
@@ -11,7 +11,7 @@ export const resendEnvConfig: () => ResendEnvConfig = registerAs(RESEND_ENV_CONF
   resendFromName: process.env.RESEND_FROM_NAME,
 }))
 
-function getResendClientFactory(config: ConfigType<typeof resendEnvConfig>): Resend {
+function getResendClientFactory(config: ResendEnvConfig): Resend {
   const { resendApiKey } = config
 
   if (!resendApiKey) {
@@ -22,7 +22,7 @@ function getResendClientFactory(config: ConfigType<typeof resendEnvConfig>): Res
   return resend
 }
 
-function getResendFromFactory(config: ConfigType<typeof resendEnvConfig>): string {
+function getResendFromFactory(config: ResendEnvConfig): string {
   const { resendFromEmail, resendFromName } = config
 
   if (!resendFromEmail || !resendFromName) {
@@ -32,7 +32,7 @@ function getResendFromFactory(config: ConfigType<typeof resendEnvConfig>): strin
   return `${resendFromName} <${resendFromEmail}>`
 }
 
-function getResendToEmailFactory(config: ConfigType<typeof resendEnvConfig>): string {
+function getResendToEmailFactory(config: ResendEnvConfig): string {
   const { resendToEmail } = config
 
   if (!resendToEmail) {

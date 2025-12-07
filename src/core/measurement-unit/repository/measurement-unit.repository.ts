@@ -12,12 +12,13 @@ export class MeasurementUnitRepository {
     language: Language,
     filter?: MeasurementUnitFilterQueryDto,
   ): Promise<Array<MeasurementUnit & { translations: MeasurementUnitTranslation[] }>> {
-    const { isUserSelectable, isBaseUnit } = filter ?? {}
+    const { isUserSelectable, isBaseUnit, baseType } = filter ?? {}
 
     return this.prismaService.measurementUnit.findMany({
       where: {
         isUserSelectable,
         isBaseUnit,
+        ...(baseType ? { baseType: { key: baseType } } : {}),
       },
       include: {
         translations: {

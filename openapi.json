@@ -6961,18 +6961,29 @@
         "properties": {
           "isBaseUnit": {
             "type": "boolean",
-            "description": "Is base unit",
+            "description": "Is base unit of each measurement type. If undefined is passed, all units will be taken; otherwise, filtering will be performed based on the Boolean value.",
             "example": true
           },
           "isUserSelectable": {
             "type": "boolean",
-            "description": "Is user selectable",
+            "description": "Is available for user view",
             "example": true
+          },
+          "baseType": {
+            "type": "string",
+            "description": "Measurement base type of unit. If undefined is passed, all units will be taken; otherwise, filtering will be performed based on the type value.",
+            "enum": [
+              "MASS",
+              "VOLUME",
+              "COUNT"
+            ],
+            "example": "MASS"
           }
         },
         "required": [
           "isBaseUnit",
-          "isUserSelectable"
+          "isUserSelectable",
+          "baseType"
         ]
       },
       "SuccessResponseApiModel": {
