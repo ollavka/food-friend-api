@@ -1,0 +1,30 @@
+model RecipeDifficulty {
+  id  String              @id @default(uuid())
+  key RecipeDifficultyKey @unique
+
+  translations RecipeDifficultyTranslation[]
+
+  @@index([key])
+  @@map("recipe_difficulties")
+}
+
+model RecipeDifficultyTranslation {
+  id String @id @default(uuid())
+
+  label String
+
+  difficulty   RecipeDifficulty @relation(fields: [difficultyId], references: [id], onDelete: Cascade)
+  difficultyId String           @map("difficulty_id")
+
+  language   Language @relation(fields: [languageId], references: [id])
+  languageId String   @map("language_id")
+
+  @@unique([difficultyId, languageId])
+  @@map("recipe_difficulty_translations")
+}
+
+enum RecipeDifficultyKey {
+  EASY
+  MEDIUM
+  HARD
+}

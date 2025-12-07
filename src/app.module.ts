@@ -10,6 +10,7 @@ import { LanguageModule } from '@core/language'
 import { MeasurementBaseTypeModule } from '@core/measurement-base-type'
 import { MeasurementUnitModule } from '@core/measurement-unit'
 import { ProductModule } from '@core/product'
+import { RecipeDifficultyModule } from '@core/recipe-difficulty'
 import { UserModule } from '@core/user'
 import { AWSBucketModule } from '@infrastructure/aws-bucket'
 import { BcryptModule } from '@infrastructure/cryptography'
@@ -36,6 +37,7 @@ import { SchedulerModule } from '@infrastructure/scheduler'
     LanguageModule,
     MeasurementBaseTypeModule,
     MeasurementUnitModule,
+    RecipeDifficultyModule,
     ProductModule,
   ],
   providers: [...pipes, ...interceptors, ...filters],

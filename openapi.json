@@ -6600,6 +6600,79 @@
         ]
       }
     },
+    "/recipes/difficulty-levels": {
+      "get": {
+        "description": "Retrieve available recipe difficulty levels with translated label",
+        "operationId": "RecipeDifficultyController_getRecipeDifficultyList",
+        "parameters": [
+          {
+            "name": "lang",
+            "required": false,
+            "in": "query",
+            "description": "Optional language override. Highest priority.\n\nLanguage resolution order:\n1) Query parameter: ?lang\n2) Header: x-lang\n3) Authenticated user language\n4) Default language (Ukrainian – uk)\n\nThe value is case-insensitive and may be either:\n- a plain language code (e.g. \"en\", \"EN\", \"uk\")\n- a locale code (e.g. \"en-US\", \"EN_us\", \"uk-UA\")\n\nThe value will be normalized internally to a supported LanguageCode.",
+            "schema": {
+              "enum": [
+                "EN",
+                "UK"
+              ],
+              "default": "UK"
+            }
+          },
+          {
+            "name": "x-lang",
+            "in": "header",
+            "description": "Optional language override. Lower priority than ?lang.\n\nLanguage resolution order:\n1) Query parameter: ?lang\n2) Header: x-lang\n3) Authenticated user language\n4) Default language (Ukrainian – uk)\n\nThe value is case-insensitive and may be either:\n- a plain language code (e.g. \"en\", \"EN\", \"uk\")\n- a locale code (e.g. \"en-US\", \"EN_us\", \"uk-UA\")\n\nThe value will be normalized internally to a supported LanguageCode.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "EN",
+                "UK"
+              ],
+              "default": "UK"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Recipe difficulty list successfully retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessResponseApiModel"
+                    },
+                    {
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "default": "success"
+                        },
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/RecipeDifficultyApiModel"
+                          }
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "data"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "Retrieve recipe difficulty levels",
+        "tags": [
+          "Recipes"
+        ]
+      }
+    },
     "/products": {
       "get": {
         "description": "Retrieve paginated products with translated name and measurement base type",
@@ -7626,6 +7699,25 @@
           "isUserSelectable"
         ]
       },
+      "RecipeDifficultyApiModel": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Recipe difficulty key",
+            "example": "EASY"
+          },
+          "label": {
+            "type": "string",
+            "description": "Recipe difficulty label",
+            "example": "Easy"
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ]
+      },
       "PaginationMetaApiModel": {
         "type": "object",
         "properties": {
@@ -7696,13 +7788,13 @@
             "format": "date-time",
             "type": "string",
             "description": "Product created at date",
-            "example": "2025-12-07T22:22:08.977Z"
+            "example": "2025-12-07T22:39:32.628Z"
           },
           "updatedAt": {
             "format": "date-time",
             "type": "string",
             "description": "Product updated at date",
-            "example": "2025-12-07T22:22:08.977Z"
+            "example": "2025-12-07T22:39:32.628Z"
           }
         },
         "required": [

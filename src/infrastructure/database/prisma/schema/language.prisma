@@ -11,6 +11,7 @@ model Language {
   measurementUnitTranslations     MeasurementUnitTranslation[]
   measurementBaseTypeTranslations MeasurementBaseTypeTranslation[]
   productTranslations             ProductTranslation[]
+  recipeDifficultyTranslations    RecipeDifficultyTranslation[]
 
   @@index([code])
   @@map("languages")

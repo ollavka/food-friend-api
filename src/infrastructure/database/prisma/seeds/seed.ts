@@ -5,6 +5,7 @@ import { seedLanguages } from './languages/seed'
 import { seedMeasurementBaseTypes } from './measurement-base-type/seed'
 import { seedMeasurementUnits } from './measurement-unit/seed'
 import { seedProducts } from './product/seed'
+import { seedRecipeDifficulties } from './recipe-difficulty/seed'
 
 // TODO: use it for local seeding
 // import { config as loadEnv } from 'dotenv'
@@ -21,6 +22,7 @@ async function main(): Promise<void> {
   const languages = await seedLanguages(prisma)
   const measurementBaseTypes = await seedMeasurementBaseTypes(prisma, languages)
   await Promise.all([
+    seedRecipeDifficulties(prisma, languages),
     seedMeasurementUnits(prisma, measurementBaseTypes, languages),
     seedProducts(prisma, measurementBaseTypes, languages),
   ])
