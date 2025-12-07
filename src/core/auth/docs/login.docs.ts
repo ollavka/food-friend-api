@@ -6,7 +6,7 @@ import {
   ApiValidationExceptionResponse,
 } from '@swagger/decorator'
 import { successApiSchemaRef } from '@swagger/util'
-import { AccessTokenApiModel } from '../api-model'
+import { SuccessAuthApiModel } from '../api-model'
 import { LoginUserDto } from '../dto'
 
 export function LoginDocs(): MethodDecorator {
@@ -18,7 +18,7 @@ export function LoginDocs(): MethodDecorator {
     ApiBody({ type: LoginUserDto, required: true }),
     ApiOkResponse({
       description: 'User successfully authenticated',
-      schema: successApiSchemaRef(AccessTokenApiModel),
+      schema: successApiSchemaRef(SuccessAuthApiModel),
     }),
     ApiValidationExceptionResponse([
       {

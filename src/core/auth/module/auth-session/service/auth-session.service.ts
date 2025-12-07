@@ -5,7 +5,7 @@ import { Request, Response } from 'express'
 import { StatusPolicy } from '@access-control/util'
 import { AppEntityNotFoundException } from '@common/exception'
 import { convertToMs, hashValue, isDev } from '@common/util'
-import { AccessTokenApiModel } from '@core/auth/api-model'
+import { SuccessAuthApiModel } from '@core/auth/api-model'
 import { JWT_ENV_CONFIG_KEY, JwtEnvConfig } from '@core/auth/config/jwt'
 import { UserService } from '@core/user'
 import { SessionRepository } from '../repository'
@@ -22,7 +22,7 @@ export class AuthSessionService {
     this.jwtEnvConfig = configService.get(JWT_ENV_CONFIG_KEY)
   }
 
-  public async refresh(req: Request, res: Response): Promise<AccessTokenApiModel> {
+  public async refresh(req: Request, res: Response): Promise<SuccessAuthApiModel> {
     const refreshToken = req.cookies['refresh-token'] ?? ''
 
     try {
@@ -52,7 +52,7 @@ export class AuthSessionService {
     return null
   }
 
-  public async auth(res: Response, user: User): Promise<AccessTokenApiModel> {
+  public async auth(res: Response, user: User): Promise<SuccessAuthApiModel> {
     await StatusPolicy.enforce(user)
 
     const { jwtAccessTokenTtl, jwtRefreshTokenTtl } = this.jwtEnvConfig
@@ -65,7 +65,7 @@ export class AuthSessionService {
 
     this.setRefreshTokenCookie(res, refreshToken)
 
-    return { accessToken }
+    return SuccessAuthApiModel.from({ accessToken, user })
   }
 
   private setRefreshTokenCookie(res: Response, token: string): void {

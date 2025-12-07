@@ -5,7 +5,7 @@ import { Response } from 'express'
 import { Authorization } from '@access-control/decorator'
 import { SuccessMessageApiModel } from '@common/api-model'
 import { AuthUser, Language } from '@common/decorator'
-import { AccessTokenApiModel } from '@core/auth/api-model'
+import { SuccessAuthApiModel } from '@core/auth/api-model'
 import { LocalizationFactory } from '@localization'
 import { GoogleAuthDocs, LinkGoogleAccountDocs, UnlinkGoogleAccountDocs } from '../docs'
 import { GoogleAuthDto } from '../dto'
@@ -25,7 +25,7 @@ export class GoogleProviderController {
     @Res({ passthrough: true }) res: Response,
     @Body() { idToken }: GoogleAuthDto,
     @Language() languageCode: LanguageCode,
-  ): Promise<AccessTokenApiModel> {
+  ): Promise<SuccessAuthApiModel> {
     return this.googleProviderService.googleAuth(res, idToken, languageCode)
   }
 

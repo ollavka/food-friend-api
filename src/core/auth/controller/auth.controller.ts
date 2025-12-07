@@ -2,14 +2,14 @@ import { Body, Controller, HttpCode, HttpStatus, Post, Req, Res } from '@nestjs/
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger'
 import { Request, Response } from 'express'
 import { Authorization } from '@access-control/decorator'
-import { AccessTokenApiModel, OtpTicketApiModel } from '../api-model'
+import { OtpTicketApiModel, SuccessAuthApiModel } from '../api-model'
 import { LoginDocs, LogoutDocs, RefreshDocs } from '../docs'
 import { RegisterDocs } from '../docs/register.docs'
 import { LoginUserDto, RegisterUserDto } from '../dto'
 import { AuthService } from '../service'
 
 @ApiTags('Auth')
-@ApiExtraModels(AccessTokenApiModel, OtpTicketApiModel)
+@ApiExtraModels(SuccessAuthApiModel, OtpTicketApiModel)
 @Controller('auth')
 export class AuthController {
   public constructor(private readonly authService: AuthService) {}
@@ -26,7 +26,7 @@ export class AuthController {
   public async login(
     @Res({ passthrough: true }) res: Response,
     @Body() userDto: LoginUserDto,
-  ): Promise<AccessTokenApiModel> {
+  ): Promise<SuccessAuthApiModel> {
     return this.authService.login(res, userDto)
   }
 
@@ -39,7 +39,7 @@ export class AuthController {
 
   @Post('refresh')
   @RefreshDocs()
-  public async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<AccessTokenApiModel> {
+  public async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<SuccessAuthApiModel> {
     return this.authService.refresh(req, res)
   }
 }

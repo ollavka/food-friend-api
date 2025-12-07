@@ -24,11 +24,20 @@ export function ConfirmEmailDocs(): MethodDecorator {
         'application/json': {
           examples: {
             accessTokenResponse: {
-              summary: 'Access token',
+              summary: 'Access token with user',
               value: {
                 status: 'success',
                 data: {
                   accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiO...',
+                  user: {
+                    id: '2Sd1axH6Lf8N5DaiZcDDYG',
+                    firstName: 'John',
+                    lastName: 'Doe',
+                    email: 'john.doe@mail.com',
+                    isVerified: true,
+                    isAdmin: false,
+                    isBlocked: false,
+                  },
                 },
               },
             },

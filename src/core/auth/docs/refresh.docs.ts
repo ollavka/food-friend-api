@@ -6,7 +6,7 @@ import {
   ApiUserStatusPolicyExceptionResponse,
 } from '@swagger/decorator'
 import { successApiSchemaRef } from '@swagger/util'
-import { AccessTokenApiModel } from '../api-model'
+import { SuccessAuthApiModel } from '../api-model'
 
 export function RefreshDocs(): MethodDecorator {
   return applyDecorators(
@@ -15,8 +15,8 @@ export function RefreshDocs(): MethodDecorator {
       description: 'Refresh access and refresh tokens. Returns a new access token',
     }),
     ApiOkResponse({
-      description: 'New access and refresh tokens',
-      schema: successApiSchemaRef(AccessTokenApiModel),
+      description: 'Authorized user, new access and refresh tokens',
+      schema: successApiSchemaRef(SuccessAuthApiModel),
     }),
     ApiAuthenticationExceptionResponse({
       description: 'Refresh token missing, expired or invalid',

@@ -7,7 +7,7 @@ import { LanguageService } from '@core/language'
 import { UserService } from '@core/user'
 import { BcryptService } from '@infrastructure/cryptography/bcrypt'
 import { MailService } from '@infrastructure/mail'
-import { AccessTokenApiModel, OtpTicketApiModel } from '../api-model'
+import { OtpTicketApiModel, SuccessAuthApiModel } from '../api-model'
 import { LoginUserDto, RegisterUserDto } from '../dto'
 import { AuthSessionService, EmailVerificationService } from '../module'
 
@@ -51,7 +51,7 @@ export class AuthService {
     return emailVerificationTicketModel
   }
 
-  public async login(res: Response, { email, password }: LoginUserDto): Promise<AccessTokenApiModel> {
+  public async login(res: Response, { email, password }: LoginUserDto): Promise<SuccessAuthApiModel> {
     const user = await this.userService.findByEmail(email)
 
     if (!user || !user.password) {
@@ -71,7 +71,7 @@ export class AuthService {
     return this.authSessionService.logout(req, res)
   }
 
-  public async refresh(req: Request, res: Response): Promise<AccessTokenApiModel> {
+  public async refresh(req: Request, res: Response): Promise<SuccessAuthApiModel> {
     return this.authSessionService.refresh(req, res)
   }
 }

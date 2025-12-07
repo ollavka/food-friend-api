@@ -341,7 +341,7 @@
                           "default": "success"
                         },
                         "data": {
-                          "$ref": "#/components/schemas/AccessTokenApiModel"
+                          "$ref": "#/components/schemas/SuccessAuthApiModel"
                         }
                       },
                       "required": [
@@ -782,7 +782,7 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "New access and refresh tokens",
+            "description": "Authorized user, new access and refresh tokens",
             "content": {
               "application/json": {
                 "schema": {
@@ -797,7 +797,7 @@
                           "default": "success"
                         },
                         "data": {
-                          "$ref": "#/components/schemas/AccessTokenApiModel"
+                          "$ref": "#/components/schemas/SuccessAuthApiModel"
                         }
                       },
                       "required": [
@@ -4392,11 +4392,20 @@
               "application/json": {
                 "examples": {
                   "accessTokenResponse": {
-                    "summary": "Access token",
+                    "summary": "Access token with user",
                     "value": {
                       "status": "success",
                       "data": {
-                        "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiO..."
+                        "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiO...",
+                        "user": {
+                          "id": "2Sd1axH6Lf8N5DaiZcDDYG",
+                          "firstName": "John",
+                          "lastName": "Doe",
+                          "email": "john.doe@mail.com",
+                          "isVerified": true,
+                          "isAdmin": false,
+                          "isBlocked": false
+                        }
                       }
                     }
                   },
@@ -5073,7 +5082,7 @@
                           "default": "success"
                         },
                         "data": {
-                          "$ref": "#/components/schemas/AccessTokenApiModel"
+                          "$ref": "#/components/schemas/SuccessAuthApiModel"
                         }
                       },
                       "required": [
@@ -6580,17 +6589,75 @@
       }
     },
     "schemas": {
-      "AccessTokenApiModel": {
+      "UserApiModel": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "User ID",
+            "example": "2Sd1axH6Lf8N5DaiZcDDYG"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "User first name",
+            "example": "John"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "User last name",
+            "example": "Doe"
+          },
+          "email": {
+            "type": "string",
+            "description": "User email",
+            "example": "john.doe@mail.com"
+          },
+          "isVerified": {
+            "type": "boolean",
+            "description": "User is verified status",
+            "example": true
+          },
+          "isAdmin": {
+            "type": "boolean",
+            "description": "User is admin status",
+            "example": false
+          },
+          "isBlocked": {
+            "type": "boolean",
+            "description": "User is blocked status",
+            "example": false
+          }
+        },
+        "required": [
+          "id",
+          "firstName",
+          "lastName",
+          "email",
+          "isVerified",
+          "isAdmin",
+          "isBlocked"
+        ]
+      },
+      "SuccessAuthApiModel": {
         "type": "object",
         "properties": {
           "accessToken": {
             "type": "string",
             "description": "Access JWT token",
             "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiO..."
+          },
+          "user": {
+            "description": "Authorized user",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserApiModel"
+              }
+            ]
           }
         },
         "required": [
-          "accessToken"
+          "accessToken",
+          "user"
         ]
       },
       "OtpTicketApiModel": {

@@ -4,7 +4,7 @@ import { Response } from 'express'
 import { StatusPolicy } from '@access-control/util'
 import { ConfirmOtpCodeDto } from '@common/dto'
 import { AppBadRequestException, AppEntityNotFoundException, AppRateLimitException } from '@common/exception'
-import { AccessTokenApiModel, OtpTicketApiModel } from '@core/auth/api-model'
+import { OtpTicketApiModel, SuccessAuthApiModel } from '@core/auth/api-model'
 import { UserService } from '@core/user'
 import { PrismaService } from '@infrastructure/database'
 import { MailService } from '@infrastructure/mail'
@@ -58,7 +58,7 @@ export class EmailVerificationService {
     res: Response,
     { ticket, code }: ConfirmOtpCodeDto,
     makeAuth?: boolean,
-  ): Promise<AccessTokenApiModel | null> {
+  ): Promise<SuccessAuthApiModel | null> {
     const { email: userEmail } = await this.otpService.confirmCode(ticket, code, OtpCodeType.EMAIL_VERIFICATION)
 
     const userEntity = await this.prismaService.$transaction(async (tx) => {

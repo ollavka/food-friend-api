@@ -5,7 +5,7 @@ import { OAuth2Client, TokenPayload } from 'google-auth-library'
 import { AppBadRequestException } from '@common/exception'
 import { Nullable, Uuid } from '@common/type'
 import { def } from '@common/util'
-import { AccessTokenApiModel } from '@core/auth/api-model'
+import { SuccessAuthApiModel } from '@core/auth/api-model'
 import { AuthSessionService, ProviderAccountService } from '@core/auth/module'
 import { LanguageService } from '@core/language'
 import { UserService } from '@core/user'
@@ -24,7 +24,7 @@ export class GoogleProviderService {
     private readonly languageService: LanguageService,
   ) {}
 
-  public async googleAuth(res: Response, idToken: string, languageCode: LanguageCode): Promise<AccessTokenApiModel> {
+  public async googleAuth(res: Response, idToken: string, languageCode: LanguageCode): Promise<SuccessAuthApiModel> {
     const user = await this.handleGoogleToken({ idToken, userEmail: null, languageCode }, false)
     return this.authSessionService.auth(res, user)
   }
