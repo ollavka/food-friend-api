@@ -9,6 +9,7 @@ import { AuthModule } from '@core/auth'
 import { LanguageModule } from '@core/language'
 import { MeasurementBaseTypeModule } from '@core/measurement-base-type'
 import { MeasurementUnitModule } from '@core/measurement-unit'
+import { ProductModule } from '@core/product'
 import { UserModule } from '@core/user'
 import { AWSBucketModule } from '@infrastructure/aws-bucket'
 import { BcryptModule } from '@infrastructure/cryptography'
@@ -16,6 +17,7 @@ import { PrismaModule } from '@infrastructure/database'
 import { LocalizationModule } from '@infrastructure/localization'
 import { MailModule } from '@infrastructure/mail'
 import { OtpModule } from '@infrastructure/otp'
+import { PaginationModule } from '@infrastructure/pagination'
 import { SchedulerModule } from '@infrastructure/scheduler'
 
 @Module({
@@ -30,9 +32,11 @@ import { SchedulerModule } from '@infrastructure/scheduler'
     OtpModule,
     MailModule,
     AWSBucketModule,
+    PaginationModule,
     LanguageModule,
     MeasurementBaseTypeModule,
     MeasurementUnitModule,
+    ProductModule,
   ],
   providers: [...pipes, ...interceptors, ...filters],
 })

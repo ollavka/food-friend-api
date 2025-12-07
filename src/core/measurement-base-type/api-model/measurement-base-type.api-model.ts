@@ -20,8 +20,8 @@ export class MeasurementBaseTypeApiModel {
   })
   public label: string
 
-  public constructor(partial: Partial<MeasurementBaseType>) {
-    Object.assign(this, partial)
+  public constructor(baseType: Partial<MeasurementBaseType>) {
+    Object.assign(this, baseType)
   }
 
   public static from(baseType: Partial<MeasurementBaseType>): MeasurementBaseTypeApiModel {

@@ -6385,11 +6385,35 @@
         "operationId": "MeasurementUnitController_getMeasurementUnitList",
         "parameters": [
           {
-            "name": "filter",
+            "name": "filter[baseType]",
             "required": false,
             "in": "query",
+            "description": "Measurement base type of unit. If undefined is passed, all units will be taken; otherwise, filtering will be performed based on the type value.",
             "schema": {
-              "$ref": "#/components/schemas/MeasurementUnitFilterQueryDto"
+              "enum": [
+                "MASS",
+                "VOLUME",
+                "COUNT"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "filter[isBaseUnit]",
+            "required": false,
+            "in": "query",
+            "description": "Is base unit of each measurement type. If undefined is passed, all units will be taken; otherwise, filtering will be performed based on the Boolean value.",
+            "schema": {
+              "example": true
+            }
+          },
+          {
+            "name": "filter[isUserSelectable]",
+            "required": false,
+            "in": "query",
+            "description": "Is available unit for user view",
+            "schema": {
+              "example": true
             }
           },
           {
@@ -6552,7 +6576,14 @@
                           "property": "filter.isBaseUnit",
                           "value": "invalid-boolean-value",
                           "constraints": {
-                            "isBoolean": "Field filter.isBaseUnit must be boolean"
+                            "isBoolean": "Field filter.isBaseUnit must be boolean."
+                          }
+                        },
+                        {
+                          "property": "filter.baseType",
+                          "value": "invalid-base-type",
+                          "constraints": {
+                            "isEnum": "Field filter.baseType must be one of the allowed values: MASS, VOLUME, COUNT."
                           }
                         }
                       ]
@@ -6566,6 +6597,578 @@
         "summary": "Retrieve measurement units",
         "tags": [
           "Measurements"
+        ]
+      }
+    },
+    "/products": {
+      "get": {
+        "description": "Retrieve paginated products with translated name and measurement base type",
+        "operationId": "ProductController_getProductList",
+        "parameters": [
+          {
+            "name": "filter[search]",
+            "required": false,
+            "in": "query",
+            "description": "Case-insensitive search by product name or slug",
+            "schema": {
+              "example": "Potato"
+            }
+          },
+          {
+            "name": "filter[measurementBaseType]",
+            "required": false,
+            "in": "query",
+            "description": "Measurement base type of product. If undefined is passed, products with all types will be taken; otherwise, filtering will be performed based on the type value.",
+            "schema": {
+              "enum": [
+                "MASS",
+                "VOLUME",
+                "COUNT"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort[field]",
+            "required": false,
+            "in": "query",
+            "description": "Field name to sort by",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "name",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          },
+          {
+            "name": "sort[order]",
+            "required": false,
+            "in": "query",
+            "description": "Sort order (asc or desc)",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            }
+          },
+          {
+            "name": "pagination[page]",
+            "required": false,
+            "in": "query",
+            "description": "Page number",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "pagination[limit]",
+            "required": false,
+            "in": "query",
+            "description": "Resources count per page",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 10
+            }
+          },
+          {
+            "name": "lang",
+            "required": false,
+            "in": "query",
+            "description": "Optional language override. Highest priority.\n\nLanguage resolution order:\n1) Query parameter: ?lang\n2) Header: x-lang\n3) Authenticated user language\n4) Default language (Ukrainian – uk)\n\nThe value is case-insensitive and may be either:\n- a plain language code (e.g. \"en\", \"EN\", \"uk\")\n- a locale code (e.g. \"en-US\", \"EN_us\", \"uk-UA\")\n\nThe value will be normalized internally to a supported LanguageCode.",
+            "schema": {
+              "enum": [
+                "EN",
+                "UK"
+              ],
+              "default": "UK"
+            }
+          },
+          {
+            "name": "x-lang",
+            "in": "header",
+            "description": "Optional language override. Lower priority than ?lang.\n\nLanguage resolution order:\n1) Query parameter: ?lang\n2) Header: x-lang\n3) Authenticated user language\n4) Default language (Ukrainian – uk)\n\nThe value is case-insensitive and may be either:\n- a plain language code (e.g. \"en\", \"EN\", \"uk\")\n- a locale code (e.g. \"en-US\", \"EN_us\", \"uk-UA\")\n\nThe value will be normalized internally to a supported LanguageCode.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "EN",
+                "UK"
+              ],
+              "default": "UK"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Product list successfully retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessResponseApiModel"
+                    },
+                    {
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "default": "success"
+                        },
+                        "data": {
+                          "$ref": "#/components/schemas/PaginatedProductsApiModel"
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "data"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "default": "validation"
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Validation failed."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "default": 422
+                            },
+                            "details": {
+                              "nullable": true,
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "title": "Object",
+                                  "description": "Any JSON",
+                                  "additionalProperties": true
+                                },
+                                {
+                                  "type": "array",
+                                  "items": {},
+                                  "title": "Array",
+                                  "description": "Any array"
+                                },
+                                {
+                                  "type": "string",
+                                  "title": "String",
+                                  "description": "Any string"
+                                },
+                                {
+                                  "type": "number",
+                                  "title": "Number",
+                                  "description": "Any number"
+                                },
+                                {
+                                  "type": "boolean",
+                                  "title": "String",
+                                  "description": "True or false"
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "validation",
+                    "message": "Validation failed.",
+                    "statusCode": 422,
+                    "details": {
+                      "entries": [
+                        {
+                          "property": "filter.measurementBaseType",
+                          "value": "INVALID_TYPE",
+                          "constraints": {
+                            "isEnum": "Field filter.measurementBaseType must be one of the allowed values: MASS, VOLUME, COUNT."
+                          }
+                        },
+                        {
+                          "property": "sort.field",
+                          "value": "unknown",
+                          "constraints": {
+                            "isIn": "Field sort.field must be one of the allowed values: id, name, createdAt, updatedAt."
+                          }
+                        },
+                        {
+                          "property": "sort.order",
+                          "value": "invalid",
+                          "constraints": {
+                            "isEnum": "Field sort.order must be one of the allowed values: asc, desc."
+                          }
+                        },
+                        {
+                          "property": "pagination.page",
+                          "value": 0,
+                          "constraints": {
+                            "min": "Field pagination.page must not be less than 1."
+                          }
+                        },
+                        {
+                          "property": "pagination.limit",
+                          "value": 101,
+                          "constraints": {
+                            "min": "Field pagination.limit must be less or equals to 100."
+                          }
+                        },
+                        {
+                          "property": "pagination.limit",
+                          "value": 0,
+                          "constraints": {
+                            "min": "Field pagination.limit must not be less than 1."
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Retrieve products",
+        "tags": [
+          "Products"
+        ]
+      }
+    },
+    "/products/{id}": {
+      "get": {
+        "description": "Retrieve single product with translated name by id",
+        "operationId": "ProductController_getProductById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "lang",
+            "required": false,
+            "in": "query",
+            "description": "Optional language override. Highest priority.\n\nLanguage resolution order:\n1) Query parameter: ?lang\n2) Header: x-lang\n3) Authenticated user language\n4) Default language (Ukrainian – uk)\n\nThe value is case-insensitive and may be either:\n- a plain language code (e.g. \"en\", \"EN\", \"uk\")\n- a locale code (e.g. \"en-US\", \"EN_us\", \"uk-UA\")\n\nThe value will be normalized internally to a supported LanguageCode.",
+            "schema": {
+              "enum": [
+                "EN",
+                "UK"
+              ],
+              "default": "UK"
+            }
+          },
+          {
+            "name": "x-lang",
+            "in": "header",
+            "description": "Optional language override. Lower priority than ?lang.\n\nLanguage resolution order:\n1) Query parameter: ?lang\n2) Header: x-lang\n3) Authenticated user language\n4) Default language (Ukrainian – uk)\n\nThe value is case-insensitive and may be either:\n- a plain language code (e.g. \"en\", \"EN\", \"uk\")\n- a locale code (e.g. \"en-US\", \"EN_us\", \"uk-UA\")\n\nThe value will be normalized internally to a supported LanguageCode.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "EN",
+                "UK"
+              ],
+              "default": "UK"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Product successfully retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessResponseApiModel"
+                    },
+                    {
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "default": "success"
+                        },
+                        "data": {
+                          "$ref": "#/components/schemas/ProductApiModel"
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "data"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Product not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "default": "app.entity-not-found"
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Entity not found."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "default": 404
+                            },
+                            "details": {
+                              "type": "object",
+                              "properties": {
+                                "entityType": {
+                                  "type": "string"
+                                },
+                                "identity": {
+                                  "type": "object",
+                                  "additionalProperties": {
+                                    "nullable": true,
+                                    "oneOf": [
+                                      {
+                                        "type": "object",
+                                        "title": "Object",
+                                        "description": "Any JSON",
+                                        "additionalProperties": true
+                                      },
+                                      {
+                                        "type": "array",
+                                        "items": {},
+                                        "title": "Array",
+                                        "description": "Any array"
+                                      },
+                                      {
+                                        "type": "string",
+                                        "title": "String",
+                                        "description": "Any string"
+                                      },
+                                      {
+                                        "type": "number",
+                                        "title": "Number",
+                                        "description": "Any number"
+                                      },
+                                      {
+                                        "type": "boolean",
+                                        "title": "String",
+                                        "description": "True or false"
+                                      }
+                                    ]
+                                  }
+                                }
+                              },
+                              "required": [
+                                "entityType"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "app.entity-not-found",
+                    "message": "Entity not found.",
+                    "statusCode": 404,
+                    "details": {
+                      "entityType": "Product",
+                      "identity": {
+                        "id": "LnT8BAUhhoJ2Y6MuB9AAZp"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponseApiModel"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ],
+                          "default": "error"
+                        },
+                        "error": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "default": "validation"
+                            },
+                            "message": {
+                              "type": "string",
+                              "default": "Validation failed."
+                            },
+                            "statusCode": {
+                              "type": "number",
+                              "default": 422
+                            },
+                            "details": {
+                              "nullable": true,
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "title": "Object",
+                                  "description": "Any JSON",
+                                  "additionalProperties": true
+                                },
+                                {
+                                  "type": "array",
+                                  "items": {},
+                                  "title": "Array",
+                                  "description": "Any array"
+                                },
+                                {
+                                  "type": "string",
+                                  "title": "String",
+                                  "description": "Any string"
+                                },
+                                {
+                                  "type": "number",
+                                  "title": "Number",
+                                  "description": "Any number"
+                                },
+                                {
+                                  "type": "boolean",
+                                  "title": "String",
+                                  "description": "True or false"
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "statusCode"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "error"
+                      ]
+                    }
+                  ]
+                },
+                "example": {
+                  "status": "error",
+                  "error": {
+                    "type": "validation",
+                    "message": "Validation failed.",
+                    "statusCode": 422,
+                    "details": {
+                      "entries": [
+                        {
+                          "property": "id",
+                          "value": "invalid-id",
+                          "constraints": {
+                            "isId": "Field id must be a valid identifier."
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Retrieve product by id",
+        "tags": [
+          "Products"
         ]
       }
     }
@@ -7023,34 +7626,110 @@
           "isUserSelectable"
         ]
       },
-      "MeasurementUnitFilterQueryDto": {
+      "PaginationMetaApiModel": {
         "type": "object",
         "properties": {
-          "isBaseUnit": {
+          "totalItems": {
+            "type": "number",
+            "description": "Total items count",
+            "example": 50
+          },
+          "page": {
+            "type": "number",
+            "description": "Current page number",
+            "example": 1
+          },
+          "perPage": {
+            "type": "number",
+            "description": "Items per page",
+            "example": 10
+          },
+          "pageCount": {
+            "type": "number",
+            "description": "Total pages",
+            "example": 5
+          },
+          "hasNextPage": {
             "type": "boolean",
-            "description": "Is base unit of each measurement type. If undefined is passed, all units will be taken; otherwise, filtering will be performed based on the Boolean value.",
+            "description": "Has next page",
             "example": true
           },
-          "isUserSelectable": {
+          "hasPrevPage": {
             "type": "boolean",
-            "description": "Is available for user view",
-            "example": true
-          },
-          "baseType": {
-            "type": "string",
-            "description": "Measurement base type of unit. If undefined is passed, all units will be taken; otherwise, filtering will be performed based on the type value.",
-            "enum": [
-              "MASS",
-              "VOLUME",
-              "COUNT"
-            ],
-            "example": "MASS"
+            "description": "Has previous page",
+            "example": false
           }
         },
         "required": [
-          "isBaseUnit",
-          "isUserSelectable",
-          "baseType"
+          "totalItems",
+          "page",
+          "perPage",
+          "pageCount",
+          "hasNextPage",
+          "hasPrevPage"
+        ]
+      },
+      "ProductApiModel": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Product ID",
+            "example": "LnT8BAUhhoJ2Y6MuB9AAZp"
+          },
+          "slug": {
+            "type": "string",
+            "description": "Product slug",
+            "example": "potato"
+          },
+          "name": {
+            "type": "string",
+            "description": "Product name",
+            "example": "Potato"
+          },
+          "measurementBaseType": {
+            "type": "string",
+            "description": "Measurement base type key",
+            "example": "MASS"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Product created at date",
+            "example": "2025-12-07T22:22:08.977Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Product updated at date",
+            "example": "2025-12-07T22:22:08.977Z"
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "measurementBaseType",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "PaginatedProductsApiModel": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaApiModel"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductApiModel"
+            }
+          }
+        },
+        "required": [
+          "meta",
+          "items"
         ]
       },
       "SuccessResponseApiModel": {

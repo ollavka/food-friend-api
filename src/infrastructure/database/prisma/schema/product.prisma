@@ -1,0 +1,32 @@
+model Product {
+  id   String @id @default(uuid())
+  slug String @unique
+
+  measurementBaseType   MeasurementBaseType @relation(fields: [measurementBaseTypeId], references: [id])
+  measurementBaseTypeId String              @map("measurement_base_type_id")
+
+  translations ProductTranslation[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("products")
+}
+
+model ProductTranslation {
+  id String @id @default(uuid())
+
+  name String
+
+  language   Language @relation(fields: [languageId], references: [id])
+  languageId String   @map("language_id")
+
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String  @map("product_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([productId, languageId])
+  @@map("product_translations")
+}

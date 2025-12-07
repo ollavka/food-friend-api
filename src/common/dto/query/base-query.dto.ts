@@ -1,5 +1,5 @@
 import { applyDecorators } from '@nestjs/common'
-import { ApiHideProperty, ApiPropertyOptional } from '@nestjs/swagger'
+import { ApiHideProperty } from '@nestjs/swagger'
 import { Type } from 'class-transformer'
 import { IsOptional, ValidateNested } from 'class-validator'
 import { BaseQuery } from '@common/type'
@@ -24,7 +24,7 @@ export function createBaseQueryDto<Filter, SortField extends string>({
 
   const Filtering = filterDto
     ? applyDecorators(
-        ApiPropertyOptional({ type: () => filterDto }),
+        ApiHideProperty(),
         IsOptional(),
         ValidateNested(),
         Type(() => filterDto),
@@ -33,7 +33,7 @@ export function createBaseQueryDto<Filter, SortField extends string>({
 
   const Pagination = includePagination
     ? applyDecorators(
-        ApiPropertyOptional({ type: () => PaginationQueryDto }),
+        ApiHideProperty(),
         IsOptional(),
         ValidateNested(),
         Type(() => PaginationQueryDto),
@@ -42,7 +42,7 @@ export function createBaseQueryDto<Filter, SortField extends string>({
 
   const Sorting = availableSortFields?.length
     ? applyDecorators(
-        ApiPropertyOptional({ type: () => SortFieldQueryDto }),
+        ApiHideProperty(),
         IsOptional(),
         ValidateNested(),
         Type(() => SortFieldQueryDto),

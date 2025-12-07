@@ -36,8 +36,8 @@ export class LanguageApiModel {
   })
   public shortLabel: string
 
-  public constructor(partial: Partial<Language>) {
-    Object.assign(this, partial)
+  public constructor(language: Partial<Language>) {
+    Object.assign(this, language)
   }
 
   public static from(language: Partial<Language>): LanguageApiModel {

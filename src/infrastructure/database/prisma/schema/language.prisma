@@ -10,6 +10,7 @@ model Language {
   users                           User[]
   measurementUnitTranslations     MeasurementUnitTranslation[]
   measurementBaseTypeTranslations MeasurementBaseTypeTranslation[]
+  productTranslations             ProductTranslation[]
 
   @@index([code])
   @@map("languages")
@@ -22,7 +23,7 @@ model LanguageTranslation {
   fullLabel       String       @map("full_label")
   shortLabel      String       @map("short_label")
 
-  language   Language @relation(fields: [languageId], references: [id])
+  language   Language @relation(fields: [languageId], references: [id], onDelete: Cascade)
   languageId String   @map("language_id")
 
   @@unique([languageId, translationCode])

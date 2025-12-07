@@ -19,7 +19,7 @@ model MeasurementUnitTranslation {
 
   label String
 
-  unit   MeasurementUnit @relation(fields: [unitId], references: [id])
+  unit   MeasurementUnit @relation(fields: [unitId], references: [id], onDelete: Cascade)
   unitId String          @map("unit_id")
 
   language   Language @relation(fields: [languageId], references: [id])

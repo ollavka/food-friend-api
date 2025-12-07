@@ -4,6 +4,7 @@ import { Pool } from 'pg'
 import { seedLanguages } from './languages/seed'
 import { seedMeasurementBaseTypes } from './measurement-base-type/seed'
 import { seedMeasurementUnits } from './measurement-unit/seed'
+import { seedProducts } from './product/seed'
 
 // TODO: use it for local seeding
 // import { config as loadEnv } from 'dotenv'
@@ -19,7 +20,10 @@ const prisma = new PrismaClient({
 async function main(): Promise<void> {
   const languages = await seedLanguages(prisma)
   const measurementBaseTypes = await seedMeasurementBaseTypes(prisma, languages)
-  await seedMeasurementUnits(prisma, measurementBaseTypes, languages)
+  await Promise.all([
+    seedMeasurementUnits(prisma, measurementBaseTypes, languages),
+    seedProducts(prisma, measurementBaseTypes, languages),
+  ])
 }
 
 main()

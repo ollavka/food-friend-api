@@ -36,15 +36,15 @@ export class MeasurementUnitApiModel {
   })
   public isUserSelectable: boolean
 
-  public constructor(partial: Partial<MeasurementUnit>) {
-    Object.assign(this, partial)
+  public constructor(unit: Partial<MeasurementUnit>) {
+    Object.assign(this, unit)
   }
 
-  public static from(baseType: Partial<MeasurementUnit>): MeasurementUnitApiModel {
-    return new this(baseType)
+  public static from(unit: Partial<MeasurementUnit>): MeasurementUnitApiModel {
+    return new this(unit)
   }
 
-  public static fromList(baseTypes: Array<Partial<MeasurementUnit>>): MeasurementUnitApiModel[] {
-    return baseTypes.map((baseTypes) => this.from(baseTypes))
+  public static fromList(units: Array<Partial<MeasurementUnit>>): MeasurementUnitApiModel[] {
+    return units.map((unit) => this.from(unit))
   }
 }

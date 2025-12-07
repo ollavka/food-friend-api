@@ -71,8 +71,8 @@ export class UserApiModel {
     this.isBlocked = status === UserStatus.BLOCKED
   }
 
-  public static from(data: Partial<User>): UserApiModel {
-    return new this(data)
+  public static from(user: Partial<User>): UserApiModel {
+    return new this(user)
   }
 
   public get fullName(): string {

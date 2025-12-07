@@ -8,6 +8,9 @@
   "id": "Field {property} must be a valid identifier.",
   "uuid": "Field {property} must be a valid UUID.",
   "jwt": "Field {property} must contains a valid token.",
+  "integer": "Field {property} must be an integer number.",
+  "min": "Field {property} must not be less than {value}.",
+  "max": "Field {property} must be less or equals to {value}.",
   "otp": {
     "length": "Field {property} must be exactly {length} digits long."
   },

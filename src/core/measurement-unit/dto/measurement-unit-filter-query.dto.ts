@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiHideProperty } from '@nestjs/swagger'
 import { MeasurementBaseTypeKey } from '@prisma/client'
 import { IsOptional } from 'class-validator'
 import { IsBoolean, IsEnum } from '@common/validation'
@@ -6,25 +6,16 @@ import { IsBoolean, IsEnum } from '@common/validation'
 export class MeasurementUnitFilterQueryDto {
   @IsOptional()
   @IsBoolean()
-  @ApiProperty({
-    description:
-      'Is base unit of each measurement type. If undefined is passed, all units will be taken; otherwise, filtering will be performed based on the Boolean value.',
-    example: true,
-  })
+  @ApiHideProperty()
   public isBaseUnit?: boolean
 
   @IsOptional()
   @IsBoolean()
-  @ApiProperty({ description: 'Is available for user view', example: true })
+  @ApiHideProperty()
   public isUserSelectable?: boolean
 
   @IsOptional()
   @IsEnum(MeasurementBaseTypeKey)
-  @ApiProperty({
-    description:
-      'Measurement base type of unit. If undefined is passed, all units will be taken; otherwise, filtering will be performed based on the type value.',
-    enum: MeasurementBaseTypeKey,
-    example: MeasurementBaseTypeKey.MASS,
-  })
+  @ApiHideProperty()
   public baseType?: MeasurementBaseTypeKey
 }
