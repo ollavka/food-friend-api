@@ -7788,13 +7788,13 @@
             "format": "date-time",
             "type": "string",
             "description": "Product created at date",
-            "example": "2025-12-07T22:39:32.628Z"
+            "example": "2025-12-07T23:01:16.838Z"
           },
           "updatedAt": {
             "format": "date-time",
             "type": "string",
             "description": "Product updated at date",
-            "example": "2025-12-07T22:39:32.628Z"
+            "example": "2025-12-07T23:01:16.838Z"
           }
         },
         "required": [
