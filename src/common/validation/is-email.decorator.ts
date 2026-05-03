@@ -1,7 +1,7 @@
 import { applyDecorators } from '@nestjs/common'
 import { Transform } from 'class-transformer'
 import { ValidationOptions, IsEmail as _IsEmail } from 'class-validator'
-import { toLowerCase } from '../util'
+import { toLowerCase } from '../util/to-lower-case.util'
 import { withI18nMessage } from './with-i18n-message.util'
 
 export function IsEmail(validationOptions?: ValidationOptions): PropertyDecorator {

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { LanguageCode } from '@prisma/client'
+import { LanguageCode, RecipeDifficulty, RecipeDifficultyKey } from '@prisma/client'
 import { LanguageService } from '@core/language'
 import { RecipeDifficultyApiModel } from '../api-model'
 import { RecipeDifficultyRepository } from '../repository'
@@ -24,5 +24,9 @@ export class RecipeDifficultyService {
     })
 
     return RecipeDifficultyApiModel.fromList(mappedDifficulties)
+  }
+
+  public async getRecipeDifficultyByKey(key: RecipeDifficultyKey): Promise<RecipeDifficulty | null> {
+    return this.recipeDifficultyRepository.findRecipeDifficultyByKey(key)
   }
 }

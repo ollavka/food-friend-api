@@ -16,6 +16,20 @@
       "reset-send": {
         "reason": "The reset password mail could not be sent."
       }
+    },
+    "ai": {
+      "provider-request": {
+        "reason": "AI provider request failed."
+      },
+      "image-generation-failed": {
+        "reason": "AI image generation failed."
+      },
+      "empty-output": {
+        "reason": "AI provider returned an empty response."
+      },
+      "invalid-output": {
+        "reason": "AI provider returned invalid output."
+      }
     }
   },
   "validation": {
@@ -69,6 +83,49 @@
       },
       "email-not-verified": {
         "reason": "Google email must be verified to sign in."
+      }
+    },
+    "ai": {
+      "recipe-id-required": {
+        "reason": "Recipe id is required for image generation."
+      },
+      "recipe-image-forbidden": {
+        "reason": "You have no access to generate image for this recipe."
+      },
+      "recipe-image-status": {
+        "reason": "Image generation is not available for archived recipe."
+      },
+      "photo-source-required": {
+        "reason": "Provide recipe photo file or imageUrl."
+      },
+      "image-url-invalid": {
+        "reason": "Provided imageUrl is invalid."
+      },
+      "image-url-forbidden": {
+        "reason": "Provided imageUrl is forbidden."
+      },
+      "image-download-failed": {
+        "reason": "Unable to download image by URL."
+      },
+      "image-content-type": {
+        "reason": "Only image content type is supported."
+      },
+      "image-size-limit": {
+        "reason": "Image exceeds maximum allowed size."
+      }
+    },
+    "recipe": {
+      "translation-title-required": {
+        "reason": "Recipe title is required to create translation for the selected language."
+      },
+      "ingredient-unit-mismatch": {
+        "reason": "Ingredient measurement unit is not compatible with product base type."
+      },
+      "recommendation-profile-required": {
+        "reason": "Nutrition profile is required for personalized recommendations."
+      },
+      "substitution-ingredient-not-found": {
+        "reason": "Ingredient product is not part of the selected recipe."
       }
     }
   },

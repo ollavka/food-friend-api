@@ -1,8 +1,8 @@
 import { applyDecorators } from '@nestjs/common'
 import { Transform } from 'class-transformer'
 import { ValidationOptions } from 'class-validator'
-import { uuidToHash } from '../util'
-import { IsUuid } from '.'
+import { uuidToHash } from '../util/hash.util'
+import { IsUuid } from './is-uuid.decorator'
 
 export function ToId(validationOptions?: ValidationOptions): PropertyDecorator {
   return applyDecorators(

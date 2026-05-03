@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto'
 import { Hash, Uuid } from '../type'
-import { def, uuid } from '.'
+import { def } from './def.util'
+import { uuid } from './uuid.util'
 
 const characters = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 const base = BigInt(characters.length)

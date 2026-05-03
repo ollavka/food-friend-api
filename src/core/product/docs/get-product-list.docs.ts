@@ -28,6 +28,10 @@ export function GetProductListDocs(): MethodDecorator {
             enum: MeasurementBaseTypeKey,
             example: MeasurementBaseTypeKey.MASS,
           },
+          isSystem: {
+            description: 'Is system product. If undefined is passed, all products will be returned.',
+            example: true,
+          },
         },
       },
       sort: {
@@ -63,6 +67,11 @@ export function GetProductListDocs(): MethodDecorator {
         constraints: {
           isEnum: `Field sort.order must be one of the allowed values: ${Object.values(SortOrder).join(', ')}.`,
         },
+      },
+      {
+        property: 'filter.isSystem',
+        value: 'invalid-boolean',
+        constraints: { isBoolean: 'Field filter.isSystem must be boolean.' },
       },
       {
         property: 'pagination.page',

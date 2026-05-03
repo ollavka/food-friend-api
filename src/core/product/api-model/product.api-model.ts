@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { MeasurementBaseTypeKey } from '@prisma/client'
+import { MeasurementBaseTypeKey, MeasurementUnitKey } from '@prisma/client'
 import { Exclude, Expose } from 'class-transformer'
 import { Hash } from '@common/type'
 import { IsString, ToId } from '@common/validation'
@@ -35,11 +35,47 @@ export class ProductApiModel {
 
   @Expose()
   @ApiProperty({
+    description: 'Product description',
+    example: 'Fresh potato for cooking.',
+    required: false,
+    nullable: true,
+  })
+  public description?: string | null
+
+  @Expose()
+  @ApiProperty({
     description: 'Measurement base type key',
     example: 'MASS',
     required: true,
   })
   public measurementBaseType: MeasurementBaseTypeKey
+
+  @Expose()
+  @ApiProperty({
+    description: 'Measurement unit key',
+    enum: MeasurementUnitKey,
+    example: MeasurementUnitKey.KG,
+    required: false,
+    nullable: true,
+  })
+  public measurementUnit?: MeasurementUnitKey | null
+
+  @Expose()
+  @ApiProperty({
+    description: 'Is system product',
+    required: true,
+    example: true,
+  })
+  public isSystem: boolean
+
+  @Expose()
+  @ApiProperty({
+    description: 'Product image URL',
+    required: false,
+    nullable: true,
+    example: 'https://bucket.s3.eu-north-1.amazonaws.com/p/1.jpg',
+  })
+  public imageUrl?: string | null
 
   @Expose()
   @ApiProperty({
@@ -60,9 +96,14 @@ export class ProductApiModel {
   public constructor(product: Partial<ProductWithTranslation>) {
     Object.assign(this, product)
     const measurementBaseTypeKey = product.measurementBaseType?.key
+    const measurementUnitKey = product.measurementUnit?.key
 
     if (measurementBaseTypeKey) {
       this.measurementBaseType = measurementBaseTypeKey
+    }
+
+    if (measurementUnitKey) {
+      this.measurementUnit = measurementUnitKey
     }
   }
 

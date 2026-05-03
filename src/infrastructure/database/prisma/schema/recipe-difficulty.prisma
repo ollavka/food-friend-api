@@ -3,6 +3,7 @@ model RecipeDifficulty {
   key RecipeDifficultyKey @unique
 
   translations RecipeDifficultyTranslation[]
+  recipes      Recipe[]
 
   @@index([key])
   @@map("recipe_difficulties")

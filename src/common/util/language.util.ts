@@ -54,3 +54,27 @@ export function getRequestLanguage(req: Request, options?: { fallback?: Language
 export function isLanguageCode(code: any): code is LanguageCode {
   return Object.values(LanguageCode).includes(code)
 }
+
+export function getLanguageLabelByCode(code: LanguageCode): string {
+  switch (code) {
+    case LanguageCode.EN:
+      return 'English'
+    case LanguageCode.UK:
+      return 'Ukrainian'
+    default:
+      return code
+  }
+}
+
+export function pickTranslationByLanguage<T extends { languageId: string }>(
+  translations: T[],
+  languageId: string,
+  defaultLanguageId: string,
+): T | null {
+  return (
+    translations.find((translation) => translation.languageId === languageId) ??
+    translations.find((translation) => translation.languageId === defaultLanguageId) ??
+    translations[0] ??
+    null
+  )
+}

@@ -1,0 +1,76 @@
+model ShoppingList {
+  id String @id @default(uuid())
+
+  title  String?
+  status ShoppingListStatus @default(ACTIVE)
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
+
+  sourceLanguage   Language? @relation(fields: [sourceLanguageId], references: [id], onDelete: SetNull)
+  sourceLanguageId String?   @map("source_language_id")
+
+  items   ShoppingListItem[]
+  recipes ShoppingListRecipe[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([userId, status])
+  @@index([sourceLanguageId])
+  @@index([createdAt])
+  @@map("shopping_lists")
+}
+
+model ShoppingListRecipe {
+  id String @id @default(uuid())
+
+  shoppingList   ShoppingList @relation(fields: [shoppingListId], references: [id], onDelete: Cascade)
+  shoppingListId String       @map("shopping_list_id")
+
+  recipe   Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId String @map("recipe_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([shoppingListId, recipeId])
+  @@index([recipeId])
+  @@map("shopping_list_recipes")
+}
+
+model ShoppingListItem {
+  id String @id @default(uuid())
+
+  shoppingList   ShoppingList @relation(fields: [shoppingListId], references: [id], onDelete: Cascade)
+  shoppingListId String       @map("shopping_list_id")
+
+  product   Product @relation(fields: [productId], references: [id])
+  productId String  @map("product_id")
+
+  measurementUnit   MeasurementUnit @relation(fields: [measurementUnitId], references: [id])
+  measurementUnitId String          @map("measurement_unit_id")
+
+  quantity Decimal @default(0)
+  note     String?
+
+  isManual Boolean                @default(false) @map("is_manual")
+  status   ShoppingListItemStatus @default(PENDING)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([shoppingListId, status])
+  @@index([productId])
+  @@index([measurementUnitId])
+  @@map("shopping_list_items")
+}
+
+enum ShoppingListStatus {
+  ACTIVE
+  ARCHIVED
+}
+
+enum ShoppingListItemStatus {
+  PENDING
+  COMPLETED
+}

@@ -1,0 +1,57 @@
+model BackgroundJob {
+  id String @id @default(uuid())
+
+  type   BackgroundJobType
+  status BackgroundJobStatus @default(PENDING)
+
+  payload Json
+  result  Json?
+  error   Json?
+
+  attempts    Int @default(0)
+  maxAttempts Int @default(3) @map("max_attempts")
+
+  runAt       DateTime  @default(now()) @map("run_at")
+  startedAt   DateTime? @map("started_at")
+  finishedAt  DateTime? @map("finished_at")
+  lockExpires DateTime? @map("lock_expires_at")
+  lockedBy    String?   @map("locked_by")
+
+  dedupKey String? @unique @map("dedup_key")
+
+  recipe   Recipe? @relation(fields: [recipeId], references: [id], onDelete: SetNull)
+  recipeId String? @map("recipe_id")
+
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId String? @map("user_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([status, runAt])
+  @@index([type, status])
+  @@index([recipeId])
+  @@index([userId])
+  @@map("background_jobs")
+}
+
+enum BackgroundJobType {
+  PRODUCT_TRANSLATION
+  RECIPE_TRANSLATION
+  RECIPE_NUTRITION_ANALYSIS
+  RECIPE_DRAFT_GENERATION
+  RECIPE_IMAGE_ANALYSIS
+  RECIPE_IMAGE_GENERATION
+  SEARCH_SYNC_RECIPE
+  SEARCH_SYNC_PRODUCT
+  SEARCH_REINDEX_RECIPES
+  SEARCH_REINDEX_PRODUCTS
+}
+
+enum BackgroundJobStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELED
+}

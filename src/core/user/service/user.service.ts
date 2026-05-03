@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common'
 import { Prisma, User } from '@prisma/client'
 import { isEmail } from 'class-validator'
+import { Uuid } from '@common/type'
 import { isUuid } from '@common/util'
 import { PrismaService } from '@infrastructure/database'
-import { CreateUserPayload, FindUserOptions } from '../type'
+import { CreateUserPayload, FindUserOptions, UserNutritionProfile } from '../type'
 
 @Injectable()
 export class UserService {
@@ -51,8 +52,9 @@ export class UserService {
     payload: Omit<CreateUserPayload, 'lastEmailVerificationMailSentAt' | 'lastResetPasswordMailSentAt'>,
     tx?: Prisma.TransactionClient,
   ): Promise<User> {
-    const findBy = isUuid(idOrEmail) ? this.findById : this.findByEmail
-    const foundUser = await findBy(idOrEmail, {}, tx)
+    const foundUser = isUuid(idOrEmail)
+      ? await this.findById(idOrEmail, {}, tx)
+      : await this.findByEmail(idOrEmail, {}, tx)
 
     if (foundUser) {
       return foundUser
@@ -80,5 +82,78 @@ export class UserService {
     })
 
     return updatedUser
+  }
+
+  public async getNutritionProfileByUserId(
+    userId: Uuid,
+    tx?: Prisma.TransactionClient,
+  ): Promise<UserNutritionProfile | null> {
+    const db = tx ?? this.prismaService
+    const profile = await db.userNutritionProfile.findUnique({
+      where: {
+        userId,
+      },
+    })
+
+    if (!profile) {
+      return null
+    }
+
+    return this.mapNutritionProfile(profile)
+  }
+
+  public async upsertNutritionProfile(
+    userId: Uuid,
+    data: Pick<
+      Prisma.UserNutritionProfileUncheckedCreateInput,
+      'sex' | 'age' | 'heightCm' | 'weightKg' | 'activityLevel' | 'goal' | 'targetCalories'
+    >,
+    tx?: Prisma.TransactionClient,
+  ): Promise<UserNutritionProfile> {
+    const db = tx ?? this.prismaService
+    const profile = await db.userNutritionProfile.upsert({
+      where: {
+        userId,
+      },
+      create: {
+        userId,
+        sex: data.sex,
+        age: data.age,
+        heightCm: data.heightCm,
+        weightKg: data.weightKg,
+        activityLevel: data.activityLevel,
+        goal: data.goal,
+        targetCalories: data.targetCalories,
+      },
+      update: {
+        sex: data.sex,
+        age: data.age,
+        heightCm: data.heightCm,
+        weightKg: data.weightKg,
+        activityLevel: data.activityLevel,
+        goal: data.goal,
+        targetCalories: data.targetCalories,
+      },
+    })
+
+    return this.mapNutritionProfile(profile)
+  }
+
+  private mapNutritionProfile(
+    profile: Prisma.UserNutritionProfileGetPayload<Record<never, never>>,
+  ): UserNutritionProfile {
+    return {
+      id: <Uuid>profile.id,
+      userId: <Uuid>profile.userId,
+      sex: profile.sex,
+      age: profile.age,
+      heightCm: profile.heightCm,
+      weightKg: Number(profile.weightKg),
+      activityLevel: profile.activityLevel,
+      goal: profile.goal,
+      targetCalories: profile.targetCalories,
+      createdAt: profile.createdAt,
+      updatedAt: profile.updatedAt,
+    }
   }
 }

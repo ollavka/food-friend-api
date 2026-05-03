@@ -18,3 +18,16 @@ export function enumValue<T extends EnumLike, K extends keyof T, V extends T[K]>
   const key = enumNamedKeys(enumObj).find((key) => key === targetKey) ?? null
   return key ? (enumObj[key] as V) : null
 }
+
+export function normalizeEnumValue<T extends Record<string, string>>(
+  value: unknown,
+  enumObject: T,
+  fallback: T[keyof T],
+): T[keyof T] {
+  if (typeof value !== 'string') {
+    return fallback
+  }
+
+  const values = <Array<T[keyof T]>>Object.values(enumObject)
+  return values.includes(<T[keyof T]>value) ? <T[keyof T]>value : fallback
+}

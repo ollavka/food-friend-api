@@ -16,6 +16,20 @@
       "reset-send": {
         "reason": "Не вдалося надіслати лист для скидання пароля."
       }
+    },
+    "ai": {
+      "provider-request": {
+        "reason": "Запит до AI-провайдера завершився помилкою."
+      },
+      "image-generation-failed": {
+        "reason": "Не вдалося згенерувати зображення за допомогою AI."
+      },
+      "empty-output": {
+        "reason": "AI-провайдер повернув порожню відповідь."
+      },
+      "invalid-output": {
+        "reason": "AI-провайдер повернув некоректний формат відповіді."
+      }
     }
   },
   "validation": {
@@ -69,6 +83,49 @@
       },
       "email-not-verified": {
         "reason": "Електронна пошта Google має бути підтверджена для входу."
+      }
+    },
+    "ai": {
+      "recipe-id-required": {
+        "reason": "Для генерації зображення потрібен ідентифікатор рецепта."
+      },
+      "recipe-image-forbidden": {
+        "reason": "У вас немає доступу до генерації зображення для цього рецепта."
+      },
+      "recipe-image-status": {
+        "reason": "Для архівного рецепта генерація зображення недоступна."
+      },
+      "photo-source-required": {
+        "reason": "Передайте файл фото рецепта або imageUrl."
+      },
+      "image-url-invalid": {
+        "reason": "Переданий imageUrl є некоректним."
+      },
+      "image-url-forbidden": {
+        "reason": "Переданий imageUrl заборонений."
+      },
+      "image-download-failed": {
+        "reason": "Не вдалося завантажити зображення за URL."
+      },
+      "image-content-type": {
+        "reason": "Підтримується лише image content type."
+      },
+      "image-size-limit": {
+        "reason": "Зображення перевищує максимально дозволений розмір."
+      }
+    },
+    "recipe": {
+      "translation-title-required": {
+        "reason": "Для створення перекладу вибраною мовою потрібна назва рецепта."
+      },
+      "ingredient-unit-mismatch": {
+        "reason": "Одиниця вимірювання інгредієнта несумісна з базовим типом продукту."
+      },
+      "recommendation-profile-required": {
+        "reason": "Для персоналізованих рекомендацій потрібен профіль харчування."
+      },
+      "substitution-ingredient-not-found": {
+        "reason": "Вказаний продукт-інгредієнт відсутній у вибраному рецепті."
       }
     }
   },

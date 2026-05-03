@@ -2,21 +2,43 @@ model Product {
   id   String @id @default(uuid())
   slug String @unique
 
+  isSystem Boolean @default(true) @map("is_system")
+
+  imageKey String? @map("image_key")
+  imageUrl String? @map("image_url")
+
+  owner   User?   @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  ownerId String? @map("owner_id")
+
+  sourceLanguage   Language? @relation(fields: [sourceLanguageId], references: [id], onDelete: SetNull)
+  sourceLanguageId String?   @map("source_language_id")
+
   measurementBaseType   MeasurementBaseType @relation(fields: [measurementBaseTypeId], references: [id])
   measurementBaseTypeId String              @map("measurement_base_type_id")
 
-  translations ProductTranslation[]
+  measurementUnit   MeasurementUnit? @relation(fields: [measurementUnitId], references: [id], onDelete: SetNull)
+  measurementUnitId String?          @map("measurement_unit_id")
+
+  translations      ProductTranslation[]
+  recipeIngredients RecipeIngredient[]
+  shoppingListItems ShoppingListItem[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  @@index([isSystem])
+  @@index([ownerId])
+  @@index([sourceLanguageId])
+  @@index([measurementUnitId])
   @@map("products")
 }
 
 model ProductTranslation {
   id String @id @default(uuid())
 
-  name String
+  name             String
+  description      String?
+  isAutoTranslated Boolean @default(false) @map("is_auto_translated")
 
   language   Language @relation(fields: [languageId], references: [id])
   languageId String   @map("language_id")
@@ -28,5 +50,6 @@ model ProductTranslation {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@unique([productId, languageId])
+  @@index([languageId])
   @@map("product_translations")
 }

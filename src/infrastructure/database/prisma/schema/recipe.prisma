@@ -1,0 +1,194 @@
+model Recipe {
+  id   String @id @default(uuid())
+  slug String @unique
+
+  status             RecipeStatus @default(DRAFT)
+  cookingTimeMinutes Int          @default(0) @map("cooking_time_minutes")
+  servings           Int?
+
+  imageKey String? @map("image_key")
+  imageUrl String? @map("image_url")
+
+  likesCount     Int @default(0) @map("likes_count")
+  favoritesCount Int @default(0) @map("favorites_count")
+  viewsCount     Int @default(0) @map("views_count")
+
+  publishedAt DateTime? @map("published_at")
+
+  sourceLanguage   Language? @relation(fields: [sourceLanguageId], references: [id], onDelete: SetNull)
+  sourceLanguageId String?   @map("source_language_id")
+
+  difficulty   RecipeDifficulty @relation(fields: [difficultyId], references: [id])
+  difficultyId String           @map("difficulty_id")
+
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId String @map("author_id")
+
+  translations RecipeTranslation[]
+  steps        RecipeStep[]
+  ingredients  RecipeIngredient[]
+  nutrition    RecipeNutrition?
+
+  likes     RecipeLike[]
+  favorites RecipeFavorite[]
+
+  shoppingListRecipes ShoppingListRecipe[]
+
+  backgroundJobs BackgroundJob[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([status])
+  @@index([authorId])
+  @@index([difficultyId])
+  @@index([sourceLanguageId])
+  @@index([createdAt])
+  @@map("recipes")
+}
+
+model RecipeTranslation {
+  id String @id @default(uuid())
+
+  title            String
+  description      String?
+  isAutoTranslated Boolean @default(false) @map("is_auto_translated")
+
+  language   Language @relation(fields: [languageId], references: [id])
+  languageId String   @map("language_id")
+
+  recipe   Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId String @map("recipe_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([recipeId, languageId])
+  @@index([languageId])
+  @@index([title])
+  @@map("recipe_translations")
+}
+
+model RecipeStep {
+  id String @id @default(uuid())
+
+  recipe   Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId String @map("recipe_id")
+
+  sortOrder Int @map("sort_order")
+
+  translations RecipeStepTranslation[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([recipeId, sortOrder])
+  @@index([recipeId])
+  @@map("recipe_steps")
+}
+
+model RecipeStepTranslation {
+  id String @id @default(uuid())
+
+  content          String
+  isAutoTranslated Boolean @default(false) @map("is_auto_translated")
+
+  language   Language @relation(fields: [languageId], references: [id])
+  languageId String   @map("language_id")
+
+  step   RecipeStep @relation(fields: [stepId], references: [id], onDelete: Cascade)
+  stepId String     @map("step_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([stepId, languageId])
+  @@index([languageId])
+  @@map("recipe_step_translations")
+}
+
+model RecipeIngredient {
+  id String @id @default(uuid())
+
+  recipe   Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId String @map("recipe_id")
+
+  product   Product @relation(fields: [productId], references: [id])
+  productId String  @map("product_id")
+
+  measurementUnit   MeasurementUnit @relation(fields: [measurementUnitId], references: [id])
+  measurementUnitId String          @map("measurement_unit_id")
+
+  quantity  Decimal @default(0)
+  note      String?
+  sortOrder Int     @default(0) @map("sort_order")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([recipeId, sortOrder])
+  @@index([productId])
+  @@index([measurementUnitId])
+  @@map("recipe_ingredients")
+}
+
+model RecipeNutrition {
+  id String @id @default(uuid())
+
+  recipe   Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId String @unique @map("recipe_id")
+
+  kcal     Decimal?
+  proteins Decimal?
+  fats     Decimal?
+  carbs    Decimal?
+  fiber    Decimal?
+  sugar    Decimal?
+  sodiumMg Decimal? @map("sodium_mg")
+
+  isEstimated   Boolean   @default(false) @map("is_estimated")
+  updatedByAiAt DateTime? @map("updated_by_ai_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("recipe_nutritions")
+}
+
+model RecipeFavorite {
+  id String @id @default(uuid())
+
+  recipe   Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId String @map("recipe_id")
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([recipeId, userId])
+  @@index([userId])
+  @@map("recipe_favorites")
+}
+
+model RecipeLike {
+  id String @id @default(uuid())
+
+  recipe   Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId String @map("recipe_id")
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([recipeId, userId])
+  @@index([userId])
+  @@map("recipe_likes")
+}
+
+enum RecipeStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}

@@ -1,0 +1,32 @@
+{
+  "moduleFileExtensions": ["js", "json", "ts", "tsx"],
+  "rootDir": "src",
+  "testRegex": ".*\\.spec\\.ts$",
+  "transform": {
+    "^.+\\.(t|j)sx?$": "ts-jest"
+  },
+  "moduleNameMapper": {
+    "^@access-control/(.*)$": "<rootDir>/access-control/$1",
+    "^@core/(.*)$": "<rootDir>/core/$1",
+    "^@infrastructure/(.*)$": "<rootDir>/infrastructure/$1",
+    "^@localization$": "<rootDir>/infrastructure/localization",
+    "^@common/(.*)$": "<rootDir>/common/$1",
+    "^@config/(.*)$": "<rootDir>/config/$1",
+    "^@swagger/(.*)$": "<rootDir>/swagger/$1"
+  },
+  "collectCoverageFrom": [
+    "common/util/language.util.ts",
+    "common/util/normalize-value.util.ts",
+    "core/background-job/service/background-job.service.ts"
+  ],
+  "coverageDirectory": "../coverage/gate",
+  "coverageThreshold": {
+    "global": {
+      "branches": 80,
+      "functions": 80,
+      "lines": 80,
+      "statements": 80
+    }
+  },
+  "testEnvironment": "node"
+}

@@ -1,5 +1,5 @@
 import { ValidateBy, ValidationOptions, buildMessage } from 'class-validator'
-import { isHash } from '../util'
+import { isHash } from '../util/hash.util'
 import { withI18nMessage } from './with-i18n-message.util'
 
 export function IsId(validationOptions?: ValidationOptions): PropertyDecorator {

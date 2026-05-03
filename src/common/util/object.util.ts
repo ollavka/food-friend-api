@@ -18,3 +18,7 @@ export function isEmptyObject<T extends Record<string | number, unknown>>(object
 
   return !Object.values(object).filter(def).length
 }
+
+export function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
+}

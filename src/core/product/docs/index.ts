@@ -1,2 +1,5 @@
 export * from './get-product-by-id.docs'
 export * from './get-product-list.docs'
+export * from './create-product.docs'
+export * from './update-product.docs'
+export * from './remove-product.docs'

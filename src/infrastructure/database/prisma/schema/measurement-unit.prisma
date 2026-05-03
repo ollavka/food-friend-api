@@ -9,6 +9,10 @@ model MeasurementUnit {
   baseTypeId String              @map("base_type_id")
 
   translations MeasurementUnitTranslation[]
+  products     Product[]
+
+  recipeIngredients RecipeIngredient[]
+  shoppingListItems ShoppingListItem[]
 
   @@index([key])
   @@map("measurement_units")

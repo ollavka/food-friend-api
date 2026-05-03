@@ -1,0 +1,18 @@
+{
+  "moduleFileExtensions": ["js", "json", "ts", "tsx"],
+  "rootDir": "..",
+  "testRegex": "src/swagger/docs-coverage\\.spec\\.ts$",
+  "transform": {
+    "^.+\\.(t|j)sx?$": "ts-jest"
+  },
+  "moduleNameMapper": {
+    "^@access-control/(.*)$": "<rootDir>/src/access-control/$1",
+    "^@core/(.*)$": "<rootDir>/src/core/$1",
+    "^@infrastructure/(.*)$": "<rootDir>/src/infrastructure/$1",
+    "^@localization$": "<rootDir>/src/infrastructure/localization",
+    "^@common/(.*)$": "<rootDir>/src/common/$1",
+    "^@config/(.*)$": "<rootDir>/src/config/$1",
+    "^@swagger/(.*)$": "<rootDir>/src/swagger/$1"
+  },
+  "testEnvironment": "node"
+}

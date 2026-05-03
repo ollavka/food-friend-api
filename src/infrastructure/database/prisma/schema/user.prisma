@@ -15,6 +15,16 @@ model User {
   otpCodes OtpCode[]
   sessions Session[]
   accounts Account[]
+  products Product[]
+  recipes  Recipe[]
+
+  recipeLikes     RecipeLike[]
+  recipeFavorites RecipeFavorite[]
+
+  shoppingLists ShoppingList[]
+
+  backgroundJobs BackgroundJob[]
+  nutritionProfile UserNutritionProfile?
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("update_at")
@@ -35,4 +45,45 @@ enum UserStatus {
   UNVERIFIED
   ACTIVE
   BLOCKED
+}
+
+model UserNutritionProfile {
+  id String @id @default(uuid())
+
+  sex           NutritionSex
+  age           Int
+  heightCm      Int                    @map("height_cm")
+  weightKg      Decimal                @map("weight_kg")
+  activityLevel NutritionActivityLevel @map("activity_level")
+  goal          NutritionGoal
+  targetCalories Int?                  @map("target_calories")
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @unique @map("user_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([goal])
+  @@index([activityLevel])
+  @@map("user_nutrition_profiles")
+}
+
+enum NutritionSex {
+  MALE
+  FEMALE
+}
+
+enum NutritionActivityLevel {
+  SEDENTARY
+  LIGHT
+  MODERATE
+  ACTIVE
+  VERY_ACTIVE
+}
+
+enum NutritionGoal {
+  LOSE_WEIGHT
+  MAINTAIN_WEIGHT
+  GAIN_WEIGHT
 }
